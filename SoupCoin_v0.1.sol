@@ -19,49 +19,59 @@ contract owned {
 
 contract SoupCoin is owned{
 
-    string public standard = 'SoupCoin 0.1';
+    string public standard = 'SoupCoin V0.1';
     string public name;
     string public symbol;
     uint256 public totalSupply;
+    uint minBalanceForAccounts = 5 finney;
+
     
     struct user{
         uint256 balanceOf;
         role roleOf;
     }
     
-    enum role { superadmin, admin, gebruiker }
+    enum role { admin, gebruiker }
     role constant defaultrole = role.gebruiker;
     
     mapping (address => user) public users;
     mapping (uint => address[]) orders;
     
-    function SoupCoin(string tokenName,  string tokenSymbol) {
-        users[msg.sender].roleOf = role.superadmin; 
+    function SoupCoin(string tokenName, string tokenSymbol) {
+        users[msg.sender].roleOf = role.admin; 
         name = tokenName;                                   // Set the name for display purposes
         symbol = tokenSymbol;                            // Set the symbol for display purposes
+    }
+
+
+    function setMinBalance(uint minimumBalanceInFinney) onlyOwner {
+         minBalanceForAccounts = minimumBalanceInFinney * 1 finney;
     }
     
     function CreateAndTransfer(address target, uint256 Amount) { //enkel uit te voeren door admin of super admin
         
-        if (users[msg.sender].roleOf != role.superadmin || users[msg.sender].roleOf != role.admin) throw; 
+        if (users[msg.sender].roleOf != role.admin) throw; 
         if (target == 0x0) throw;
         users[target].balanceOf += Amount;
-        if (users[target].roleOf != role.superadmin || users[target].roleOf != role.admin){
-            users[target].roleOf != role.gebruiker;
+        if (users[target].roleOf != role.admin){
+            users[target].roleOf = role.gebruiker;
         }
+        
+        if(target.balance<minBalanceForAccounts) target.transfer(minBalanceForAccounts-target.balance);
+        
         totalSupply += Amount;
+    
     }
     
-    function MakeAdmin(address target) {
+    function MakeAdmin(address target) onlyOwner {
         
-        if (users[msg.sender].roleOf != role.superadmin) throw;
         users[target].roleOf = role.admin;
         
     }
     
     function RemoveAdmin(address target) {
     
-        if (users[msg.sender].roleOf != role.superadmin || users[msg.sender].roleOf != role.admin) throw; 
+        if (users[msg.sender].roleOf != role.admin) throw;
         
         if (users[target].roleOf != role.admin) throw;
         
@@ -91,6 +101,12 @@ contract SoupCoin is owned{
             
             uint aantalSoupkes = users[orders[WeekDay][i]].balanceOf;
             users[orders[WeekDay][i]].balanceOf = aantalSoupkes-1;
+        }
+        
+        for (uint j = 0; j < orders[WeekDay].length; j++){
+
+            delete orders[WeekDay][i];
+
         }
         
         return true;
