@@ -24,64 +24,77 @@ contract SoupCoin is owned{
     string public symbol;
     uint256 public totalSupply;
     uint minBalanceForAccounts = 5 finney;
-
     
-    struct user{
-        uint256 balanceOf;
-        role roleOf;
-    }
-    
-    enum role { admin, gebruiker }
-    role constant defaultrole = role.gebruiker;
-    
-    mapping (address => user) public users;
-    mapping (uint => address[]) orders;
+    mapping (address => uint) public balanceOf;
+    mapping (uint => address[]) public orders;
+    mapping (address => bool) public isAdmin;
     
     function SoupCoin(string tokenName, string tokenSymbol) {
-        users[msg.sender].roleOf = role.admin; 
+        isAdmin[msg.sender] = true; 
         name = tokenName;                                   // Set the name for display purposes
         symbol = tokenSymbol;                            // Set the symbol for display purposes
     }
 
 
-    function setMinBalance(uint minimumBalanceInFinney) onlyOwner {
+    function SetMinBalance(uint minimumBalanceInFinney) onlyOwner {
          minBalanceForAccounts = minimumBalanceInFinney * 1 finney;
     }
+
     
     function CreateAndTransfer(address target, uint256 Amount) { //enkel uit te voeren door admin of super admin
         
-        if (users[msg.sender].roleOf != role.admin) throw; 
+        if (!isAdmin[msg.sender]) throw; 
         if (target == 0x0) throw;
-        users[target].balanceOf += Amount;
-        if (users[target].roleOf != role.admin){
-            users[target].roleOf = role.gebruiker;
+
+        balanceOf[target] += Amount;
+
+        if (!isAdmin[target]){
+            isAdmin[target] = false;
         }
-        
-        if(target.balance<minBalanceForAccounts) target.send(minBalanceForAccounts-target.balance);
+
+        if(target.balance<minBalanceForAccounts) {
+
+	    	if(target.send(minBalanceForAccounts-target.balance)){
+	    		throw;
+	    	}
+        }
         
         totalSupply += Amount;
     
     }
+
     
-    function MakeAdmin(address target) onlyOwner {
-        
-        users[target].roleOf = role.admin;
+    function MakeAdmin(address target) returns (bool){
+
+        if (!isAdmin[msg.sender]) throw;
+
+        isAdmin[target] = true;
+
+        return true;
         
     }
     
-    function RemoveAdmin(address target) {
+    function RemoveAdmin(address target) returns (bool){
     
-        if (users[msg.sender].roleOf != role.admin) throw;
+        if (!isAdmin[msg.sender]) throw;
         
-        if (users[target].roleOf != role.admin) throw;
+        if (isAdmin[target] != true) throw;
         
-        users[target].roleOf = role.gebruiker;
+        isAdmin[target] = false;
+
+        return true;
         
     }
     
     function ReservSoupForDay(address sender, uint[] WeekDays){
+
+        uint aantalsoup = 0;
+
+        for (uint j = 0; j< WeekDays.length; j++){
+            aantalsoup += WeekDays[j];
+        }
         
-        if (users[sender].balanceOf < 1) throw;
+        if (balanceOf[sender] < aantalsoup) throw;
         
         for (uint i = 0; i < WeekDays.length; i++){
             if (WeekDays[i] == 1){
@@ -92,24 +105,37 @@ contract SoupCoin is owned{
     }
     
     function CountSoupForDay(uint WeekDay) returns (uint) {
+
         return orders[WeekDay].length;
+    
     }
     
-    function EndOfDay(uint WeekDay) returns (bool success){
+    function EndOfDay(uint WeekDay) returns (bool){
         
         for (uint i= 0; i < orders[WeekDay].length; i++){
             
-            uint aantalSoupkes = users[orders[WeekDay][i]].balanceOf;
-            users[orders[WeekDay][i]].balanceOf = aantalSoupkes-1;
+            balanceOf[orders[WeekDay][i]] = balanceOf[orders[WeekDay][i]]-1;
+           
         }
         
         for (uint j = 0; j < orders[WeekDay].length; j++){
 
-            delete orders[WeekDay][i];
+            delete orders[WeekDay][j];
 
         }
         
         return true;
     }
+
+    function getRole(address sender) returns (bool){
+    	return isAdmin[sender];
+    }
     
 }
+
+
+
+
+
+
+
