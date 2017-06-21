@@ -2,7 +2,7 @@
 
 1. install nodejs v8.1.2: [link](https://nodejs.org/en/)
 
-1. install windows-build-tools
+1. install windows-build-tools (only on windows)
 
         $ npm install -g --production windows-build-tools
 
