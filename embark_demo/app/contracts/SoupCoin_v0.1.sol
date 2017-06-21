@@ -30,9 +30,9 @@ contract SoupCoin is owned{
     mapping (address => bool) public isAdmin;
     
     function SoupCoin(string tokenName, string tokenSymbol) {
-        isAdmin[msg.sender] = true; 
         name = tokenName;                                   // Set the name for display purposes
         symbol = tokenSymbol;                            // Set the symbol for display purposes
+        MakeOwnerAdmin;
     }
 
 
@@ -72,6 +72,12 @@ contract SoupCoin is owned{
 
         return true;
         
+    }
+
+    function MakeOwnerAdmin() internal onlyOwner{
+
+        isAdmin[owner] = true;
+
     }
     
     function RemoveAdmin(address target) returns (bool){
