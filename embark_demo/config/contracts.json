@@ -2,9 +2,9 @@
   "default": {
     "gas": 2000000,
     "contracts": {
-      "SoupCoin": {
+      "SoupContract": {
         "args": [
-          "a","a"
+          "Jaak","Jaak"
         ]
       }
     }

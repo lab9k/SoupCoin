@@ -77997,446 +77997,524 @@ var EmbarkJS =
 	/*jshint esversion: 6 */
 	//var Ipfs = require('./ipfs.js');
 
-	var EmbarkJS = {
-	};
+	//=========================================================
+	// Embark Smart Contracts
+	//=========================================================
+
+	var EmbarkJS = {};
 
 	EmbarkJS.Contract = function(options) {
-	  var self = this;
-	  var i, abiElement;
+	    var self = this;
+	    var i, abiElement;
 
-	  this.abi = options.abi;
-	  this.address = options.address;
-	  this.code = '0x' + options.code;
-	  this.web3 = options.web3 || web3;
+	    this.abi = options.abi;
+	    this.address = options.address;
+	    this.code = '0x' + options.code;
+	    this.web3 = options.web3 || web3;
 
-	  var ContractClass = this.web3.eth.contract(this.abi);
+	    var ContractClass = this.web3.eth.contract(this.abi);
 
-	  this.eventList = [];
+	    this.eventList = [];
 
-	  if (this.abi) {
-	    for (i = 0; i < this.abi.length; i++) {
-	      abiElement = this.abi[i];
-	      if (abiElement.type === 'event') {
-	        this.eventList.push(abiElement.name);
-	      }
-	    }
-	  }
-
-	  var messageEvents = function() {
-	    this.cb = function() {};
-	  };
-
-	  messageEvents.prototype.then = function(cb) {
-	    this.cb = cb;
-	  };
-
-	  messageEvents.prototype.error = function(err) {
-	    return err;
-	  };
-
-	  this._originalContractObject = ContractClass.at(this.address);
-	  this._methods = Object.getOwnPropertyNames(this._originalContractObject).filter(function (p) {
-	    // TODO: check for forbidden properties
-	    if (self.eventList.indexOf(p) >= 0) {
-
-	      self[p] = function() {
-	        var promise = new messageEvents();
-	        var args = Array.prototype.slice.call(arguments);
-	        args.push(function(err, result) {
-	          if (err) {
-	            promise.error(err);
-	          } else {
-	            promise.cb(result);
-	          }
-	        });
-
-	        self._originalContractObject[p].apply(self._originalContractObject[p], args);
-	        return promise;
-	      };
-	      return true;
-	    } else if (typeof self._originalContractObject[p] === 'function') {
-	      self[p] = function(_args) {
-	        var args = Array.prototype.slice.call(arguments);
-	        var fn = self._originalContractObject[p];
-	        var props = self.abi.find((x) => x.name == p);
-
-	        var promise = new Promise(function(resolve, reject) {
-	          args.push(function(err, transaction) {
-	            promise.tx = transaction;
-	            if (err) {
-	              return reject(err);
+	    if (this.abi) {
+	        for (i = 0; i < this.abi.length; i++) {
+	            abiElement = this.abi[i];
+	            if (abiElement.type === 'event') {
+	                this.eventList.push(abiElement.name);
 	            }
+	        }
+	    }
 
-	            var getConfirmation = function() {
-	              self.web3.eth.getTransactionReceipt(transaction, function(err, receipt) {
-	                if (err) {
-	                  return reject(err);
-	                }
+	    var messageEvents = function() {
+	        this.cb = function() {};
+	    };
 
-	                if (receipt !== null) {
-	                  return resolve(receipt);
-	                }
+	    messageEvents.prototype.then = function(cb) {
+	        this.cb = cb;
+	    };
 
-	                setTimeout(getConfirmation, 1000);
-	              });
+	    messageEvents.prototype.error = function(err) {
+	        return err;
+	    };
+
+	    this._originalContractObject = ContractClass.at(this.address);
+	    this._methods = Object.getOwnPropertyNames(this._originalContractObject).filter(function(p) {
+	        // TODO: check for forbidden properties
+	        if (self.eventList.indexOf(p) >= 0) {
+
+	            self[p] = function() {
+	                var promise = new messageEvents();
+	                var args = Array.prototype.slice.call(arguments);
+	                args.push(function(err, result) {
+	                    if (err) {
+	                        promise.error(err);
+	                    } else {
+	                        promise.cb(result);
+	                    }
+	                });
+
+	                self._originalContractObject[p].apply(self._originalContractObject[p], args);
+	                return promise;
 	            };
+	            return true;
+	        } else if (typeof self._originalContractObject[p] === 'function') {
+	            self[p] = function(_args) {
+	                var args = Array.prototype.slice.call(arguments);
+	                var fn = self._originalContractObject[p];
+	                var props = self.abi.find((x) => x.name == p);
 
-	            if (typeof(transaction) !== "string" || props.constant) {
-	              resolve(transaction);
-	            } else {
-	              getConfirmation();
-	            }
-	          });
+	                var promise = new Promise(function(resolve, reject) {
+	                    args.push(function(err, transaction) {
+	                        promise.tx = transaction;
+	                        if (err) {
+	                            return reject(err);
+	                        }
 
-	          fn.apply(fn, args);
-	        });
+	                        var getConfirmation = function() {
+	                            self.web3.eth.getTransactionReceipt(transaction, function(err, receipt) {
+	                                if (err) {
+	                                    return reject(err);
+	                                }
 
-	        return promise;
-	      };
-	      return true;
-	    }
-	    return false;
-	  });
+	                                if (receipt !== null) {
+	                                    return resolve(receipt);
+	                                }
+
+	                                setTimeout(getConfirmation, 1000);
+	                            });
+	                        };
+
+	                        if (typeof(transaction) !== "string" || props.constant) {
+	                            resolve(transaction);
+	                        } else {
+	                            getConfirmation();
+	                        }
+	                    });
+
+	                    fn.apply(fn, args);
+	                });
+
+	                return promise;
+	            };
+	            return true;
+	        }
+	        return false;
+	    });
 	};
 
 	EmbarkJS.Contract.prototype.deploy = function(args, _options) {
-	  var self = this;
-	  var contractParams;
-	  var options = _options || {};
+	    var self = this;
+	    var contractParams;
+	    var options = _options || {};
 
-	  contractParams = args || [];
+	    contractParams = args || [];
 
-	  contractParams.push({
-	    from: this.web3.eth.accounts[0],
-	    data: this.code,
-	    gas: options.gas || 800000
-	  });
-
-	  var contractObject = this.web3.eth.contract(this.abi);
-
-	  var promise = new Promise(function(resolve, reject) {
-	    contractParams.push(function(err, transaction) {
-	      if (err) {
-	        reject(err);
-	      } else if (transaction.address !== undefined) {
-	        resolve(new EmbarkJS.Contract({abi: self.abi, code: self.code, address: transaction.address}));
-	      }
+	    contractParams.push({
+	        from: this.web3.eth.accounts[0],
+	        data: this.code,
+	        gas: options.gas || 800000
 	    });
 
-	    // returns promise
-	    // deploys contract
-	    // wraps it around EmbarkJS.Contract
-	    contractObject["new"].apply(contractObject, contractParams);
-	  });
+	    var contractObject = this.web3.eth.contract(this.abi);
 
-	  
-	  return promise;
+	    var promise = new Promise(function(resolve, reject) {
+	        contractParams.push(function(err, transaction) {
+	            if (err) {
+	                reject(err);
+	            } else if (transaction.address !== undefined) {
+	                resolve(new EmbarkJS.Contract({
+	                    abi: self.abi,
+	                    code: self.code,
+	                    address: transaction.address
+	                }));
+	            }
+	        });
+
+	        // returns promise
+	        // deploys contract
+	        // wraps it around EmbarkJS.Contract
+	        contractObject["new"].apply(contractObject, contractParams);
+	    });
+
+
+	    return promise;
 	};
 
-	EmbarkJS.IPFS = 'ipfs';
+	EmbarkJS.Contract.prototype.new = EmbarkJS.Contract.prototype.deploy;
 
-	EmbarkJS.Storage = {
+	EmbarkJS.Contract.prototype.at = function(address) {
+	  return new EmbarkJS.Contract({ abi: this.abi, code: this.code, address: address });
 	};
 
-	EmbarkJS.Storage.setProvider = function(provider, options) {
-	  if (provider === 'ipfs') {
-	    this.currentStorage = EmbarkJS.Storage.IPFS;
-	    if (options === undefined) {
-	      this.ipfsConnection = IpfsApi('localhost', '5001');
-	    } else {
-	      this.ipfsConnection = IpfsApi(options.server, options.port);
-	    }
+	EmbarkJS.Contract.prototype.send = function(value, unit, _options) {
+	  var options, wei;
+	  if (typeof unit === 'object') {
+	    options = unit;
+	    wei = value;
 	  } else {
-	    throw Error('unknown provider');
+	    options = _options || {};
+	    wei = this.web3.toWei(value, unit);
 	  }
+
+	  options.to = this.address;
+	  options.value = wei;
+	  console.log(options);
+
+	  this.web3.eth.sendTransaction(options);
 	};
+
+	//=========================================================
+	// Embark Storage
+	//=========================================================
+
+	EmbarkJS.Storage = {};
+
+	EmbarkJS.Storage.Providers = {
+	    IPFS: 'ipfs',
+	    SWARM: 'swarm'
+	};
+
+	EmbarkJS.Storage.IPFS = {};
 
 	EmbarkJS.Storage.saveText = function(text) {
-	  var self = this;
-	  if (!this.ipfsConnection) {
-	    this.setProvider('ipfs');
-	  }
-	  var promise = new Promise(function(resolve, reject) {
-	    self.ipfsConnection.add((new self.ipfsConnection.Buffer(text)), function(err, result) {
-	      if (err) {
-	        reject(err);
-	      } else {
-	        resolve(result[0].path);
-	      }
-	    });
-	  });
-
-	  return promise;
-	};
-
-	EmbarkJS.Storage.uploadFile = function(inputSelector) {
-	  var self = this;
-	  var file = inputSelector[0].files[0];
-
-	  if (file === undefined) {
-	    throw new Error('no file found');
-	  }
-
-	  if (!this.ipfsConnection) {
-	    this.setProvider('ipfs');
-	  }
-
-	  var promise = new Promise(function(resolve, reject) {
-	    var reader = new FileReader();
-	    reader.onloadend = function() { 
-	      var fileContent = reader.result;
-	      var buffer = self.ipfsConnection.Buffer.from(fileContent);
-	      self.ipfsConnection.add(buffer, function(err, result) {
-	        if (err) {
-	          reject(err);
-	        } else {
-	          resolve(result[0].path);
-	        }
-	      });
-	    };
-	    reader.readAsArrayBuffer(file);
-	  });
-
-	  return promise;
+	    return this.currentStorage.saveText(text);
 	};
 
 	EmbarkJS.Storage.get = function(hash) {
-	  var self = this;
-	  // TODO: detect type, then convert if needed
-	  //var ipfsHash = web3.toAscii(hash);
-	  if (!this.ipfsConnection) {
-	    this.setProvider('ipfs');
-	  }
+	    return this.currentStorage.get(hash);
+	};
 
-	  var promise = new Promise(function(resolve, reject) {
-	    self.ipfsConnection.object.get([hash]).then(function(node) {
-	      resolve(node.data);
-	    });
-	  });
-
-	  return promise;
+	EmbarkJS.Storage.uploadFile = function(inputSelector) {
+	    return this.currentStorage.uploadFile(inputSelector);
 	};
 
 	EmbarkJS.Storage.getUrl = function(hash) {
-	  //var ipfsHash = web3.toAscii(hash);
-
-	  return 'http://localhost:8080/ipfs/' + hash;
+	    return this.currentStorage.getUrl(hash);
 	};
 
-	EmbarkJS.Messages = {
+	EmbarkJS.Storage.setProvider = function(provider, options) {
+	    var self = this;
+	    var promise = new Promise(function(resolve, reject) {
+	        if (provider.toLowerCase() === EmbarkJS.Storage.Providers.IPFS) {
+	            //I don't think currentStorage is used anywhere, this might not be needed
+	            //for now until additional storage providers are supported. But keeping it
+	            //anyways
+	            self.currentStorage = EmbarkJS.Storage.IPFS;
+
+	            try {
+	                if (options === undefined) {
+	                    self.ipfsConnection = IpfsApi('localhost', '5001');
+	                } else {
+	                    self.ipfsConnection = IpfsApi(options.server, options.port);
+	                }
+	                resolve(self);
+	            } catch (err) {
+	                self.ipfsConnection = null;
+	                reject(new Error('Failed to connect to IPFS'));
+	            }
+	        } else if (provider.toLowerCase() === EmbarkJS.Storage.SWARM) {
+	            reject('Swarm not implemented');
+	            // TODO Implement Swarm
+	            // this.currentStorage = EmbarkJS.Storage.SWARM;
+	            // if (options === undefined) {
+	            //     //Connect to default Swarm node
+	            // } else {
+	            //     //Connect using options
+	            // }
+	        } else {
+	            reject('Unknown storage provider');
+	        }
+	    });
+	    return promise;
 	};
+
+	EmbarkJS.Storage.IPFS.saveText = function(text) {
+	    var promise = new Promise(function(resolve, reject) {
+	        if (!EmbarkJS.Storage.ipfsConnection) {
+	            var connectionError = new Error('No IPFS connection. Please ensure to call Embark.Storage.setProvider()');
+	            reject(connectionError);
+	        }
+	        EmbarkJS.Storage.ipfsConnection.add((new EmbarkJS.Storage.ipfsConnection.Buffer(text)), function(err, result) {
+	            if (err) {
+	                reject(err);
+	            } else {
+	                resolve(result[0].path);
+	            }
+	        });
+	    });
+
+	    return promise;
+	};
+
+	EmbarkJS.Storage.IPFS.get = function(hash) {
+	    // TODO: detect type, then convert if needed
+	    //var ipfsHash = web3.toAscii(hash);
+	    var promise = new Promise(function(resolve, reject) {
+	        if (!EmbarkJS.Storage.ipfsConnection) {
+	            var connectionError = new Error('No IPFS connection. Please ensure to call Embark.Storage.setProvider()');
+	            reject(connectionError);
+	        }
+	        EmbarkJS.Storage.ipfsConnection.object.get([hash]).then(function(node) {
+	            resolve(node.data);
+	        }).catch(function(err) {
+	            reject(err);
+	        });
+	    });
+
+	    return promise;
+	};
+
+	EmbarkJS.Storage.IPFS.uploadFile = function(inputSelector) {
+	    var file = inputSelector[0].files[0];
+
+	    if (file === undefined) {
+	        throw new Error('no file found');
+	    }
+
+	    var promise = new Promise(function(resolve, reject) {
+	        if (!EmbarkJS.Storage.ipfsConnection) {
+	            var connectionError = new Error('No IPFS connection. Please ensure to call Embark.Storage.setProvider()');
+	            reject(connectionError);
+	        }
+	        var reader = new FileReader();
+	        reader.onloadend = function() {
+	            var fileContent = reader.result;
+	            var buffer = EmbarkJS.Storage.ipfsConnection.Buffer.from(fileContent);
+	            EmbarkJS.Storage.ipfsConnection.add(buffer, function(err, result) {
+	                if (err) {
+	                    reject(err);
+	                } else {
+	                    resolve(result[0].path);
+	                }
+	            });
+	        };
+	        reader.readAsArrayBuffer(file);
+	    });
+
+	    return promise;
+	};
+
+	EmbarkJS.Storage.IPFS.getUrl = function(hash) {
+	    //var ipfsHash = web3.toAscii(hash);
+
+	    return 'http://localhost:8080/ipfs/' + hash;
+	};
+
+	//=========================================================
+	// Embark Messaging
+	//=========================================================
+
+	EmbarkJS.Messages = {};
 
 	EmbarkJS.Messages.setProvider = function(provider, options) {
-	  var self = this;
-	  var ipfs;
-	  if (provider === 'whisper') {
-	    this.currentMessages = EmbarkJS.Messages.Whisper;
-	    if (typeof variable === 'undefined' && typeof(web3) === 'undefined') {
-	      if (options === undefined) {
-	        web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-	      } else {
-	        web3 = new Web3(new Web3.providers.HttpProvider("http://" + options.server + ':' + options.port));
-	      }
-	    }
-	    web3.version.getWhisper(function(err, res) {
-	      if (err) {
-	        console.log("whisper not available");
-	      } else {
-	        self.currentMessages.identity = web3.shh.newIdentity();
-	      }
-	    });
-	  } else if (provider === 'orbit') {
-	    this.currentMessages = EmbarkJS.Messages.Orbit;
-	    if (options === undefined) {
-	      ipfs = HaadIpfsApi('localhost', '5001');
+	    var self = this;
+	    var ipfs;
+	    if (provider === 'whisper') {
+	        this.currentMessages = EmbarkJS.Messages.Whisper;
+	        if (typeof variable === 'undefined') {
+	            if (options === undefined) {
+	                web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+	            } else {
+	                web3 = new Web3(new Web3.providers.HttpProvider("http://" + options.server + ':' + options.port));
+	            }
+	        }
+	        web3.version.getWhisper(function(err, res) {
+	            if (err) {
+	                console.log("whisper not available");
+	            } else {
+	                self.currentMessages.identity = web3.shh.newIdentity();
+	            }
+	        });
+	    } else if (provider === 'orbit') {
+	        this.currentMessages = EmbarkJS.Messages.Orbit;
+	        if (options === undefined) {
+	            ipfs = HaadIpfsApi('localhost', '5001');
+	        } else {
+	            ipfs = HaadIpfsApi(options.server, options.port);
+	        }
+	        this.currentMessages.orbit = new Orbit(ipfs);
+	        this.currentMessages.orbit.connect(web3.eth.accounts[0]);
 	    } else {
-	      ipfs = HaadIpfsApi(options.server, options.port);
+	        throw Error('Unknown message provider');
 	    }
-	    this.currentMessages.orbit = new Orbit(ipfs);
-	    this.currentMessages.orbit.connect(web3.eth.accounts[0]);
-	  } else {
-	    throw Error('unknown provider');
-	  }
 	};
 
 	EmbarkJS.Messages.sendMessage = function(options) {
-	  return this.currentMessages.sendMessage(options);
+	    return this.currentMessages.sendMessage(options);
 	};
 
 	EmbarkJS.Messages.listenTo = function(options) {
-	  return this.currentMessages.listenTo(options);
+	    return this.currentMessages.listenTo(options);
 	};
 
-	EmbarkJS.Messages.Whisper = {
-	};
+	EmbarkJS.Messages.Whisper = {};
 
 	EmbarkJS.Messages.Whisper.sendMessage = function(options) {
-	  var topics = options.topic || options.topics;
-	  var data = options.data || options.payload;
-	  var identity = options.identity || this.identity || web3.shh.newIdentity();
-	  var ttl = options.ttl || 100;
-	  var priority = options.priority || 1000;
-	  var _topics;
+	    var topics = options.topic || options.topics;
+	    var data = options.data || options.payload;
+	    var identity = options.identity || this.identity || web3.shh.newIdentity();
+	    var ttl = options.ttl || 100;
+	    var priority = options.priority || 1000;
+	    var _topics;
 
-	  if (topics === undefined) {
-	    throw new Error("missing option: topic");
-	  }
-
-	  if (data === undefined) {
-	    throw new Error("missing option: data");
-	  }
-
-	  // do fromAscii to each topics unless it's already a string
-	  if (typeof topics === 'string') {
-	    _topics = [web3.fromAscii(topics)];
-	  } else {
-	    // TODO: replace with es6 + babel;
-	    for (var i = 0; i < topics.length; i++) {
-	      _topics.push(web3.fromAscii(topics[i]));
+	    if (topics === undefined) {
+	        throw new Error("missing option: topic");
 	    }
-	  }
-	  topics = _topics;
 
-	  var payload = JSON.stringify(data);
+	    if (data === undefined) {
+	        throw new Error("missing option: data");
+	    }
 
-	  var message = {
-	    from: identity,
-	    topics: topics,
-	    payload: web3.fromAscii(payload),
-	    ttl: ttl,
-	    priority: priority
-	  };
+	    // do fromAscii to each topics unless it's already a string
+	    if (typeof topics === 'string') {
+	        _topics = [web3.fromAscii(topics)];
+	    } else {
+	        // TODO: replace with es6 + babel;
+	        for (var i = 0; i < topics.length; i++) {
+	            _topics.push(web3.fromAscii(topics[i]));
+	        }
+	    }
+	    topics = _topics;
 
-	  return web3.shh.post(message, function() {});
+	    var payload = JSON.stringify(data);
+
+	    var message = {
+	        from: identity,
+	        topics: topics,
+	        payload: web3.fromAscii(payload),
+	        ttl: ttl,
+	        priority: priority
+	    };
+
+	    return web3.shh.post(message, function() {});
 	};
 
 	EmbarkJS.Messages.Whisper.listenTo = function(options) {
-	  var topics = options.topic || options.topics;
-	  var _topics = [];
+	    var topics = options.topic || options.topics;
+	    var _topics = [];
 
-	  if (typeof topics === 'string') {
-	    _topics = [topics];
-	  } else {
-	    // TODO: replace with es6 + babel;
-	    for (var i = 0; i < topics.length; i++) {
-	      _topics.push(topics[i]);
-	    }
-	  }
-	  topics = _topics;
-
-	  var filterOptions = {
-	    topics: topics
-	  };
-
-	  var messageEvents = function() {
-	    this.cb = function() {};
-	  };
-
-	  messageEvents.prototype.then = function(cb) {
-	    this.cb = cb;
-	  };
-
-	  messageEvents.prototype.error = function(err) {
-	    return err;
-	  };
-
-	  messageEvents.prototype.stop = function() {
-	    this.filter.stopWatching();
-	  };
-
-	  var promise = new messageEvents();
-
-	  var filter = web3.shh.filter(filterOptions, function(err, result) {
-	    var payload = JSON.parse(web3.toAscii(result.payload));
-	    var data;
-	    if (err) {
-	      promise.error(err);
+	    if (typeof topics === 'string') {
+	        _topics = [topics];
 	    } else {
-	      data = {
-	        topic: topics,
-	        data: payload,
-	        from: result.from,
-	        time: (new Date(result.sent * 1000))
-	      };
-	      promise.cb(payload, data, result);
+	        // TODO: replace with es6 + babel;
+	        for (var i = 0; i < topics.length; i++) {
+	            _topics.push(topics[i]);
+	        }
 	    }
-	  });
+	    topics = _topics;
 
-	  promise.filter = filter;
+	    var filterOptions = {
+	        topics: topics
+	    };
 
-	  return promise;
+	    var messageEvents = function() {
+	        this.cb = function() {};
+	    };
+
+	    messageEvents.prototype.then = function(cb) {
+	        this.cb = cb;
+	    };
+
+	    messageEvents.prototype.error = function(err) {
+	        return err;
+	    };
+
+	    messageEvents.prototype.stop = function() {
+	        this.filter.stopWatching();
+	    };
+
+	    var promise = new messageEvents();
+
+	    var filter = web3.shh.filter(filterOptions, function(err, result) {
+	        var payload = JSON.parse(web3.toAscii(result.payload));
+	        var data;
+	        if (err) {
+	            promise.error(err);
+	        } else {
+	            data = {
+	                topic: topics,
+	                data: payload,
+	                from: result.from,
+	                time: (new Date(result.sent * 1000))
+	            };
+	            promise.cb(payload, data, result);
+	        }
+	    });
+
+	    promise.filter = filter;
+
+	    return promise;
 	};
 
-	EmbarkJS.Messages.Orbit = {
-	};
+	EmbarkJS.Messages.Orbit = {};
 
 	EmbarkJS.Messages.Orbit.sendMessage = function(options) {
-	  var topics = options.topic || options.topics;
-	  var data = options.data || options.payload;
+	    var topics = options.topic || options.topics;
+	    var data = options.data || options.payload;
 
-	  if (topics === undefined) {
-	    throw new Error("missing option: topic");
-	  }
+	    if (topics === undefined) {
+	        throw new Error("missing option: topic");
+	    }
 
-	  if (data === undefined) {
-	    throw new Error("missing option: data");
-	  }
+	    if (data === undefined) {
+	        throw new Error("missing option: data");
+	    }
 
-	  if (typeof topics === 'string') {
-	    topics = topics;
-	  } else {
-	    // TODO: better to just send to different channels instead
-	    topics = topics.join(',');
-	  }
+	    if (typeof topics === 'string') {
+	        topics = topics;
+	    } else {
+	        // TODO: better to just send to different channels instead
+	        topics = topics.join(',');
+	    }
 
-	  this.orbit.join(topics);
+	    this.orbit.join(topics);
 
-	  var payload = JSON.stringify(data);
+	    var payload = JSON.stringify(data);
 
-	  this.orbit.send(topics, data);
+	    this.orbit.send(topics, data);
 	};
 
 	EmbarkJS.Messages.Orbit.listenTo = function(options) {
-	  var self = this;
-	  var topics = options.topic || options.topics;
+	    var self = this;
+	    var topics = options.topic || options.topics;
 
-	  if (typeof topics === 'string') {
-	    topics = topics;
-	  } else {
-	    topics = topics.join(',');
-	  }
+	    if (typeof topics === 'string') {
+	        topics = topics;
+	    } else {
+	        topics = topics.join(',');
+	    }
 
-	  this.orbit.join(topics);
+	    this.orbit.join(topics);
 
-	  var messageEvents = function() {
-	    this.cb = function() {};
-	  };
+	    var messageEvents = function() {
+	        this.cb = function() {};
+	    };
 
-	  messageEvents.prototype.then = function(cb) {
-	    this.cb = cb;
-	  };
+	    messageEvents.prototype.then = function(cb) {
+	        this.cb = cb;
+	    };
 
-	  messageEvents.prototype.error = function(err) {
-	    return err;
-	  };
+	    messageEvents.prototype.error = function(err) {
+	        return err;
+	    };
 
-	  var promise = new messageEvents();
+	    var promise = new messageEvents();
 
-	  this.orbit.events.on('message', (channel, message) => {
-	    // TODO: looks like sometimes it's receving messages from all topics
-	    if (topics !== channel) return;
-	    self.orbit.getPost(message.payload.value, true).then((post) => {
-	      var data = {
-	        topic: channel,
-	        data: post.content,
-	        from: post.meta.from.name,
-	        time: (new Date(post.meta.ts))
-	      };
-	      promise.cb(post.content, data, post);
+	    this.orbit.events.on('message', (channel, message) => {
+	        // TODO: looks like sometimes it's receving messages from all topics
+	        if (topics !== channel) return;
+	        self.orbit.getPost(message.payload.value, true).then((post) => {
+	            var data = {
+	                topic: channel,
+	                data: post.content,
+	                from: post.meta.from.name,
+	                time: (new Date(post.meta.ts))
+	            };
+	            promise.cb(post.content, data, post);
+	        });
 	    });
-	  });
 
-	  return promise;
+	    return promise;
 	};
 
 	module.exports = EmbarkJS;
@@ -78445,62 +78523,17 @@ var EmbarkJS =
 /***/ }
 /******/ ]);
 
-var whenEnvIsLoaded = function(cb) {
-  if (typeof window !== 'undefined' && window !== null) {
-      window.addEventListener('load', cb);
-  } else {
-    cb();
-  }
-}
-whenEnvIsLoaded(function() {
 if (typeof web3 !== 'undefined' && typeof Web3 !== 'undefined') {
 	web3 = new Web3(web3.currentProvider);
 } else if (typeof Web3 !== 'undefined') {
 	web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 }
 web3.eth.defaultAccount = web3.eth.accounts[0];
-})
 
-var whenEnvIsLoaded = function(cb) {
-  if (typeof window !== 'undefined' && window !== null) {
-      window.addEventListener('load', cb);
-  } else {
-    cb();
-  }
-}
-whenEnvIsLoaded(function() {
-SoupCoin = new EmbarkJS.Contract({abi: [{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"WeekDay","type":"uint256"}],"name":"EndOfDay","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"isAdmin","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"sender","type":"address"}],"name":"getRole","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"minimumBalanceInFinney","type":"uint256"}],"name":"SetMinBalance","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"standard","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"balanceOf","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"target","type":"address"}],"name":"RemoveAdmin","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"sender","type":"address"},{"name":"WeekDays","type":"uint256[]"}],"name":"ReservSoupForDay","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"WeekDay","type":"uint256"}],"name":"CountSoupForDay","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"},{"name":"","type":"uint256"}],"name":"orders","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"target","type":"address"}],"name":"MakeAdmin","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"target","type":"address"},{"name":"Amount","type":"uint256"}],"name":"CreateAndTransfer","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"type":"function"},{"inputs":[{"name":"tokenName","type":"string"},{"name":"tokenSymbol","type":"string"}],"payable":false,"type":"constructor"}], address: '0x0cfc1fb0722b5f5c072ceb30af5da56af02a4a09', code: '60a0604052600d60608190527f536f7570436f696e2056302e310000000000000000000000000000000000000060809081526001805460008290527f536f7570436f696e2056302e310000000000000000000000000000000000001a825590927fb10e2d527612073b26eecdfd717e6a320cf44b4afac2b0732d9fcbe2b7fa0cf66020600284871615610100026000190190941693909304601f0192909204820192909190620000da565b82800160010185558215620000da579182015b82811115620000da578251825591602001919060010190620000bd565b5b50620000fe9291505b80821115620000fa5760008155600101620000e4565b5090565b50506611c37937e0800060055534620000005760405162000f1b38038062000f1b833981016040528051602082015190820191015b5b60008054600160a060020a03191633600160a060020a03161790555b8160029080519060200190828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f106200019e57805160ff1916838001178555620001ce565b82800160010185558215620001ce579182015b82811115620001ce578251825591602001919060010190620001b1565b5b50620001f29291505b80821115620000fa5760008155600101620000e4565b5090565b50508060039080519060200190828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f106200024257805160ff191683800117855562000272565b8280016001018555821562000272579182015b828111156200027257825182559160200191906001019062000255565b5b50620002969291505b80821115620000fa5760008155600101620000e4565b5090565b50505b5050620002e5565b60005433600160a060020a03908116911614620002be5762000000565b60008054600160a060020a03168152600860205260409020805460ff191660011790555b5b565b610c2680620002f56000396000f300606060405236156100d55763ffffffff60e060020a60003504166306fdde0381146100da57806318160ddd146101675780631df962381461018657806324d7806c146101aa57806344276733146101d7578063515c2cf2146102045780635a3b7e421461021657806370a08231146102a3578063753f40ca146102ce578063816c7415146102fb5780638da5cb5b1461035457806395d89b411461037d578063a9510a621461040a578063b94a000f1461042c578063bf0f2d701461045b578063e496012614610488578063f2fde38b146104a6575b610000565b34610000576100e76104c1565b60408051602080825283518183015283519192839290830191850190808383821561012d575b80518252602083111561012d57601f19909201916020918201910161010d565b505050905090810190601f1680156101595780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b346100005761017461054c565b60408051918252519081900360200190f35b3461000057610196600435610552565b604080519115158252519081900360200190f35b3461000057610196600160a060020a036004351661069c565b604080519115158252519081900360200190f35b3461000057610196600160a060020a03600435166106b1565b604080519115158252519081900360200190f35b34610000576102146004356106d3565b005b34610000576100e7610700565b60408051602080825283518183015283519192839290830191850190808383821561012d575b80518252602083111561012d57601f19909201916020918201910161010d565b505050905090810190601f1680156101595780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b3461000057610174600160a060020a036004351661078d565b60408051918252519081900360200190f35b3461000057610196600160a060020a036004351661079f565b604080519115158252519081900360200190f35b346100005760408051602480356004818101356020818102868101820190975281865261021496600160a060020a038435169693956044950192918291908501908490808284375094965061081995505050505050565b005b3461000057610361610946565b60408051600160a060020a039092168252519081900360200190f35b34610000576100e7610955565b60408051602080825283518183015283519192839290830191850190808383821561012d575b80518252602083111561012d57601f19909201916020918201910161010d565b505050905090810190601f1680156101595780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b34610000576101746004356109e3565b60408051918252519081900360200190f35b34610000576103616004356024356109f8565b60408051600160a060020a039092168252519081900360200190f35b3461000057610196600160a060020a0360043516610a37565b604080519115158252519081900360200190f35b3461000057610214600160a060020a0360043516602435610a8b565b005b3461000057610214600160a060020a0360043516610b70565b005b6002805460408051602060018416156101000260001901909316849004601f810184900484028201840190925281815292918301828280156105445780601f1061051957610100808354040283529160200191610544565b820191906000526020600020905b81548152906001019060200180831161052757829003601f168201915b505050505081565b60045481565b600080805b600084815260076020526040902054821015610632576001600660006007600088815260200190815260200160002085815481101561000057906000526020600020900160005b9054906101000a9004600160a060020a0316600160a060020a0316600160a060020a031681526020019081526020016000205403600660006007600088815260200190815260200160002085815481101561000057906000526020600020900160005b9054600160a060020a036101009290920a90041681526020810191909152604001600020555b600190910190610557565b5060005b6000848152600760205260409020548110156106905760008481526007602052604090208054829081101561000057906000526020600020900160005b6101000a815490600160a060020a0302191690555b600101610636565b600192505b5050919050565b60086020526000908152604090205460ff1681565b600160a060020a03811660009081526008602052604090205460ff165b919050565b60005433600160a060020a039081169116146106ee57610000565b66038d7ea4c6800081026005555b5b50565b60018054604080516020600284861615610100026000190190941693909304601f810184900484028201840190925281815292918301828280156105445780601f1061051957610100808354040283529160200191610544565b820191906000526020600020905b81548152906001019060200180831161052757829003601f168201915b505050505081565b60066020526000908152604090205481565b600160a060020a03331660009081526008602052604081205460ff1615156107c657610000565b600160a060020a03821660009081526008602052604090205460ff1615156001146107f057610000565b50600160a060020a0381166000908152600860205260409020805460ff1916905560015b919050565b600080805b835182101561084c57838281518110156100005790602001906020020151830192505b60019091019061081e565b600160a060020a0385166000908152600660205260409020548390101561087257610000565b5060005b835181101561093e5783818151811015610000579060200190602002015160011415610935576007600085838151811015610000579060200190602002015181526020019081526020016000208054806001018281815481835581811511610903576000838152602090206109039181019083015b808211156108ff57600081556001016108eb565b5090565b5b505050916000526020600020900160005b8154600160a060020a03808a166101009390930a92830292021916179055505b5b600101610876565b5b5050505050565b600054600160a060020a031681565b6003805460408051602060026001851615610100026000190190941693909304601f810184900484028201840190925281815292918301828280156105445780601f1061051957610100808354040283529160200191610544565b820191906000526020600020905b81548152906001019060200180831161052757829003601f168201915b505050505081565b6000818152600760205260409020545b919050565b600760205281600052604060002081815481101561000057906000526020600020900160005b915091509054906101000a9004600160a060020a031681565b600160a060020a03331660009081526008602052604081205460ff161515610a5e57610000565b50600160a060020a0381166000908152600860205260409020805460ff191660019081179091555b919050565b600160a060020a03331660009081526008602052604090205460ff161515610ab257610000565b600160a060020a0382161515610ac757610000565b600160a060020a0382166000908152600660209081526040808320805485019055600890915290205460ff161515610b1a57600160a060020a0382166000908152600860205260409020805460ff191690555b60055482600160a060020a0316311015610b6257600554604051600160a060020a038416918231900380156108fc02916000818181858888f1935050505015610b6257610000565b5b60048054820190555b5050565b60005433600160a060020a03908116911614610b8b57610000565b6000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a0383161790555b5b50565b60005433600160a060020a03908116911614610bd357610000565b60008054600160a060020a03168152600860205260409020805460ff191660011790555b5b5600a165627a7a723058201f8034e91abf600eff7a4e2490a99aca4baeddb0efebe963ce68d4f10a0771690029', gasEstimates: {"creation":[null,622000],"external":{"CountSoupForDay(uint256)":584,"CreateAndTransfer(address,uint256)":null,"EndOfDay(uint256)":null,"MakeAdmin(address)":20921,"RemoveAdmin(address)":20966,"ReservSoupForDay(address,uint256[])":null,"SetMinBalance(uint256)":20394,"balanceOf(address)":503,"getRole(address)":493,"isAdmin(address)":427,"name()":null,"orders(uint256,uint256)":852,"owner()":535,"standard()":null,"symbol()":null,"totalSupply()":264,"transferOwnership(address)":20766},"internal":{"MakeOwnerAdmin()":20361}}});
-});
-var whenEnvIsLoaded = function(cb) {
-  if (typeof window !== 'undefined' && window !== null) {
-      window.addEventListener('load', cb);
-  } else {
-    cb();
-  }
-}
-whenEnvIsLoaded(function() {
-SimpleStorage = new EmbarkJS.Contract({abi: [{"constant":true,"inputs":[],"name":"storedData","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"x","type":"uint256"}],"name":"set","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"get","outputs":[{"name":"retVal","type":"uint256"}],"payable":false,"type":"function"},{"inputs":[{"name":"initialValue","type":"uint256"}],"payable":false,"type":"constructor"}], address: '0x71aab2d6199414ab985ebfd6c6bc008a93c314c1', code: '606060405234610000576040516020806100f083398101604052515b60008190555b505b60bf806100316000396000f300606060405263ffffffff60e060020a6000350416632a1afcd98114603657806360fe47b11460525780636d4ce63c146061575b6000565b346000576040607d565b60408051918252519081900360200190f35b34600057605f6004356083565b005b346000576040608c565b60408051918252519081900360200190f35b60005481565b60008190555b50565b6000545b905600a165627a7a72305820ef9dce0841e008796fa8eabd48fe1dda49347244408bffc4f9aaca7f012d6a5b0029', gasEstimates: {"creation":[20131,38200],"external":{"get()":269,"set(uint256)":20163,"storedData()":224},"internal":{}}});
-});
-var whenEnvIsLoaded = function(cb) {
-  if (typeof window !== 'undefined' && window !== null) {
-      window.addEventListener('load', cb);
-  } else {
-    cb();
-  }
-}
-whenEnvIsLoaded(function() {
-Storage = new EmbarkJS.Contract({abi: [{"constant":false,"inputs":[{"name":"record","type":"bytes32"},{"name":"value","type":"uint256"}],"name":"setUIntValue","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"record","type":"bytes32"}],"name":"getUIntValue","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"}], address: '0x69b8cd16f003b814c7e4abfbc90ed568c2dd5f11', code: '606060405234610000575b60b4806100186000396000f300606060405263ffffffff60e060020a6000350416633562fd208114602c578063bdc963d814603e575b6000565b34600057603c600435602435605d565b005b34600057604b6004356073565b60408051918252519081900360200190f35b60008281526020819052604090208190555b5050565b6000818152602081905260409020545b9190505600a165627a7a723058205fce5c51a332914a5f6b65e4bc264ff1470cdf353b8cafc9d0410a8a5128f8d40029', gasEstimates: {"creation":[79,36000],"external":{"getUIntValue(bytes32)":327,"setUIntValue(bytes32,uint256)":20218},"internal":{}}});
-});
-var whenEnvIsLoaded = function(cb) {
-  if (typeof window !== 'undefined' && window !== null) {
-      window.addEventListener('load', cb);
-  } else {
-    cb();
-  }
-}
-whenEnvIsLoaded(function() {
-owned = new EmbarkJS.Contract({abi: [{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"type":"function"},{"inputs":[],"payable":false,"type":"constructor"}], address: '0x3ab3479c2697eb73a7201805b99ebd940b3a23be', code: '606060405234610000575b60008054600160a060020a03191633600160a060020a03161790555b5b60eb806100356000396000f300606060405263ffffffff60e060020a6000350416638da5cb5b8114602c578063f2fde38b146052575b6000565b346000576036606a565b60408051600160a060020a039092168252519081900360200190f35b346000576068600160a060020a03600435166079565b005b600054600160a060020a031681565b60005433600160a060020a039081169116146092576000565b6000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a0383161790555b5b505600a165627a7a72305820dd57e8094cdf1fa573df6480b2856941ce056d7e4f2db571ad8b720cde320a7b0029', gasEstimates: {"creation":[20230,47000],"external":{"owner()":297,"transferOwnership(address)":20418},"internal":{}}});
-});
+SoupContract = new EmbarkJS.Contract({abi: [{"constant":false,"inputs":[{"name":"admin","type":"address"}],"name":"removeAdmin","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"isAdmin","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"soupToken","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"admin","type":"address"}],"name":"addAdmin","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"GetTotalAmount","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"target","type":"address"},{"name":"mintedAmount","type":"uint256"}],"name":"CreateAndTransfer","outputs":[],"payable":true,"type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"type":"function"},{"inputs":[{"name":"name","type":"string"},{"name":"jaak","type":"string"}],"payable":true,"type":"constructor"}], address: '0xf986679ed2c64f3b5c4afb21f9d87dc160dba512', code: '6060604052604051611489380380611489833981016040528051602082015190820191015b5b60008054600160a060020a03191633600160a060020a031690811782558152600160208190526040909120805460ff191690911790555b8181610066610196565b604080825283519082015282518190602080830191606084019187019080838382156100ad575b8051825260208311156100ad57601f19909201916020918201910161008d565b505050905090810190601f1680156100d95780820380516001836020036101000a031916815260200191505b5083810382528451815284516020918201918601908083838215610118575b80518252602083111561011857601f1990920191602091820191016100f8565b505050905090810190601f1680156101445780820380516001836020036101000a031916815260200191505b50945050505050604051809103906000f080151561015e57fe5b60028054600160a060020a0319908116600160a060020a039384161790915560038054909116339092169190911790555b50506101a6565b604051610e578061063283390190565b61047d806101b56000396000f3006060604052361561008b5763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416631785f53c811461008d57806324d7806c146100ab57806368e06023146100db57806370480275146101075780638da5cb5b14610125578063c7fbd74114610151578063e496012614610173578063f2fde38b1461018c575bfe5b341561009557fe5b6100a9600160a060020a03600435166101aa565b005b34156100b357fe5b6100c7600160a060020a036004351661022d565b604080519115158252519081900360200190f35b34156100e357fe5b6100eb610242565b60408051600160a060020a039092168252519081900360200190f35b341561010f57fe5b6100a9600160a060020a0360043516610251565b005b341561012d57fe5b6100eb6102be565b60408051600160a060020a039092168252519081900360200190f35b341561015957fe5b6101616102cd565b60408051918252519081900360200190f35b6100a9600160a060020a0360043516602435610345565b005b341561019457fe5b6100a9600160a060020a0360043516610408565b005b60005433600160a060020a0390811691161415806101e15750600160a060020a03331660009081526001602052604090205460ff16155b156101ec5760006000fd5b600054600160a060020a03828116911614156102085760006000fd5b600160a060020a0381166000908152600160205260409020805460ff191690555b5b50565b60016020526000908152604090205460ff1681565b600254600160a060020a031681565b60005433600160a060020a0390811691161415806102885750600160a060020a03331660009081526001602052604090205460ff16155b156102935760006000fd5b600160a060020a0381166000908152600160208190526040909120805460ff191690911790555b5b50565b600354600160a060020a031681565b600254604080516000602091820181905282517f18160ddd00000000000000000000000000000000000000000000000000000000815292519093600160a060020a0316926318160ddd92600480830193919282900301818787803b151561033057fe5b6102c65a03f1151561033e57fe5b5050505b90565b60005433600160a060020a03908116911614158061037c5750600160a060020a03331660009081526001602052604090205460ff16155b156103875760006000fd5b600254604080517f79c65068000000000000000000000000000000000000000000000000000000008152600160a060020a03858116600483015260248201859052915191909216916379c6506891604480830192600092919082900301818387803b15156103f157fe5b6102c65a03f115156103ff57fe5b5050505b5b5050565b60005433600160a060020a039081169116146104245760006000fd5b6000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a0383161790555b5b505600a165627a7a72305820fd11ab4a0d9bbc1679d183fd6874d06cb11a12866dcd0b81b048bae9072cfc86002960a0604052600d60608190527f536f7570546f6b656e20302e3100000000000000000000000000000000000000608090815261003e91600291906100ed565b506611c37937e08000600755604051610e57380380610e57833981016040528051602082015190820191015b5b60008054600160a060020a03191633600160a060020a031690811782558152600160208190526040909120805460ff191690911790555b60068054600160a060020a03191633600160a060020a031617905581516100d09060039060208501906100ed565b5080516100e49060049060208401906100ed565b505b505061018d565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061012e57805160ff191683800117855561015b565b8280016001018555821561015b579182015b8281111561015b578251825591602001919060010190610140565b5b5061016892915061016c565b5090565b61018a91905b808211156101685760008155600101610172565b5090565b90565b610cbb8061019c6000396000f300606060405236156100f95763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166306fdde0381146100fb5780631785f53c1461018b57806318160ddd146101a957806323b872dd146101cb57806324d7806c146102045780633c7e20f51461023457806342966c68146102605780635a3b7e4214610287578063704802751461031757806370a082311461033557806379c650681461036357806379cc67901461037c5780638da5cb5b146103af57806395d89b41146103db578063a9059cbb1461046b578063c91d956c14610484578063dd62ed3e14610499578063f2fde38b146104cd575bfe5b341561010357fe5b61010b6104eb565b604080516020808252835181830152835191928392908301918501908083838215610151575b80518252602083111561015157601f199092019160209182019101610131565b505050905090810190601f16801561017d5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b341561019357fe5b6101a7600160a060020a0360043516610579565b005b34156101b157fe5b6101b96105fc565b60408051918252519081900360200190f35b34156101d357fe5b6101f0600160a060020a0360043581169060243516604435610602565b604080519115158252519081900360200190f35b341561020c57fe5b6101f0600160a060020a0360043516610717565b604080519115158252519081900360200190f35b341561023c57fe5b61024461072c565b60408051600160a060020a039092168252519081900360200190f35b341561026857fe5b6101f060043561073b565b604080519115158252519081900360200190f35b341561028f57fe5b61010b6107c8565b604080516020808252835181830152835191928392908301918501908083838215610151575b80518252602083111561015157601f199092019160209182019101610131565b505050905090810190601f16801561017d5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b341561031f57fe5b6101a7600160a060020a0360043516610853565b005b341561033d57fe5b6101b9600160a060020a03600435166108c0565b60408051918252519081900360200190f35b6101a7600160a060020a03600435166024356108d2565b005b341561038457fe5b6101f0600160a060020a03600435166024356109bd565b604080519115158252519081900360200190f35b34156103b757fe5b610244610a7f565b60408051600160a060020a039092168252519081900360200190f35b34156103e357fe5b61010b610a8e565b604080516020808252835181830152835191928392908301918501908083838215610151575b80518252602083111561015157601f199092019160209182019101610131565b505050905090810190601f16801561017d5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b6101a7600160a060020a0360043516602435610b1c565b005b341561048c57fe5b6101a7600435610bdb565b005b34156104a157fe5b6101b9600160a060020a0360043581169060243516610c09565b60408051918252519081900360200190f35b34156104d557fe5b6101a7600160a060020a0360043516610c26565b005b6003805460408051602060026001851615610100026000190190941693909304601f810184900484028201840190925281815292918301828280156105715780601f1061054657610100808354040283529160200191610571565b820191906000526020600020905b81548152906001019060200180831161055457829003601f168201915b505050505081565b60005433600160a060020a0390811691161415806105b05750600160a060020a03331660009081526001602052604090205460ff16155b156105bb5760006000fd5b600054600160a060020a03828116911614156105d75760006000fd5b600160a060020a0381166000908152600160205260409020805460ff191690555b5b50565b60055481565b6000600160a060020a038316151561061a5760006000fd5b600160a060020a038416600090815260086020526040902054829010156106415760006000fd5b600160a060020a03831660009081526008602052604090205482810110156106695760006000fd5b600160a060020a038085166000908152600960209081526040808320339094168352929052205482111561069d5760006000fd5b600160a060020a0380851660008181526008602090815260408083208054889003905587851680845281842080548901905584845260098352818420339096168452948252918290208054879003905581518681529151600080516020610c708339815191529281900390910190a35060015b9392505050565b60016020526000908152604090205460ff1681565b600654600160a060020a031681565b600160a060020a033316600090815260086020526040812054829010156107625760006000fd5b600160a060020a03331660008181526008602090815260409182902080548690039055600580548690039055815185815291517fcc16f5dbb4873280815c1ee09dbd06736cffcc184412cf7a71a0fdb75d397ca59281900390910190a25060015b919050565b6002805460408051602060018416156101000260001901909316849004601f810184900484028201840190925281815292918301828280156105715780601f1061054657610100808354040283529160200191610571565b820191906000526020600020905b81548152906001019060200180831161055457829003601f168201915b505050505081565b60005433600160a060020a03908116911614158061088a5750600160a060020a03331660009081526001602052604090205460ff16155b156108955760006000fd5b600160a060020a0381166000908152600160208190526040909120805460ff191690911790555b5b50565b60086020526000908152604090205481565b60005433600160a060020a039081169116146108ee5760006000fd5b600160a060020a038216600081815260086020526040902080548301905560058054830190556007549031101561095157600754604051600160a060020a038416918231900380156108fc02916000818181858888f19350505050151561095157fe5b5b60008054604080518481529051600160a060020a039092169291600080516020610c708339815191529181900360200190a3600054604080518381529051600160a060020a03808616931691600080516020610c70833981519152919081900360200190a35b5b5050565b600160a060020a038216600090815260086020526040812054829010156109e45760006000fd5b600160a060020a0380841660009081526009602090815260408083203390941683529290522054821115610a185760006000fd5b600160a060020a03831660008181526008602090815260409182902080548690039055600580548690039055815185815291517fcc16f5dbb4873280815c1ee09dbd06736cffcc184412cf7a71a0fdb75d397ca59281900390910190a25060015b92915050565b600054600160a060020a031681565b6004805460408051602060026001851615610100026000190190941693909304601f810184900484028201840190925281815292918301828280156105715780601f1061054657610100808354040283529160200191610571565b820191906000526020600020905b81548152906001019060200180831161055457829003601f168201915b505050505081565b600160a060020a0382161515610b325760006000fd5b600160a060020a03331660009081526008602052604090205481901015610b595760006000fd5b600160a060020a0382166000908152600860205260409020548181011015610b815760006000fd5b600160a060020a0333811660008181526008602090815260408083208054879003905593861680835291849020805486019055835185815293519193600080516020610c70833981519152929081900390910190a35b5050565b60005433600160a060020a03908116911614610bf75760006000fd5b66038d7ea4c6800081026007555b5b50565b600960209081526000928352604080842090915290825290205481565b60005433600160a060020a03908116911614610c425760006000fd5b6000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a0383161790555b5b505600ddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3efa165627a7a72305820b50c4d29db385900b025a88e4a002c6d01b6e7b556eeae8a0a4c13d16758c0e50029', gasEstimates: {"creation":[null,229800],"external":{"CreateAndTransfer(address,uint256)":null,"GetTotalAmount()":null,"addAdmin(address)":21342,"isAdmin(address)":554,"owner()":614,"removeAdmin(address)":21568,"soupToken()":570,"transferOwnership(address)":20969},"internal":{}}});
+SoupToken = new EmbarkJS.Contract({abi: [{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"admin","type":"address"}],"name":"removeAdmin","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"isAdmin","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"eigenaar","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_value","type":"uint256"}],"name":"burn","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"standard","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"admin","type":"address"}],"name":"addAdmin","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"balanceOf","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"target","type":"address"},{"name":"mintedAmount","type":"uint256"}],"name":"mintToken","outputs":[],"payable":true,"type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_value","type":"uint256"}],"name":"burnFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transfer","outputs":[],"payable":true,"type":"function"},{"constant":false,"inputs":[{"name":"minimumBalanceInFinney","type":"uint256"}],"name":"setMinBalance","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"},{"name":"","type":"address"}],"name":"allowance","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"type":"function"},{"inputs":[{"name":"tokenName","type":"string"},{"name":"tokenSymbol","type":"string"}],"payable":true,"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Burn","type":"event"}], address: '0xecf80489cc0495b5f8eda37b1bcc1796b1b801db', code: '60a0604052600d60608190527f536f7570546f6b656e20302e3100000000000000000000000000000000000000608090815261003e91600291906100ed565b506611c37937e08000600755604051610e57380380610e57833981016040528051602082015190820191015b5b60008054600160a060020a03191633600160a060020a031690811782558152600160208190526040909120805460ff191690911790555b60068054600160a060020a03191633600160a060020a031617905581516100d09060039060208501906100ed565b5080516100e49060049060208401906100ed565b505b505061018d565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061012e57805160ff191683800117855561015b565b8280016001018555821561015b579182015b8281111561015b578251825591602001919060010190610140565b5b5061016892915061016c565b5090565b61018a91905b808211156101685760008155600101610172565b5090565b90565b610cbb8061019c6000396000f300606060405236156100f95763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166306fdde0381146100fb5780631785f53c1461018b57806318160ddd146101a957806323b872dd146101cb57806324d7806c146102045780633c7e20f51461023457806342966c68146102605780635a3b7e4214610287578063704802751461031757806370a082311461033557806379c650681461036357806379cc67901461037c5780638da5cb5b146103af57806395d89b41146103db578063a9059cbb1461046b578063c91d956c14610484578063dd62ed3e14610499578063f2fde38b146104cd575bfe5b341561010357fe5b61010b6104eb565b604080516020808252835181830152835191928392908301918501908083838215610151575b80518252602083111561015157601f199092019160209182019101610131565b505050905090810190601f16801561017d5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b341561019357fe5b6101a7600160a060020a0360043516610579565b005b34156101b157fe5b6101b96105fc565b60408051918252519081900360200190f35b34156101d357fe5b6101f0600160a060020a0360043581169060243516604435610602565b604080519115158252519081900360200190f35b341561020c57fe5b6101f0600160a060020a0360043516610717565b604080519115158252519081900360200190f35b341561023c57fe5b61024461072c565b60408051600160a060020a039092168252519081900360200190f35b341561026857fe5b6101f060043561073b565b604080519115158252519081900360200190f35b341561028f57fe5b61010b6107c8565b604080516020808252835181830152835191928392908301918501908083838215610151575b80518252602083111561015157601f199092019160209182019101610131565b505050905090810190601f16801561017d5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b341561031f57fe5b6101a7600160a060020a0360043516610853565b005b341561033d57fe5b6101b9600160a060020a03600435166108c0565b60408051918252519081900360200190f35b6101a7600160a060020a03600435166024356108d2565b005b341561038457fe5b6101f0600160a060020a03600435166024356109bd565b604080519115158252519081900360200190f35b34156103b757fe5b610244610a7f565b60408051600160a060020a039092168252519081900360200190f35b34156103e357fe5b61010b610a8e565b604080516020808252835181830152835191928392908301918501908083838215610151575b80518252602083111561015157601f199092019160209182019101610131565b505050905090810190601f16801561017d5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b6101a7600160a060020a0360043516602435610b1c565b005b341561048c57fe5b6101a7600435610bdb565b005b34156104a157fe5b6101b9600160a060020a0360043581169060243516610c09565b60408051918252519081900360200190f35b34156104d557fe5b6101a7600160a060020a0360043516610c26565b005b6003805460408051602060026001851615610100026000190190941693909304601f810184900484028201840190925281815292918301828280156105715780601f1061054657610100808354040283529160200191610571565b820191906000526020600020905b81548152906001019060200180831161055457829003601f168201915b505050505081565b60005433600160a060020a0390811691161415806105b05750600160a060020a03331660009081526001602052604090205460ff16155b156105bb5760006000fd5b600054600160a060020a03828116911614156105d75760006000fd5b600160a060020a0381166000908152600160205260409020805460ff191690555b5b50565b60055481565b6000600160a060020a038316151561061a5760006000fd5b600160a060020a038416600090815260086020526040902054829010156106415760006000fd5b600160a060020a03831660009081526008602052604090205482810110156106695760006000fd5b600160a060020a038085166000908152600960209081526040808320339094168352929052205482111561069d5760006000fd5b600160a060020a0380851660008181526008602090815260408083208054889003905587851680845281842080548901905584845260098352818420339096168452948252918290208054879003905581518681529151600080516020610c708339815191529281900390910190a35060015b9392505050565b60016020526000908152604090205460ff1681565b600654600160a060020a031681565b600160a060020a033316600090815260086020526040812054829010156107625760006000fd5b600160a060020a03331660008181526008602090815260409182902080548690039055600580548690039055815185815291517fcc16f5dbb4873280815c1ee09dbd06736cffcc184412cf7a71a0fdb75d397ca59281900390910190a25060015b919050565b6002805460408051602060018416156101000260001901909316849004601f810184900484028201840190925281815292918301828280156105715780601f1061054657610100808354040283529160200191610571565b820191906000526020600020905b81548152906001019060200180831161055457829003601f168201915b505050505081565b60005433600160a060020a03908116911614158061088a5750600160a060020a03331660009081526001602052604090205460ff16155b156108955760006000fd5b600160a060020a0381166000908152600160208190526040909120805460ff191690911790555b5b50565b60086020526000908152604090205481565b60005433600160a060020a039081169116146108ee5760006000fd5b600160a060020a038216600081815260086020526040902080548301905560058054830190556007549031101561095157600754604051600160a060020a038416918231900380156108fc02916000818181858888f19350505050151561095157fe5b5b60008054604080518481529051600160a060020a039092169291600080516020610c708339815191529181900360200190a3600054604080518381529051600160a060020a03808616931691600080516020610c70833981519152919081900360200190a35b5b5050565b600160a060020a038216600090815260086020526040812054829010156109e45760006000fd5b600160a060020a0380841660009081526009602090815260408083203390941683529290522054821115610a185760006000fd5b600160a060020a03831660008181526008602090815260409182902080548690039055600580548690039055815185815291517fcc16f5dbb4873280815c1ee09dbd06736cffcc184412cf7a71a0fdb75d397ca59281900390910190a25060015b92915050565b600054600160a060020a031681565b6004805460408051602060026001851615610100026000190190941693909304601f810184900484028201840190925281815292918301828280156105715780601f1061054657610100808354040283529160200191610571565b820191906000526020600020905b81548152906001019060200180831161055457829003601f168201915b505050505081565b600160a060020a0382161515610b325760006000fd5b600160a060020a03331660009081526008602052604090205481901015610b595760006000fd5b600160a060020a0382166000908152600860205260409020548181011015610b815760006000fd5b600160a060020a0333811660008181526008602090815260408083208054879003905593861680835291849020805486019055835185815293519193600080516020610c70833981519152929081900390910190a35b5050565b60005433600160a060020a03908116911614610bf75760006000fd5b66038d7ea4c6800081026007555b5b50565b600960209081526000928352604080842090915290825290205481565b60005433600160a060020a03908116911614610c425760006000fd5b6000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a0383161790555b5b505600ddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3efa165627a7a72305820b50c4d29db385900b025a88e4a002c6d01b6e7b556eeae8a0a4c13d16758c0e50029', gasEstimates: {"creation":[null,651800],"external":{"addAdmin(address)":21452,"allowance(address,address)":959,"balanceOf(address)":718,"burn(uint256)":42717,"burnFrom(address,uint256)":43362,"eigenaar()":636,"isAdmin(address)":620,"mintToken(address,uint256)":null,"name()":null,"owner()":790,"removeAdmin(address)":21590,"setMinBalance(uint256)":20785,"standard()":null,"symbol()":null,"totalSupply()":417,"transfer(address,uint256)":43858,"transferFrom(address,address,uint256)":null,"transferOwnership(address)":21189},"internal":{}}});
+Ownable = new EmbarkJS.Contract({abi: [{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"admins","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"adminCount","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[],"name":"getSender","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"o","type":"address"}],"name":"addAdmin","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"getOwner","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"inputs":[],"payable":false,"type":"constructor"}], address: '0x59aa3793ce6515b7765d3076e814f2f9fb9026be', code: '6060604052341561000c57fe5b5b60018054600160a060020a03191633600160a060020a031617905560006002555b5b61023b8061003e6000396000f300606060405236156100755763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166314bfd6d081146100775780632b7832b3146100a65780635e01eb5a146100c857806370480275146100f4578063893d20e8146101125780638da5cb5b1461013e575bfe5b341561007f57fe5b61008a60043561016a565b60408051600160a060020a039092168252519081900360200190f35b34156100ae57fe5b6100b6610185565b60408051918252519081900360200190f35b34156100d057fe5b61008a61018b565b60408051600160a060020a039092168252519081900360200190f35b34156100fc57fe5b610110600160a060020a0360043516610190565b005b341561011a57fe5b61008a6101f0565b60408051600160a060020a039092168252519081900360200190f35b341561014657fe5b61008a610200565b60408051600160a060020a039092168252519081900360200190f35b600060208190529081526040902054600160a060020a031681565b60025481565b335b90565b60015433600160a060020a039081169116146101ac5760006000fd5b600280546000908152602081905260409020805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a038416179055805460010190555b5b50565b600154600160a060020a03165b90565b600154600160a060020a0316815600a165627a7a723058207c91b2de84688bee1d99372eca493eecbdeeee14c220b79793c069b9d0a33cbe0029', gasEstimates: {"creation":[25530,114200],"external":{"addAdmin(address)":41368,"adminCount()":395,"admins(uint256)":601,"getOwner()":615,"getSender()":295,"owner()":636},"internal":{"isOwner(address)":null}}});
+owned = new EmbarkJS.Contract({abi: [{"constant":false,"inputs":[{"name":"admin","type":"address"}],"name":"removeAdmin","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"isAdmin","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"admin","type":"address"}],"name":"addAdmin","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"type":"function"},{"inputs":[],"payable":false,"type":"constructor"}], address: '0x869be05eeedef277b7f22fe34534c2765869ef5b', code: '6060604052341561000c57fe5b5b60008054600160a060020a03191633600160a060020a031690811782558152600160208190526040909120805460ff191690911790555b5b6102a5806100546000396000f300606060405263ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416631785f53c811461006657806324d7806c1461008457806370480275146100b45780638da5cb5b146100d2578063f2fde38b146100fe575bfe5b341561006e57fe5b610082600160a060020a036004351661011c565b005b341561008c57fe5b6100a0600160a060020a036004351661019f565b604080519115158252519081900360200190f35b34156100bc57fe5b610082600160a060020a03600435166101b4565b005b34156100da57fe5b6100e2610221565b60408051600160a060020a039092168252519081900360200190f35b341561010657fe5b610082600160a060020a0360043516610230565b005b60005433600160a060020a0390811691161415806101535750600160a060020a03331660009081526001602052604090205460ff16155b1561015e5760006000fd5b600054600160a060020a038281169116141561017a5760006000fd5b600160a060020a0381166000908152600160205260409020805460ff191690555b5b50565b60016020526000908152604090205460ff1681565b60005433600160a060020a0390811691161415806101eb5750600160a060020a03331660009081526001602052604090205460ff16155b156101f65760006000fd5b600160a060020a0381166000908152600160208190526040909120805460ff191690911790555b5b50565b600054600160a060020a031681565b60005433600160a060020a0390811691161461024c5760006000fd5b6000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a0383161790555b5b505600a165627a7a72305820438bc804c6bc799535b0748ea19d88afc40a47bdac6770cba940c08577d7ae9f0029', gasEstimates: {"creation":[40850,135400],"external":{"addAdmin(address)":21302,"isAdmin(address)":536,"owner()":574,"removeAdmin(address)":21550,"transferOwnership(address)":20885},"internal":{}}});
 
 EmbarkJS.Storage.setProvider('ipfs', {server: 'localhost', port: '5001'});
 
