@@ -1,1 +1,32 @@
 testrpc -b 1 -m "road segment equal donate immune pigeon elite judge demand inspire bronze hedgehog"
+
+Available Accounts
+==================
+(0) 0x9e7c405c8982ddc60d7cb4b2609ad0cee4c2f24c
+(1) 0xc396de05bab15001776f7047795d844bd74114a2
+(2) 0x02c732e54472ba824d1da12ffea17f86c9b8c9b8
+(3) 0x07b0a7c262789e13ad1ad65e3b68e88b2b85c2fa
+(4) 0xe6b95fff43e8a22d9f60a5ec62a075c98dac39c0
+(5) 0x8b794ba0eb500680bc4296ac9ad4ab57c2b35306
+(6) 0x0baf5a4a4457961dd5eb9c7395d8b1f2975cc8dc
+(7) 0xc5f47d83bc9af53850e56da35b2dd12f42472887
+(8) 0xf0c94380304c27f14d3eafd096b66a02b274ebdf
+(9) 0xea8f9aa679c27dfbef5e39a24595cce4ea83d6cc
+
+Private Keys
+==================
+(0) 315ad731e6ad22b14616ba21f214a41447a425010054369b19c2b1b65699f739
+(1) 069b1c24439be68166ebcd11ce627d6d301610edc09c7fb564daa37a3fb816ef
+(2) d49cefe50ce6750d129f9fdef22f828f3c3a2bd1245a9e32380f046ddb537699
+(3) f866185afcf563f85101d4fc6c907d334e17500a05015ebeb75ca12ef043c473
+(4) 65e8fdde7bae534b3059fb4dd38e2a0b320627a423e47bf2f638af7324ca990e
+(5) 82a1756ed1dc40383e54d14d604ef495019e7d2592557f57ca2e520bada14075
+(6) b36ddb3b8c36965772f4eaba6d4981a43a00f30cee864efdaa462f6466d9f6f5
+(7) f2d90ccd96c52c34ab2127e5c43e7f39901e6e6de81361c6bc7f0498bbbd6bf8
+(8) b3622dd031c8302ea3ce6406d25dbd16b2475586cde1bb99c93d37882132edce
+(9) f2d3f178144d94dbc45ab1b8ce0dbd5c8df3356c05ae7904193354e5df89fe69
+
+HD Wallet
+==================
+Mnemonic:      road segment equal donate immune pigeon elite judge demand inspire bronze hedgehog
+Base HD Path:  m/44'/60'/0'/0/{account_index}
