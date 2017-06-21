@@ -1,5 +1,7 @@
 # Embark demo setup
 
+## Windows
+
 1. install nodejs v8.1.2: [link](https://nodejs.org/en/)
 
 1. install windows-build-tools (only on windows)
@@ -28,3 +30,15 @@
     open another terminal instance and run:
 
         $ embark run
+
+## Linux
+
+* similar to windows installation, with some extra steps when installing embark
+
+    a detailed description can be found [here](https://github.com/iurimatias/embark-framework/wiki/Install-on-Linux)
+
+## OSX
+
+* similar to windows installation, with some extra steps when installing embark
+
+    a detailed description can be found [here](https://github.com/iurimatias/embark-framework/wiki/Install-on-OSX)
