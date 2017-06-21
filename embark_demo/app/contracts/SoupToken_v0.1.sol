@@ -1,8 +1,8 @@
-pragma solidity ^0.4.8;
+pragma solidity ^0.4.11;
 
-import "owned.sol";
+import "CoinOwned.sol";
 
-contract SoupToken is owned{
+contract SoupToken is CoinOwned{
     /* Public variables of the token */
     string public standard = 'SoupToken 0.1';
     string public name;
@@ -22,13 +22,14 @@ contract SoupToken is owned{
     event Burn(address indexed from, uint256 value);
 
     /* Initializes contract with initial supply tokens to the creator of the contract */
-    function SoupToken(string tokenName, string tokenSymbol) payable{
+    function SoupToken(string tokenName, string tokenSymbol){
+        owner = msg.sender;
         eigenaar = msg.sender;
         name = tokenName;                                   // Set the name for display purposes
         symbol = tokenSymbol;                               // Set the symbol for display purposes
     }
 
-    function mintToken(address target, uint256 mintedAmount) onlyOwner payable{
+    function mintToken(address target, uint256 mintedAmount) onlyOwner {
         balanceOf[target] += mintedAmount;
         totalSupply += mintedAmount;
 

@@ -794,5 +794,464 @@
       }
     },
     "name": "development"
+  },
+  "0x648c74f99d46450ae89d9dc874d1312c3b0a602971bae85e8d55315b7ca7b68d": {
+    "contracts": {
+      "0xd56dace46f2d92015febbadb5ac8167dd51cb131bfd509a139ce9e82e7d01050": {
+        "name": "SoupContract",
+        "address": "0x0cfc1fb0722b5f5c072ceb30af5da56af02a4a09"
+      },
+      "0x94b5af020acce7a934b27cdff313a846df35ce46bb87c6ce1e622e6b890e04ca": {
+        "name": "SoupToken",
+        "address": "0x71aab2d6199414ab985ebfd6c6bc008a93c314c1"
+      },
+      "0xf5e686282b7a86d04e9824240dedf52a128aa66b76fcbf51b9ae7afda38b2104": {
+        "name": "Ownable",
+        "address": "0x69b8cd16f003b814c7e4abfbc90ed568c2dd5f11"
+      },
+      "0xcb947f704c04a01f2a2c6cc306312fbb4ef630544c9d0680a4cee3cdd49e960b": {
+        "name": "owned",
+        "address": "0x3ab3479c2697eb73a7201805b99ebd940b3a23be"
+      },
+      "0xe0778aee2cbffe086054786d0f6832d1d0adeb294220a2d006207f47db7266c6": {
+        "name": "SoupContract",
+        "address": "0x8a1db7c6146a4318031e32ca0af52e5854038a2c"
+      },
+      "0xc0564c5e718a5337f4134cd416b68084b0a9a03048670beaba73e08b604f78ec": {
+        "name": "SoupToken",
+        "address": "0x63bf32e44b9fa0eaa3f845d2cd48d06efcc319f0"
+      },
+      "0x016687fc65b2ea1444dc714e328ed954cac807452836b377371dc38562ae88f7": {
+        "name": "Ownable",
+        "address": "0x3c616e7e5a8a0948e320bd5045dada44de1440b8"
+      },
+      "0xf16bb26b5a60638b05a6a0883310f40f522eb411667ea1d83e16bc523c5b3628": {
+        "name": "owned",
+        "address": "0x72d6ddeb3259454e3c4b3e239b00c07a31c16e62"
+      },
+      "0x0d7716dfe3c97d3fc430de0c182313a611296b1c62c0f77b2d1aa08214e3e82e": {
+        "name": "SoupContract",
+        "address": "0xff234fb1d60052cd169ea380e1ef1fb9f7e8f7e5"
+      },
+      "0x1745e77509a764e55f3c2a5ad64e499150f599c89d00fd80a82245a0624e279d": {
+        "name": "SoupToken",
+        "address": "0xbc1454c9902b22fe9da74dedea16d4c93e73e68c"
+      },
+      "0xdcba27511f61aa2ed38463765b7a2e1ce70432941a99c61efc98ee7f8da60755": {
+        "name": "Ownable",
+        "address": "0x1e17eb5287832f4ce9cb294780b1084b214e01ea"
+      },
+      "0xaac4a87a3092e159b7f1fc39f92d1a2f7ebf677b197b9a5194427aac7e53a4df": {
+        "name": "SoupContract",
+        "address": "0x035d0959a47658b301fedb159f1dae8d62df3ce1"
+      },
+      "0x3401723292f029056ec4f75361997bc59e30230fdbe2687c927ce6514629af27": {
+        "name": "SoupToken",
+        "address": "0xbaac83b68c73a896ff76813fc5773e7ba6ef2d14"
+      },
+      "0xa042c786dc41cbeaf54426472bbfbce7331cb29b2060242c89823190d33b4585": {
+        "name": "owned",
+        "address": "0x8b5e243ee8288582a84f4e10916869a44491fa6a"
+      },
+      "0x03cded30bbd15923dddb5bd5cefd7113d56b80c1c9a635b4cf3f4ec3bccc3040": {
+        "name": "Ownable",
+        "address": "0xffae1effdba0e5e408f907c317508de310e3f550"
+      },
+      "0x34358e6aec5f27a37e6afe4f4af6dd1d54ea7cb0ae86a3d4737da25fea85b0b1": {
+        "name": "owned",
+        "address": "0x5cb0c291ca7e9b690bbf21756bbc30b77d067441"
+      },
+      "0x1453f8305ed59d66816a4436f5811c5d8a5d480a152d167a80eed7b5e3dc3a87": {
+        "name": "SoupContract",
+        "address": "0x5bdd5415c5c891e3ea6a7f802b8de708638f35d2"
+      },
+      "0xaa6fcfcb53c066f7762ab569acef054dfc2584fa098de29f3fbd3f6d7fd2c4ed": {
+        "name": "SoupToken",
+        "address": "0xf796d18bf00b155f4a4ad6d1f8d7045b33550a6c"
+      },
+      "0xe0d4bf13ec96a573f2254e858f7a7cbcb7de350de13b4ff214bb5e36a32a729c": {
+        "name": "Ownable",
+        "address": "0x1476f46c0393df90355ce01fca4d2d26b8485f65"
+      },
+      "0xb9bd35b3fc72946a915724ba0c83fcf34aeb2b6c8ae8e03de15f720e1f8907b0": {
+        "name": "owned",
+        "address": "0xe09e70c77d1d0309a467282448315689985c093c"
+      },
+      "0xa183fc048c365e637376699541c2218332df6c8b9f8c6f19658635bf98d5b23d": {
+        "name": "SoupContract",
+        "address": "0xf8104fd64fb3281f85f376c0111e6205d9e0e48b"
+      },
+      "0xb06b71b081b0381e20a1c29e5e34c46efec79ba5942f64ad10ff5c29288579e7": {
+        "name": "SoupToken",
+        "address": "0x8b2e9f8f1dcf79d65227fd295bc50a2338b6623f"
+      },
+      "0x203cb515083028e556eb4c936876d580d9634e704a5b9fbb6d6e250119e12c81": {
+        "name": "Ownable",
+        "address": "0xfb6b8f8b295be9c0e11e1520612a35952f0b3b06"
+      },
+      "0x243aee47d91316abc604277c2baeb77409f8025ee7fb9941b95cbc4e1407b8e9": {
+        "name": "owned",
+        "address": "0x67195a8677820be23f736b551fdc6ff497db7c63"
+      },
+      "0xc84ee7a6ba1ac6ec7fef5798cdcf97557e79e2bc1238c06e7f0bb57232089d2e": {
+        "name": "SoupContract",
+        "address": "0x4414f215c1271e648ea91c9fd5df9843f355ca70"
+      },
+      "0x8fbea4392de288f4ba3acfba22c42d1e22934615650eabbc5da3a5c460cde2cd": {
+        "name": "SoupToken",
+        "address": "0x171f861ed79afd230a4a02879f9bafcdcac286d7"
+      },
+      "0x1f190e55193cbd7e2ee7d437e9dcda3f3750a27cf932d8e0f9b6c4392962bdda": {
+        "name": "Ownable",
+        "address": "0x033e0b651826bde76c50984179aeba42a2971d1b"
+      },
+      "0x28916c7c7a1d47d9caa2f5338af7a698a72fb846c6442b8e6a0b21d9e4d5527c": {
+        "name": "owned",
+        "address": "0xfdd6522074cb20755276ec4f5ba185fecd0e4749"
+      },
+      "0x2e94a850da4a48696f9866226523ba36c8da5d054715d1d8bfa89b0a7293ee69": {
+        "name": "SoupContract",
+        "address": "0x06a0a2b5dd19cb9d67aa799f290339fd65cfcf5e"
+      },
+      "0xea4f877f64e8f9fa8d20b382476610c6fe4be1481accecd0e963abfb75331ca6": {
+        "name": "SoupToken",
+        "address": "0xe30e4a4fb37ffb2476b885cbe5dded4113aacc09"
+      },
+      "0xe6ec786d7fab435e3d73bd0569fcff3a7338055005a67312400ec1f4b295e900": {
+        "name": "SoupContract",
+        "address": "0x126c778c63b13d1ce2a3a6d29b7de8f87b7bb019"
+      },
+      "0xde23ac42ff0e51e11b60722e2ab447a17c8502a347ba62bbf8c21a3a50762b40": {
+        "name": "Ownable",
+        "address": "0xe79ff8e0ded53110f11b70007d631e321095629b"
+      },
+      "0x364cc7b2fda448f054cf38b25b3a77b42d600c19b3547b1bda4895e6a7cd3398": {
+        "name": "owned",
+        "address": "0x423cb6d3bc4afa8da9070fff01b4581a055a8a68"
+      },
+      "0x55585b84cdbad1958191f155f7d623df06a3157d9d5eb2bba6024a48ed49337f": {
+        "name": "SoupToken",
+        "address": "0x9daaeaf383244085664d145dc1f51838baed5e81"
+      },
+      "0x37ade9943bbea1b3b519c1cbe3f9cedcb83ff718a4ff041de08a25bb74a57ba3": {
+        "name": "Ownable",
+        "address": "0x437d66f4d404e9e29b8c4e4b86ab9bf4a07ddfbc"
+      },
+      "0xfe80e42a2e1a18f45557371a6706d54f545991c82ceea3e433aac6239470886e": {
+        "name": "owned",
+        "address": "0xbb9337cddf5aede807dc5ee4f216b6d4d9d98fd9"
+      }
+    },
+    "name": "development"
+  },
+  "0x391f2a522200cce56c8d62663c83fffac291b3916d7136c27db3db92abd74cf3": {
+    "contracts": {
+      "0x049b06a0c77bd138c6640c178577585eba1933661276385a15876a9613ba958c": {
+        "name": "SoupContract",
+        "address": "0x71aab2d6199414ab985ebfd6c6bc008a93c314c1"
+      },
+      "0x6873e545c3a4d712e239de4f033b19a5b8ea6b047cba5319faeb25ece0867f6e": {
+        "name": "SoupToken",
+        "address": "0x69b8cd16f003b814c7e4abfbc90ed568c2dd5f11"
+      },
+      "0x4129e6783f6124602fa0cc9aa96157b9fdc7d1ba9b6dd73eb42b647904118aa6": {
+        "name": "Ownable",
+        "address": "0x8a1db7c6146a4318031e32ca0af52e5854038a2c"
+      },
+      "0xd0b3409368b254d169ae73a8128855d4b287ecb33ddf42cbbdbaa68019566a75": {
+        "name": "owned",
+        "address": "0x63bf32e44b9fa0eaa3f845d2cd48d06efcc319f0"
+      },
+      "0x44588bc015c7c17a937bf7cc0b550fb0458fea196ee83a32360d4d56d36f7087": {
+        "name": "SoupContract",
+        "address": "0xc91c92a4c142edcb1453ce1c8ba119d4bf16e13f"
+      },
+      "0xf959aeab879c48e4d327cebcdbf82b797d3a749b7a4b694f21b4a1d2c94b7033": {
+        "name": "SoupToken",
+        "address": "0xb96d943b4369f89772dac32d032e98cc3220c2f7"
+      },
+      "0x3c7b24e57c50062a201da3004492d66e16a83543bcd56dc138a817cb9c1be7f2": {
+        "name": "Ownable",
+        "address": "0xda396329e674cfbc6532aab3497e383c0c342ff5"
+      },
+      "0x2d4954c15657d85d2f041af131038b5f7cd353de6255b0506e897fef35d36335": {
+        "name": "owned",
+        "address": "0x78cf8e430a0e9001195d7ffa4bff6e3154a3c547"
+      },
+      "0x31a439b915308a129b37257baaaa479a7c19913fb1cb90dc32eb4fd9d92463f3": {
+        "name": "SoupContract",
+        "address": "0x8b2e9f8f1dcf79d65227fd295bc50a2338b6623f"
+      },
+      "0x29f986b61c04c87ef380facf5ab3ede0df20d97238893e1a5481f600e66a49fa": {
+        "name": "SoupToken",
+        "address": "0xfda5e5ac39f90121df46d52cf98b0871483b2c90"
+      },
+      "0x3c54f4a85ab6aac34c7678c670a55281f08c5336be7bfcabfc23707a441f9526": {
+        "name": "Ownable",
+        "address": "0xfb6b8f8b295be9c0e11e1520612a35952f0b3b06"
+      },
+      "0x47b942fbfb503d591f65b3513a6998383ec3ff6b0f5d75d27e4a458b0c2df606": {
+        "name": "owned",
+        "address": "0x4289a44b2c0e8df3fb50b84ca450543130e91561"
+      }
+    },
+    "name": "development"
+  },
+  "0xc5280bfa4f11ca8215a3412ac3fdddd4c141c9b65bcb6c45c17c31434f0ae013": {
+    "contracts": {
+      "0x31a439b915308a129b37257baaaa479a7c19913fb1cb90dc32eb4fd9d92463f3": {
+        "name": "SoupContract",
+        "address": "0x71aab2d6199414ab985ebfd6c6bc008a93c314c1"
+      },
+      "0x29f986b61c04c87ef380facf5ab3ede0df20d97238893e1a5481f600e66a49fa": {
+        "name": "SoupToken",
+        "address": "0x69b8cd16f003b814c7e4abfbc90ed568c2dd5f11"
+      },
+      "0x3c54f4a85ab6aac34c7678c670a55281f08c5336be7bfcabfc23707a441f9526": {
+        "name": "Ownable",
+        "address": "0x3ab3479c2697eb73a7201805b99ebd940b3a23be"
+      },
+      "0x47b942fbfb503d591f65b3513a6998383ec3ff6b0f5d75d27e4a458b0c2df606": {
+        "name": "owned",
+        "address": "0x63bf32e44b9fa0eaa3f845d2cd48d06efcc319f0"
+      },
+      "0x48134da0117523ee5bd5e5e744d01a0a70197c4b0168bbb9ff48e8148f4d23fb": {
+        "name": "SoupContract",
+        "address": "0xbc1454c9902b22fe9da74dedea16d4c93e73e68c"
+      },
+      "0x56ff0bf8aba1ee946a4eda56ee326b109335d226f21f02cbf609d07b2e415775": {
+        "name": "SoupToken",
+        "address": "0x035d0959a47658b301fedb159f1dae8d62df3ce1"
+      },
+      "0x4b56df79f283e67a80fcd6f167246b2b63f5eeb536a7613f74b99ae844c0188c": {
+        "name": "Ownable",
+        "address": "0x8b5e243ee8288582a84f4e10916869a44491fa6a"
+      },
+      "0x653bf9c6f18a58a6058960055affeeae2700ae50423ccba4965fbc73e890d65c": {
+        "name": "owned",
+        "address": "0xffae1effdba0e5e408f907c317508de310e3f550"
+      },
+      "0xd4b997733ec85aa29a914515b51bdf622b11854a87c489c86127f54d37160a20": {
+        "name": "SoupContract",
+        "address": "0x02ba24fb458f39efcc570fae81ea835418bc621f"
+      },
+      "0x8b5dfb6287cb6006a53182f899df6b99342bd6d5396f5753906e45184fbe248e": {
+        "name": "SoupToken",
+        "address": "0xf8104fd64fb3281f85f376c0111e6205d9e0e48b"
+      },
+      "0xe849f6cbe1817f211a0d3e8be7858a0cbdb983becf4611697d8b894b746e7ee4": {
+        "name": "owned",
+        "address": "0x8b2e9f8f1dcf79d65227fd295bc50a2338b6623f"
+      },
+      "0x17f776fd159a8becbda246c80ac4c21236824435d178599b4decfc9e64241284": {
+        "name": "Ownable",
+        "address": "0xfda5e5ac39f90121df46d52cf98b0871483b2c90"
+      }
+    },
+    "name": "development"
+  },
+  "0x70efdd0cc17bb765d61cc3a05fa440ad195c9f8a510cb9b156af865d92ed85b0": {
+    "contracts": {
+      "0x3bb4d6916e32885f5c801cd837221ff1d362b2273041cd927d697dd2d0b81701": {
+        "name": "SoupContract",
+        "address": "0x71aab2d6199414ab985ebfd6c6bc008a93c314c1"
+      },
+      "0x19c9e3ba603566c6a79620ba3eed73614c894da4ce029ee73e7ae9926c6039e6": {
+        "name": "SoupToken",
+        "address": "0x69b8cd16f003b814c7e4abfbc90ed568c2dd5f11"
+      },
+      "0x655425a614cf5683f6cbc36c9a698e2ccc9ed77d79c25b6e57de117e2164b657": {
+        "name": "owned",
+        "address": "0x8a1db7c6146a4318031e32ca0af52e5854038a2c"
+      }
+    },
+    "name": "development"
+  },
+  "0x2420971187a3cd9106af55841fad404f5cda38f691c9edf0c1b9b957e42a9652": {
+    "contracts": {
+      "0x5de59a45bec14f5332a38e2f25630bacae5b98a25ee17cd40f56aba86fb13569": {
+        "name": "SoupContract",
+        "address": "0x71aab2d6199414ab985ebfd6c6bc008a93c314c1"
+      },
+      "0xfda96c6ca8cde09d1b74b24beeba42ecbf87fede01aa158e2ffcee2c70dea3d3": {
+        "name": "SoupToken",
+        "address": "0x3ab3479c2697eb73a7201805b99ebd940b3a23be"
+      },
+      "0xff16b4fc31b7a40117ac63a41cdc130eb13e710e4865e8ec62181d893dc421bb": {
+        "name": "owned",
+        "address": "0x8a1db7c6146a4318031e32ca0af52e5854038a2c"
+      }
+    },
+    "name": "development"
+  },
+  "0x7e08fd4aa756f7afd07dba3e436d6f14ea21807a635b4dea18b958364f487920": {
+    "contracts": {
+      "0x2824f82679a3137832d2bf48fffd6eabbfba84a5118017c170c5cb632cab1b9d": {
+        "name": "SoupContract",
+        "address": "0x0cfc1fb0722b5f5c072ceb30af5da56af02a4a09"
+      },
+      "0x32cf107603561458b2212b3a486b167989f16a33b64012b26892acdba91ee5e7": {
+        "name": "SoupToken",
+        "address": "0x71aab2d6199414ab985ebfd6c6bc008a93c314c1"
+      },
+      "0x7f4bdb5f6e00ca5d0a5574c53795e66d6e8035a4c38717752c9fff48886a3c52": {
+        "name": "owned",
+        "address": "0x69b8cd16f003b814c7e4abfbc90ed568c2dd5f11"
+      },
+      "0xc6cb3dcaa073e5f95c458dca315b68e3d2d2aad121e2488fbc60e6560446ba06": {
+        "name": "SoupContract",
+        "address": "0x63bf32e44b9fa0eaa3f845d2cd48d06efcc319f0"
+      },
+      "0xb072f97d54238d8ca6b5cbbda402909189ec31867aa1c5e6c33b09a853175373": {
+        "name": "SoupToken",
+        "address": "0x3c616e7e5a8a0948e320bd5045dada44de1440b8"
+      },
+      "0x3cc07814ce52b3572a5b4c04adccec2f196b56a30d0ffd35c54cbe541be9c49a": {
+        "name": "owned",
+        "address": "0x72d6ddeb3259454e3c4b3e239b00c07a31c16e62"
+      }
+    },
+    "name": "development"
+  },
+  "0xdb078065e42307f2af6c1a102f6472b70cd36b3a57a51b7521f5ddf0939cd076": {
+    "contracts": {
+      "0x343993c6c062187b5d3ba93f3911a7f3f5290aa52ac68666cefd23384a13c892": {
+        "name": "SoupContract",
+        "address": "0x0cfc1fb0722b5f5c072ceb30af5da56af02a4a09"
+      },
+      "0xb9a715c1ad454b82f7bc23e64d9f2f95bfd63d212f413c7ccea61179b2a27496": {
+        "name": "SoupToken",
+        "address": "0x71aab2d6199414ab985ebfd6c6bc008a93c314c1"
+      },
+      "0xfeae1d11cfb8bceaede30cda9fbba2c199ffb89e32a4f9797d6ab272d6fe28f4": {
+        "name": "owned",
+        "address": "0x69b8cd16f003b814c7e4abfbc90ed568c2dd5f11"
+      },
+      "0xaa4d4c24719ca985447c155df5490147bb61001ca57a5b9ca5c11413777f99f2": {
+        "name": "SoupContract",
+        "address": "0x3ab3479c2697eb73a7201805b99ebd940b3a23be"
+      },
+      "0x848f571dce0a50bce5eb657ad9fa4c547073dd10743013a92fb85b2191585d4f": {
+        "name": "SoupToken",
+        "address": "0x8a1db7c6146a4318031e32ca0af52e5854038a2c"
+      },
+      "0xbce8881c5aca01334767fd93b10de2c4cb3e7b960155a769bd159bd96672da50": {
+        "name": "owned",
+        "address": "0x63bf32e44b9fa0eaa3f845d2cd48d06efcc319f0"
+      },
+      "0x42ed56b2b9e846ceac2cf03149518a8fc37fa6557ab30acb60e14932ca066d23": {
+        "name": "SoupContract",
+        "address": "0xff234fb1d60052cd169ea380e1ef1fb9f7e8f7e5"
+      },
+      "0x66261f580c85bbf632611a22da8f5644f3dc22f9f2958bfad15e7605388baa2e": {
+        "name": "CoinOwned",
+        "address": "0x8b5e243ee8288582a84f4e10916869a44491fa6a"
+      },
+      "0xc56761285eca9ff534857de96e75a0777e7d2e5bc2da53ac1205f763095cf07a": {
+        "name": "SoupToken",
+        "address": "0xb96d943b4369f89772dac32d032e98cc3220c2f7"
+      },
+      "0x70578ae241bc4368c48eff851b1a1102c25ab3f21c4f6724530ba0c22a66b500": {
+        "name": "owned",
+        "address": "0x4c0841abd819926e6b1f03eac150916c7156ef64"
+      },
+      "0x0cc239678236cd7a8bc02aa021d25995c8ba712ca6cdf1b4da6ad85374a02545": {
+        "name": "SoupContract",
+        "address": "0x78cf8e430a0e9001195d7ffa4bff6e3154a3c547"
+      },
+      "0x234384bb2906335f36a4a805e17748482033f72cbf285b392c012bd0a6256ce3": {
+        "name": "CoinOwned",
+        "address": "0xeb7f03914d0141c375f5fd417080db7c6e830562"
+      },
+      "0x2341095f0e906737e8c01e002dd80d23b2f54e47cb6749bc6f1512e80fc7c765": {
+        "name": "SoupToken",
+        "address": "0xdd77d84681a3b8e3b4b61e2f6e74b0b67650c121"
+      },
+      "0xceff3d934c7125f5548a103539c6cc29010fef4757c0b9db142896cf9c5ffbd4": {
+        "name": "owned",
+        "address": "0x5bdd5415c5c891e3ea6a7f802b8de708638f35d2"
+      },
+      "0x1fe96878fa8f6a9e14a4cf17c677113f6d1c690a3e39b08a40b6ea3ddb8e8df0": {
+        "name": "SoupContract",
+        "address": "0x147a3ff211fc9118c71354fa3950d4b22c9f3259"
+      },
+      "0xda4d01278d4e2959f2c110dd38227848e37d28ba1a621e169e242aed8971a314": {
+        "name": "CoinOwned",
+        "address": "0x5bf6542363f6fb405aaa7ad7d4b17f2a305eeb93"
+      },
+      "0x78428813356043d06dabc6b2a798c7c21d96edc79bd043f0801eb1d96ebb4f4d": {
+        "name": "ContractOwned",
+        "address": "0x02ba24fb458f39efcc570fae81ea835418bc621f"
+      },
+      "0xf453cecc539b7ae63fa395ba9482db8270ef51aa3fe92e9881056b9a1f9f0776": {
+        "name": "SoupToken",
+        "address": "0xfb6b8f8b295be9c0e11e1520612a35952f0b3b06"
+      },
+      "0x4da41433518e0d6c8ab3764d418a954d8a8fc9126a8307c32d71d330700a2c20": {
+        "name": "owned",
+        "address": "0xbfb7161e52d39c7ec770875589b010737c89f2b0"
+      },
+      "0x76988b3522d09266094d845254b617ddb5293976cf8ec21b308da18ba690ac1b": {
+        "name": "SoupContract",
+        "address": "0x6125edd46d8c720781473771d823ebe02fa39233"
+      },
+      "0xc0569620a9dc3fa8dddbdb6e0971b07f62f3b9679187c011cad3da56bf23f49b": {
+        "name": "CoinOwned",
+        "address": "0x9091ac50b2069bc93069ff4792b6c10e44d47d9f"
+      },
+      "0x37a76d429bd3a08833567b084e98abeee38849b5bbe77f45b91e98bffadd3a91": {
+        "name": "ContractOwned",
+        "address": "0x85f56affaae6d02c3434a7077f8cc98309fc198f"
+      },
+      "0x486c2990f46f97f1c95722c4faaae8b0c42d9ed38f688bfe662741a4ba3f5c2f": {
+        "name": "SoupToken",
+        "address": "0x4f419382639df711efbbd4b58a0a42906a4d605d"
+      },
+      "0xd8e5ada1507b5b29e5c6d35dfd1524925b13650d4da9cbe27261d3ad35ccd619": {
+        "name": "owned",
+        "address": "0x4414f215c1271e648ea91c9fd5df9843f355ca70"
+      },
+      "0x2c39ce93ede653bfafe06f5791bf22ce8073701a9359d79105782550cd93429e": {
+        "name": "SoupContract",
+        "address": "0xd30c03c7d2c9e19d234a60280da2ac06c2a04d99"
+      },
+      "0x3a702d2b201a1d46284878d9440886ccf4a04bf95649ec2b8d2eba3c0653a60f": {
+        "name": "CoinOwned",
+        "address": "0xf94ab71a66a7cb6934da26f58120faa4b556b36f"
+      },
+      "0x8deeb014be97457b65f0ecc49296c70ba7c8364121701c4d634a5de6433c2156": {
+        "name": "ContractOwned",
+        "address": "0x827681e4021c7b65639868d6319e45f4f7ea9979"
+      },
+      "0xf51c0cb5c7a6d4b433729f3c7e287f058c9384cc2cd1b38391759263043738e7": {
+        "name": "SoupToken",
+        "address": "0x2d037942c79803f5a7393d992f166a58791c8204"
+      },
+      "0x5a2f59fa21416a9cce4c71cf7047a107791aa985b16a70c6ddad987db2f082fd": {
+        "name": "owned",
+        "address": "0x5d9d6d5edcb4ddc97d445a688b9ddf946af705b6"
+      },
+      "0x3ac912fe8d760bed841bd8580c4e90febcd211fe2a64d2787796ee8754e4fe3a": {
+        "name": "SoupContract",
+        "address": "0x44751e2252c51bf84baf41f03f891148bdbeafc2"
+      },
+      "0xd8094116392451684c904a7e7cbe4aa8bd7751a69d49c87467fe7de0ff178221": {
+        "name": "CoinOwned",
+        "address": "0x5ccab6cec93d66e2a0640ea11c0782560783c65e"
+      },
+      "0xa4a71566da5c983444c121996ec3a0ccf68f3da101527056687e8d992b4b37f1": {
+        "name": "ContractOwned",
+        "address": "0xdbb0f5fc829d3fd508d46c7d29108e19de4b2fe6"
+      },
+      "0xf112a8ae69abdbdd923f7e74277077e954fd18995000d58da0349682bff4c368": {
+        "name": "SoupToken",
+        "address": "0x0a0b99bd5e776994cc53a4dc469346ff2c39c5fa"
+      },
+      "0x191de4b5f0fdb0b9ea4992f7122d897fcfa798b0b979195f57295dab235c2ed9": {
+        "name": "owned",
+        "address": "0x651670bac726878cf789028be6fdd3279349b8df"
+      }
+    },
+    "name": "development"
   }
 }

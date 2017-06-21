@@ -1,10 +1,10 @@
 pragma solidity ^0.4.11;
 
-contract owned {
+contract ContractOwned {
     address public owner;
     mapping (address => bool) public isAdmin;
 
-    function owned() {
+    function ContractOwned() {
 
         owner = msg.sender;
         isAdmin[msg.sender] = true;

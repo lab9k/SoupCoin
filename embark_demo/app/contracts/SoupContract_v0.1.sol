@@ -1,20 +1,20 @@
-pragma solidity ^0.4.8;
+pragma solidity ^0.4.11;
 
 import "SoupToken_v0.1.sol";
+import "ContractOwned.sol";
 
-contract SoupContract is owned{
+contract SoupContract is ContractOwned{
 
 	SoupToken public soupToken;
-	address public owner;
 
-	function SoupContract(string name, string jaak) payable{
+	function SoupContract(string name, string jaak) {
 
 		soupToken = new SoupToken(name, jaak);
 		owner = msg.sender;
 	
 	}
 
-	function CreateAndTransfer(address target, uint256 mintedAmount) onlyAdminAndOwner payable{
+	function CreateAndTransfer(address target, uint256 mintedAmount) onlyAdminAndOwner {
 
 		soupToken.mintToken(target, mintedAmount);
 
@@ -22,11 +22,9 @@ contract SoupContract is owned{
 
 	function GetTotalAmount() constant returns (uint256){
 
-		soupToken.totalSupply();
+		return soupToken.totalSupply();
 	
 	}
-
-
 
 }
 
