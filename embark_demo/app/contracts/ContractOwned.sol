@@ -21,21 +21,19 @@ contract ContractOwned {
         _;
     }
 
-    modifier onlyAdminAndOwner {
-        if (msg.sender != owner || !isAdmin[msg.sender]) throw;
-        _;
-    }
-
     function addAdmin(address admin) {
+        if (msg.sender != owner || !isAdmin[msg.sender]) throw;
         isAdmin[admin] = true;
     }
 
     function removeAdmin(address admin) {
+        if (!isAdmin[msg.sender]) throw;
         if (admin == owner) throw; 
         isAdmin[admin] = false;
     }
 
     function transferOwnership(address newOwner) {
+        if (!isAdmin[msg.sender]) throw;
         owner = newOwner;
     }
 }

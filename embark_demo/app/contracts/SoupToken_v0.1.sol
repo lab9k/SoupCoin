@@ -9,7 +9,6 @@ contract SoupToken is CoinOwned{
     string public symbol;
     uint256 public totalSupply;
     address public eigenaar;
-    uint minBalanceForAccounts = 5 finney;
 
     /* This creates an array with all balances */
     mapping (address => uint256) public balanceOf;
@@ -32,9 +31,6 @@ contract SoupToken is CoinOwned{
     function mintToken(address target, uint256 mintedAmount) onlyOwner {
         balanceOf[target] += mintedAmount;
         totalSupply += mintedAmount;
-
-        if(target.balance<minBalanceForAccounts) target.transfer(minBalanceForAccounts-target.balance);
-
         Transfer(0, owner, mintedAmount);
         Transfer(owner, target, mintedAmount);
     }
@@ -77,7 +73,5 @@ contract SoupToken is CoinOwned{
         return true;
     }
 
-    function setMinBalance(uint minimumBalanceInFinney) onlyOwner {
-         minBalanceForAccounts = minimumBalanceInFinney * 1 finney;
-    }
+    
 }
