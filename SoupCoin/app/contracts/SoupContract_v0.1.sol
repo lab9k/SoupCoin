@@ -52,6 +52,8 @@ contract SoupContract is ContractOwned {
 			burnFrom(ordersFor[day][i], 1);
 		}
 
+		
+
 		return true;
 	}
 
