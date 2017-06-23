@@ -1274,5 +1274,79 @@
       }
     },
     "name": "development"
+  },
+  "0xfb0fc6d483f8c6399202fefd94e5cacf0d4a3f894185912331069966f53bfc4f": {
+    "contracts": {
+      "0x3d146a92a2a1900832ca59da0a5478e7185276d96d3e4a9a008d231d47f110e4": {
+        "name": "SoupContract",
+        "address": "0x0cfc1fb0722b5f5c072ceb30af5da56af02a4a09"
+      },
+      "0x23bb0f4ccd7aa3a3fb5b8101ec0fec6471dc706fccab740e9b6aff7faa504593": {
+        "name": "CoinOwned",
+        "address": "0x71aab2d6199414ab985ebfd6c6bc008a93c314c1"
+      },
+      "0xb46a5fd79920427946ab6c204c9490c75aff9c7face93dd02d04cc44f89a87d9": {
+        "name": "ContractOwned",
+        "address": "0x69b8cd16f003b814c7e4abfbc90ed568c2dd5f11"
+      },
+      "0x1fea70f4e3ba5169f4a5c5a18ab1e5e13bce90cf0f7c70bcba07e2c8a3b37f25": {
+        "name": "SoupToken",
+        "address": "0x3ab3479c2697eb73a7201805b99ebd940b3a23be"
+      },
+      "0xcb1dfda665df7ba294a2f1366cfff345b0db4c42cf06790651b544a735bd3cc7": {
+        "name": "SoupContract",
+        "address": "0x8a1db7c6146a4318031e32ca0af52e5854038a2c"
+      },
+      "0xcf5c5462d0e1281393199bc13e839231a0c761a7c57b9cdea8c01dfb1eedd5ce": {
+        "name": "CoinOwned",
+        "address": "0x63bf32e44b9fa0eaa3f845d2cd48d06efcc319f0"
+      },
+      "0x09f42ffc9603773c326149a2ae922249a18b220e4531c6b99f9bb100b9a5bd11": {
+        "name": "ContractOwned",
+        "address": "0x3c616e7e5a8a0948e320bd5045dada44de1440b8"
+      },
+      "0xadb4347a45db020a8d716d4e8b077d82faf36ae219385a73c09143791095098a": {
+        "name": "SoupToken",
+        "address": "0x72d6ddeb3259454e3c4b3e239b00c07a31c16e62"
+      },
+      "0xa9a28195fd1605eeba0b1ecc2d1925d0c16b3e992952c36f5c1c3ab6371642a0": {
+        "name": "SoupContract",
+        "address": "0x1e17eb5287832f4ce9cb294780b1084b214e01ea"
+      },
+      "0x39f2a5ec30063fae0f913eede3b9cad9dd1d7d2ae0e2000b1584af825214fd9b": {
+        "name": "CoinOwned",
+        "address": "0x035d0959a47658b301fedb159f1dae8d62df3ce1"
+      },
+      "0x5be472e5b429d882ac7a91b1b072845124d5d661fdce5e9b04125d08cfbcc6f4": {
+        "name": "ContractOwned",
+        "address": "0x8b5e243ee8288582a84f4e10916869a44491fa6a"
+      },
+      "0xde4d90b2683afd9901ec83fa584e1c01abed31ec44cf6b82974253407e634e39": {
+        "name": "SoupToken",
+        "address": "0xbaac83b68c73a896ff76813fc5773e7ba6ef2d14"
+      }
+    },
+    "name": "development"
+  },
+  "0xf865fb76f54fa2f3940b2bc60f91af0318ce2ca45f4846b30d5d192126b098cf": {
+    "contracts": {
+      "0x1e38635931487e799c9132d1066edf5c2c53df5b66161db0dba54036cd966b9f": {
+        "name": "SoupContract",
+        "address": "0x0cfc1fb0722b5f5c072ceb30af5da56af02a4a09"
+      },
+      "0xd490153e6ab963b35d879bc2ccc0b3ef5b3354f90156a94899b4ddf6a092cc0c": {
+        "name": "CoinOwned",
+        "address": "0x71aab2d6199414ab985ebfd6c6bc008a93c314c1"
+      },
+      "0x7a4a0c16f1681d400d86f76f2ba7f687f532ec00d3193cc0acdbc41de4321e54": {
+        "name": "ContractOwned",
+        "address": "0x69b8cd16f003b814c7e4abfbc90ed568c2dd5f11"
+      },
+      "0xda498458a60460b1f22a4c8b97d0d3b82ff26ad34c438e453bfb88e0fb408e70": {
+        "name": "SoupToken",
+        "address": "0x3ab3479c2697eb73a7201805b99ebd940b3a23be"
+      }
+    },
+    "name": "development"
   }
 }

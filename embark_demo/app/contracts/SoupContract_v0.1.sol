@@ -59,6 +59,12 @@ contract SoupContract is ContractOwned {
     	return soupToken.owner();
     }
 
+    function getSoupAddress() constant return (address) {
+    	return soupToken.address;
+    }
+
+    
+
 }
 
 
