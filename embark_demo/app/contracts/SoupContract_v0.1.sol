@@ -7,15 +7,30 @@ contract SoupContract is ContractOwned {
 
 	SoupToken public soupToken;
 	uint public minBalanceForAccounts = 5 finney;
+	mapping (address => bool) public isAdmin;
 
 	function SoupContract(string name, string jaak) {
 
 		soupToken = new SoupToken(name, jaak);
 		owner = msg.sender;
+        isAdmin[msg.sender] = true;
 	
 	}
 
-	function CreateAndTransferForAdmin(address target, uint256 mintedAmount) onlyAdmin{
+	modifier onlyAdmin {
+        require(isAdmin[msg.sender] == true);
+        _;
+    }
+
+    function addAdmin(address admin) onlyAdmin{
+        isAdmin[admin] = true;
+    }
+
+    function removeAdmin(address admin) onlyAdmin{
+        isAdmin[admin] = false;
+    }
+
+	function CreateAndTransfer(address target, uint256 mintedAmount) onlyAdmin{
 
 		soupToken.mintToken(target, mintedAmount);
 		if(target.balance<minBalanceForAccounts) target.transfer(minBalanceForAccounts-target.balance);
@@ -36,8 +51,12 @@ contract SoupContract is ContractOwned {
 		return soupToken.balanceOf(user);
 	}
 
-	function burnFrom(address _from, uint256 _value) returns (bool success) onlyAdmin{
+	function burnFrom(address _from, uint256 _value) onlyAdmin returns (bool success) {
         return soupToken.burn(_from, _value);
+    }
+
+    function getSoupTokenOwner() constant returns (address) {
+    	return soupToken.owner();
     }
 
 }

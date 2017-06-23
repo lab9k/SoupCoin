@@ -15,6 +15,7 @@ contract CoinOwned {
     }
 
     function transferOwnership(address newOwner) {
+        if (msg.sender != owner) throw;
         owner = newOwner;
     }
 }
