@@ -1253,5 +1253,26 @@
       }
     },
     "name": "development"
+  },
+  "0xbc0286d09a7efbdb2297a0c931e1adeab6c2140e6b788ab50abae7803791a9e3": {
+    "contracts": {
+      "0xe865025003c88239a0e289337b0ed3c641ce2a6384eb10e39991f08be3dd92e1": {
+        "name": "SoupContract",
+        "address": "0x0cfc1fb0722b5f5c072ceb30af5da56af02a4a09"
+      },
+      "0x6308689ec22f4916af21ac71769d2d72ddf4b55fd0f2ab6071f9262a90d60bae": {
+        "name": "CoinOwned",
+        "address": "0x71aab2d6199414ab985ebfd6c6bc008a93c314c1"
+      },
+      "0xc1c9a94e0ea172d359b6da7ef036b380495d19e7c78d2bd1068d3bd9ce9fa36a": {
+        "name": "ContractOwned",
+        "address": "0x69b8cd16f003b814c7e4abfbc90ed568c2dd5f11"
+      },
+      "0x08f72d5e7f83b58ed9e2a9cd3622b7abd98130cf6755827ea7e29d7f48d7247a": {
+        "name": "SoupToken",
+        "address": "0x3ab3479c2697eb73a7201805b99ebd940b3a23be"
+      }
+    },
+    "name": "development"
   }
 }

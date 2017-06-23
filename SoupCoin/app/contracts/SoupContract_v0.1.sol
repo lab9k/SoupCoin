@@ -32,12 +32,12 @@ contract SoupContract is ContractOwned {
 	
 	}
 
-	function checkBallanceOf(Address user) constant returns (uint256) {
+	function checkBallanceOf(address user) constant returns (uint256) {
 		return soupToken.balanceOf(user);
 	}
 
-	function burnFrom(address _from, uint256 _value) returns (bool success) onlyAdmin{
-        return soupToken.burn(_from, _value);
+	function burnFrom(address _from, uint256 _value) onlyAdmin returns (bool success){
+        return soupToken.burnFrom(_from, _value);
     }
 
 }
