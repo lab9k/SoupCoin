@@ -24,9 +24,9 @@ contract SoupContract is ContractOwned {
 
 	}
 
-	function orderForDays(uint[] weekdays) returns (bool) {
+	function orderForDays(uint8[5] weekdays) returns (bool) {
 
-		uint totaal;
+	    /*uint totaal;
 
 		for (uint i = 0; i < 5; i++) {
 			totaal += weekdays[i];
@@ -42,8 +42,20 @@ contract SoupContract is ContractOwned {
 
 		}
 
-		return true;
+		return true;*/
+		uint8 totaal = 0;
+		for (var i = 0; i < 5; i++) {
+			totaal += weekdays[i];
+			if(weekdays[i] == 1){
+				ordersFor[i].push(msg.sender);
+			}
+		}
+		if(totaal > soupToken.balanceOf(msg.sender)){
+			revert();
+			throw;			
+		}
 
+		return true;
 	}
 
 	function burnSoupTokensForDay(uint day) onlyOwner returns (bool) {

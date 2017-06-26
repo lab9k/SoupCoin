@@ -124,7 +124,7 @@ instance: Geth/v1.6.1-stable-021c3c28/darwin-amd64/go1.8.1
 
 > eth.accounts
 []
-> personal.newAccount"notmyrealpassword")
+> personal.newAccount("notmyrealpassword")
 "0xb2e9fe08ca9a0323103883fe12c9609ed380f475"
 > eth.coinbase
 "0xb2e9fe08ca9a0323103883fe12c9609ed380f475"
