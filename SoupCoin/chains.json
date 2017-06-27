@@ -1,1 +1,19 @@
-{}
+{
+  "0x87e9ebc7f364f17a407e38baabb88a1d559a14667aac7ed29642042e6debf69c": {
+    "contracts": {
+      "0xd61105d3971f204147e8c18a71e52b269042dd27b16a7b8ea6cd518350c01c95": {
+        "name": "SoupContract",
+        "address": "0xb4c0e769a65cf3522a055a8e461b81d7ed32d01e"
+      },
+      "0x2305141b935d429ed5a12065917e4db53e03f6e7db1b54238f3343739edb08cd": {
+        "name": "Owned",
+        "address": "0x896229a6900838ad5c44a7ac0c9579de08e01572"
+      },
+      "0x6c2f301d04bc35dd13029c0f319f0a22bf3cb1f36374b1e2304874b18a2864e8": {
+        "name": "SoupToken",
+        "address": "0x862fa284a63324948ee8fef66e37347128094340"
+      }
+    },
+    "name": "development"
+  }
+}

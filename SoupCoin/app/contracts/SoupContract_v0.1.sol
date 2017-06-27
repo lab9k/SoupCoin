@@ -86,4 +86,14 @@ contract SoupContract is Owned {
         return soupToken.burnFrom(_from, _value);
     }
 
+	function addAdmin(address newAdmin) onlyAdmin returns (bool success) {
+		isAdmin.push(newAdmin);
+		return true;
+	}
+
+	function removeAdmin(address admin) onlyAdmin returns(bool success){
+		isAdmin[admin] = false;
+		return true;
+	}
+
 }
