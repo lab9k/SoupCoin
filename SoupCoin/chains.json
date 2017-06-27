@@ -12,6 +12,30 @@
       "0x6c2f301d04bc35dd13029c0f319f0a22bf3cb1f36374b1e2304874b18a2864e8": {
         "name": "SoupToken",
         "address": "0x862fa284a63324948ee8fef66e37347128094340"
+      },
+      "0x0c5fc440d9939fee2d00c7c0c289d58d913cf99600ca51213f6e7dcc7239b1b2": {
+        "name": "SoupContract",
+        "address": "0x52b6465c49cce59a30fa958ea297223de371e11e"
+      },
+      "0xb21c5f9cdac3a9a07e09f58004c4529a1f601e3dba162ac66ea0c1e13781871e": {
+        "name": "Owned",
+        "address": "0x696798437d72a2e1ebe25eeb9393adfef103d777"
+      },
+      "0x3affcae79745968282e2b23536e624bb0da4f8e8a588fd025f3191d5286ad23e": {
+        "name": "SoupToken",
+        "address": "0x9149b57b609a2307de63e17ec83d16b422074ae8"
+      },
+      "0x53478618517c8565377d52a3f1a942119caa11de422a24d53213eca3becf7a6e": {
+        "name": "SoupContract",
+        "address": "0x4f3391a9f26aa7480403d91cda066c0b8b90cf4d"
+      },
+      "0x20e65a0a12450f2504bbd3b144daf3518876f646bdb8742921cddeefad6cf8d6": {
+        "name": "Owned",
+        "address": "0xa4172ec842e9a7bfbd38288d9f4abd40f980d0d4"
+      },
+      "0x748de7fc1258c9115190f7e2c1a989b22c77229c9d0ade4d5f4b5354e4a78827": {
+        "name": "SoupToken",
+        "address": "0xf86e7c25a8e543eee96fc98ad7db1324ffbf38ed"
       }
     },
     "name": "development"
