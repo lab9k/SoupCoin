@@ -62,5 +62,4 @@ contract SoupToken is Owned {
     /* This notifies clients about the amount burnt */
     event Burn(address indexed from, uint256 value);
 
-
 }
