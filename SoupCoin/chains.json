@@ -1348,5 +1348,26 @@
       }
     },
     "name": "development"
+  },
+  "0x5fe006da2e69ade6bbcf575094e334927a2bcb2ff481f222804e5e70d41f2761": {
+    "contracts": {
+      "0x6977aa8d25e08fdb0ab88b9cd866ee8feaec8efbfaa4877db5823ed275b25e30": {
+        "name": "Owned",
+        "address": "0x0cfc1fb0722b5f5c072ceb30af5da56af02a4a09"
+      },
+      "0x788e29a84d34b11b03e60384dcff2b095be6203469a8654f67b9734e60479f2c": {
+        "name": "SoupContract",
+        "address": "0x71aab2d6199414ab985ebfd6c6bc008a93c314c1"
+      },
+      "0x74b4a5fad36f49544ee7fbb27222d8898626414efb3a79bedb2d9d4694fa7087": {
+        "name": "Owned",
+        "address": "0x69b8cd16f003b814c7e4abfbc90ed568c2dd5f11"
+      },
+      "0x081c53c9cb179f41a5d7d4a05ac7f11b8fd100f6439daef97a2e5a59040aecb1": {
+        "name": "SoupToken",
+        "address": "0x3ab3479c2697eb73a7201805b99ebd940b3a23be"
+      }
+    },
+    "name": "development"
   }
 }

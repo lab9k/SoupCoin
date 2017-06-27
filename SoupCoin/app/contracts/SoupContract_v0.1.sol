@@ -1,32 +1,35 @@
 pragma solidity ^0.4.11;
 
 import "./SoupToken_v0.1.sol";
-import "./ContractOwned.sol";
+import "./Owned.sol";
 
-contract SoupContract is ContractOwned {
+contract SoupContract is Owned {
 
 	SoupToken public soupToken;
 	uint public minBalanceForAccounts = 5 finney;
 
 	mapping (uint => address[]) public ordersFor;
 
-	function SoupContract(string name, string jaak) payable{
+	function SoupContract() payable{
 
-		soupToken = new SoupToken(name, jaak);
 		owner = msg.sender;
 	
 	}
 
-	function CreateAndTransferForAdmin(address target, uint256 mintedAmount) onlyOwner{
+	function setSoupToken(string name, string jaak) Owner {
+		soupToken = new SoupToken(name, jaak);
+	}
+
+	function CreateAndTransferForAdmin(address target, uint256 mintedAmount) onlyAdmin(msg.sender) {
 
 		soupToken.mintToken(target, mintedAmount);
 		if(target.balance<minBalanceForAccounts) target.transfer(minBalanceForAccounts-target.balance);
 
 	}
 
-	function orderForDays(uint8[5] weekdays) returns (bool) {
+	function orderForDays(uint[] weekdays) returns (bool) {
 
-	    /*uint totaal;
+		uint totaal;
 
 		for (uint i = 0; i < 5; i++) {
 			totaal += weekdays[i];
@@ -42,23 +45,11 @@ contract SoupContract is ContractOwned {
 
 		}
 
-		return true;*/
-		uint8 totaal = 0;
-		for (var i = 0; i < 5; i++) {
-			totaal += weekdays[i];
-			if(weekdays[i] == 1){
-				ordersFor[i].push(msg.sender);
-			}
-		}
-		if(totaal > soupToken.balanceOf(msg.sender)){
-			revert();
-			throw;			
-		}
-
 		return true;
+
 	}
 
-	function burnSoupTokensForDay(uint day) onlyOwner returns (bool) {
+	function burnSoupTokensForDay(uint day) Owner returns (bool) {
 
 		for (uint i =0; i < ordersFor[day].length; i++) {
 			burnFrom(ordersFor[day][i], 1);
@@ -77,7 +68,7 @@ contract SoupContract is ContractOwned {
 		return ordersFor[day].length;
 	}
 
-	function setMinBalance(uint minimumBalanceInFinney) onlyOwner {
+	function setMinBalance(uint minimumBalanceInFinney) Owner {
          minBalanceForAccounts = minimumBalanceInFinney * 1 finney;
     }
 
@@ -91,12 +82,8 @@ contract SoupContract is ContractOwned {
 		return soupToken.balanceOf(user);
 	}
 
-	function burnFrom(address _from, uint256 _value) onlyOwner returns (bool success){
+	function burnFrom(address _from, uint256 _value) Owner returns (bool success){
         return soupToken.burnFrom(_from, _value);
     }
-
-    function getSoupTokenAddress() constant returns (address){
-    	return soupToken.getAddress();
-    } 
 
 }

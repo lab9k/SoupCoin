@@ -1842,7 +1842,7 @@ module.exports = function (value, options) {
 };
 
 
-},{"crypto-js":59,"crypto-js/sha3":80}],20:[function(require,module,exports){
+},{"crypto-js":58,"crypto-js/sha3":79}],20:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -1884,7 +1884,7 @@ var sha3 = require('./sha3.js');
 var utf8 = require('utf8');
 
 var unitMap = {
-    'noether':      '0',    
+    'noether':      '0',
     'wei':          '1',
     'kwei':         '1000',
     'Kwei':         '1000',
@@ -2104,7 +2104,7 @@ var toHex = function (val) {
     if (isBigNumber(val))
         return fromDecimal(val);
 
-    if (isObject(val))
+    if (typeof val === 'object')
         return fromUtf8(JSON.stringify(val));
 
     // if its a negative number, pass it through fromDecimal
@@ -2258,8 +2258,6 @@ var isAddress = function (address) {
     }
 };
 
-
-
 /**
  * Checks if the given string is a checksummed address
  *
@@ -2267,18 +2265,18 @@ var isAddress = function (address) {
  * @param {String} address the given HEX adress
  * @return {Boolean}
 */
-var isChecksumAddress = function (address) {    
+var isChecksumAddress = function (address) {
     // Check each case
     address = address.replace('0x','');
     var addressHash = sha3(address.toLowerCase());
 
-    for (var i = 0; i < 40; i++ ) { 
+    for (var i = 0; i < 40; i++ ) {
         // the nth letter should be uppercase if the nth digit of casemap is 1
         if ((parseInt(addressHash[i], 16) > 7 && address[i].toUpperCase() !== address[i]) || (parseInt(addressHash[i], 16) <= 7 && address[i].toLowerCase() !== address[i])) {
             return false;
         }
     }
-    return true;    
+    return true;
 };
 
 
@@ -2290,15 +2288,15 @@ var isChecksumAddress = function (address) {
  * @param {String} address the given HEX adress
  * @return {String}
 */
-var toChecksumAddress = function (address) { 
+var toChecksumAddress = function (address) {
     if (typeof address === 'undefined') return '';
 
     address = address.toLowerCase().replace('0x','');
     var addressHash = sha3(address);
     var checksumAddress = '0x';
 
-    for (var i = 0; i < address.length; i++ ) { 
-        // If ith character is 9 to f then make it uppercase 
+    for (var i = 0; i < address.length; i++ ) {
+        // If ith character is 9 to f then make it uppercase
         if (parseInt(addressHash[i], 16) > 7) {
           checksumAddress += address[i].toUpperCase();
         } else {
@@ -2370,7 +2368,7 @@ var isFunction = function (object) {
  * @return {Boolean}
  */
 var isObject = function (object) {
-    return typeof object === 'object';
+    return object !== null && !(object instanceof Array) && typeof object === 'object';
 };
 
 /**
@@ -2410,6 +2408,38 @@ var isJson = function (str) {
     }
 };
 
+/**
+ * Returns true if given string is a valid Ethereum block header bloom.
+ *
+ * @method isBloom
+ * @param {String} hex encoded bloom filter
+ * @return {Boolean}
+ */
+var isBloom = function (bloom) {
+    if (!/^(0x)?[0-9a-f]{512}$/i.test(bloom)) {
+        return false;
+    } else if (/^(0x)?[0-9a-f]{512}$/.test(bloom) || /^(0x)?[0-9A-F]{512}$/.test(bloom)) {
+        return true;
+    }
+    return false;
+};
+
+/**
+ * Returns true if given string is a valid log topic.
+ *
+ * @method isTopic
+ * @param {String} hex encoded topic
+ * @return {Boolean}
+ */
+var isTopic = function (topic) {
+    if (!/^(0x)?[0-9a-f]{64}$/i.test(topic)) {
+        return false;
+    } else if (/^(0x)?[0-9a-f]{64}$/.test(topic) || /^(0x)?[0-9A-F]{64}$/.test(topic)) {
+        return true;
+    }
+    return false;
+};
+
 module.exports = {
     padLeft: padLeft,
     padRight: padRight,
@@ -2438,12 +2468,14 @@ module.exports = {
     isObject: isObject,
     isBoolean: isBoolean,
     isArray: isArray,
-    isJson: isJson
+    isJson: isJson,
+    isBloom: isBloom,
+    isTopic: isTopic,
 };
 
-},{"./sha3.js":19,"bignumber.js":"bignumber.js","utf8":85}],21:[function(require,module,exports){
+},{"./sha3.js":19,"bignumber.js":"bignumber.js","utf8":84}],21:[function(require,module,exports){
 module.exports={
-    "version": "0.18.2"
+    "version": "0.19.0"
 }
 
 },{}],22:[function(require,module,exports){
@@ -2549,6 +2581,8 @@ Web3.prototype.isAddress = utils.isAddress;
 Web3.prototype.isChecksumAddress = utils.isChecksumAddress;
 Web3.prototype.toChecksumAddress = utils.toChecksumAddress;
 Web3.prototype.isIBAN = utils.isIBAN;
+Web3.prototype.padLeft = utils.padLeft;
+Web3.prototype.padRight = utils.padRight;
 
 
 Web3.prototype.sha3 = function(string, options) {
@@ -2957,7 +2991,7 @@ var ContractFactory = function (eth, abi) {
         if (options.value > 0) {
             var constructorAbi = abi.filter(function (json) {
                 return json.type === 'constructor' && json.inputs.length === args.length;
-            })[0] || {};
+            })[0] || {};
 
             if (!constructorAbi.payable) {
                 throw new Error('Cannot send value to non-payable constructor');
@@ -3092,8 +3126,11 @@ module.exports = ContractFactory;
  */
 
 module.exports = {
-    InvalidNumberOfParams: function () {
-        return new Error('Invalid number of input parameters');
+    InvalidNumberOfSolidityArgs: function () {
+        return new Error('Invalid number of arguments to Solidity function');
+    },
+    InvalidNumberOfRPCParams: function () {
+        return new Error('Invalid number of input parameters to RPC method');
     },
     InvalidConnection: function (host){
         return new Error('CONNECTION ERROR: Couldn\'t connect to node '+ host +'.');
@@ -3523,7 +3560,9 @@ var Filter = function (requestManager, options, methods, formatter, callback, fi
             self.callbacks.forEach(function(cb){
                 cb(error);
             });
-            filterCreationErrorCallback(error);
+            if (typeof filterCreationErrorCallback === 'function') {
+              filterCreationErrorCallback(error);
+            }
         } else {
             self.filterId = id;
 
@@ -3937,6 +3976,7 @@ module.exports = {
 
 var coder = require('../solidity/coder');
 var utils = require('../utils/utils');
+var errors = require('./errors');
 var formatters = require('./formatters');
 var sha3 = require('../utils/sha3');
 
@@ -3970,6 +4010,23 @@ SolidityFunction.prototype.extractDefaultBlock = function (args) {
 };
 
 /**
+ * Should be called to check if the number of arguments is correct
+ *
+ * @method validateArgs
+ * @param {Array} arguments
+ * @throws {Error} if it is not
+ */
+SolidityFunction.prototype.validateArgs = function (args) {
+    var inputArgs = args.filter(function (a) {
+      // filter the options object but not arguments that are arrays
+      return !(utils.isObject(a) === true && utils.isArray(a) === false);
+    });
+    if (inputArgs.length !== this._inputTypes.length) {
+        throw errors.InvalidNumberOfSolidityArgs();
+    }
+};
+
+/**
  * Should be used to create payload from arguments
  *
  * @method toPayload
@@ -3981,6 +4038,7 @@ SolidityFunction.prototype.toPayload = function (args) {
     if (args.length > this._inputTypes.length && utils.isObject(args[args.length -1])) {
         options = args[args.length - 1];
     }
+    this.validateArgs(args);
     options.to = this._address;
     options.data = '0x' + this.signature() + coder.encodeParams(this._inputTypes, args);
     return options;
@@ -4175,8 +4233,7 @@ SolidityFunction.prototype.attachToContract = function (contract) {
 
 module.exports = SolidityFunction;
 
-
-},{"../solidity/coder":7,"../utils/sha3":19,"../utils/utils":20,"./formatters":30}],32:[function(require,module,exports){
+},{"../solidity/coder":7,"../utils/sha3":19,"../utils/utils":20,"./errors":26,"./formatters":30}],32:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -4331,7 +4388,7 @@ HttpProvider.prototype.isConnected = function() {
 
 module.exports = HttpProvider;
 
-},{"./errors":26,"xhr2":86,"xmlhttprequest":17}],33:[function(require,module,exports){
+},{"./errors":26,"xhr2":85,"xmlhttprequest":17}],33:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -4928,7 +4985,7 @@ Method.prototype.extractCallback = function (args) {
  */
 Method.prototype.validateArgs = function (args) {
     if (args.length !== this.params) {
-        throw errors.InvalidNumberOfParams();
+        throw errors.InvalidNumberOfRPCParams();
     }
 };
 
@@ -5021,7 +5078,6 @@ Method.prototype.request = function () {
 };
 
 module.exports = Method;
-
 
 },{"../utils/utils":20,"./errors":26}],37:[function(require,module,exports){
 /*
@@ -5155,12 +5211,12 @@ function Eth(web3) {
 
     var self = this;
 
-    methods().forEach(function(method) { 
+    methods().forEach(function(method) {
         method.attachToObject(self);
         method.setRequestManager(self._requestManager);
     });
 
-    properties().forEach(function(p) { 
+    properties().forEach(function(p) {
         p.attachToObject(self);
         p.setRequestManager(self._requestManager);
     });
@@ -5296,6 +5352,13 @@ var methods = function () {
         inputFormatter: [formatters.inputTransactionFormatter]
     });
 
+    var signTransaction = new Method({
+        name: 'signTransaction',
+        call: 'eth_signTransaction',
+        params: 1,
+        inputFormatter: [formatters.inputTransactionFormatter]
+    });
+
     var sign = new Method({
         name: 'sign',
         call: 'eth_sign',
@@ -5364,6 +5427,7 @@ var methods = function () {
         call,
         estimateGas,
         sendRawTransaction,
+        signTransaction,
         sendTransaction,
         sign,
         compileSolidity,
@@ -5421,8 +5485,8 @@ Eth.prototype.contract = function (abi) {
     return factory;
 };
 
-Eth.prototype.filter = function (fil, callback) {
-    return new Filter(this._requestManager, fil, watches.eth(), formatters.outputLogFormatter, callback);
+Eth.prototype.filter = function (fil, callback, filterCreationErrorCallback) {
+    return new Filter(this._requestManager, fil, watches.eth(), formatters.outputLogFormatter, callback, filterCreationErrorCallback);
 };
 
 Eth.prototype.namereg = function () {
@@ -5438,7 +5502,6 @@ Eth.prototype.isSyncing = function (callback) {
 };
 
 module.exports = Eth;
-
 
 },{"../../utils/config":18,"../../utils/utils":20,"../contract":25,"../filter":29,"../formatters":30,"../iban":33,"../method":36,"../namereg":44,"../property":45,"../syncing":48,"../transfer":49,"./watches":43}],39:[function(require,module,exports){
 /*
@@ -5548,6 +5611,25 @@ var methods = function () {
         inputFormatter: [null]
     });
 
+    var importRawKey = new Method({
+        name: 'importRawKey',
+		call: 'personal_importRawKey',
+		params: 2
+    });
+
+    var sign = new Method({
+        name: 'sign',
+		call: 'personal_sign',
+		params: 3,
+		inputFormatter: [null, formatters.inputAddressFormatter, null]
+    });
+
+    var ecRecover = new Method({
+        name: 'ecRecover',
+		call: 'personal_ecRecover',
+		params: 2
+    });
+
     var unlockAccount = new Method({
         name: 'unlockAccount',
         call: 'personal_unlockAccount',
@@ -5571,7 +5653,10 @@ var methods = function () {
 
     return [
         newAccount,
+        importRawKey,
         unlockAccount,
+        ecRecover,
+        sign,
         sendTransaction,
         lockAccount
     ];
@@ -6595,8 +6680,6 @@ module.exports = transfer;
 
 
 },{"../contracts/SmartExchange.json":3,"./iban":33}],50:[function(require,module,exports){
-
-},{}],51:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -6829,7 +6912,7 @@ module.exports = transfer;
 	return CryptoJS.AES;
 
 }));
-},{"./cipher-core":52,"./core":53,"./enc-base64":54,"./evpkdf":56,"./md5":61}],52:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52,"./enc-base64":53,"./evpkdf":55,"./md5":60}],51:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -7705,7 +7788,7 @@ module.exports = transfer;
 
 
 }));
-},{"./core":53}],53:[function(require,module,exports){
+},{"./core":52}],52:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8466,7 +8549,7 @@ module.exports = transfer;
 	return CryptoJS;
 
 }));
-},{}],54:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8602,7 +8685,7 @@ module.exports = transfer;
 	return CryptoJS.enc.Base64;
 
 }));
-},{"./core":53}],55:[function(require,module,exports){
+},{"./core":52}],54:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8752,7 +8835,7 @@ module.exports = transfer;
 	return CryptoJS.enc.Utf16;
 
 }));
-},{"./core":53}],56:[function(require,module,exports){
+},{"./core":52}],55:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8885,7 +8968,7 @@ module.exports = transfer;
 	return CryptoJS.EvpKDF;
 
 }));
-},{"./core":53,"./hmac":58,"./sha1":77}],57:[function(require,module,exports){
+},{"./core":52,"./hmac":57,"./sha1":76}],56:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8952,7 +9035,7 @@ module.exports = transfer;
 	return CryptoJS.format.Hex;
 
 }));
-},{"./cipher-core":52,"./core":53}],58:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52}],57:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9096,7 +9179,7 @@ module.exports = transfer;
 
 
 }));
-},{"./core":53}],59:[function(require,module,exports){
+},{"./core":52}],58:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9115,7 +9198,7 @@ module.exports = transfer;
 	return CryptoJS;
 
 }));
-},{"./aes":51,"./cipher-core":52,"./core":53,"./enc-base64":54,"./enc-utf16":55,"./evpkdf":56,"./format-hex":57,"./hmac":58,"./lib-typedarrays":60,"./md5":61,"./mode-cfb":62,"./mode-ctr":64,"./mode-ctr-gladman":63,"./mode-ecb":65,"./mode-ofb":66,"./pad-ansix923":67,"./pad-iso10126":68,"./pad-iso97971":69,"./pad-nopadding":70,"./pad-zeropadding":71,"./pbkdf2":72,"./rabbit":74,"./rabbit-legacy":73,"./rc4":75,"./ripemd160":76,"./sha1":77,"./sha224":78,"./sha256":79,"./sha3":80,"./sha384":81,"./sha512":82,"./tripledes":83,"./x64-core":84}],60:[function(require,module,exports){
+},{"./aes":50,"./cipher-core":51,"./core":52,"./enc-base64":53,"./enc-utf16":54,"./evpkdf":55,"./format-hex":56,"./hmac":57,"./lib-typedarrays":59,"./md5":60,"./mode-cfb":61,"./mode-ctr":63,"./mode-ctr-gladman":62,"./mode-ecb":64,"./mode-ofb":65,"./pad-ansix923":66,"./pad-iso10126":67,"./pad-iso97971":68,"./pad-nopadding":69,"./pad-zeropadding":70,"./pbkdf2":71,"./rabbit":73,"./rabbit-legacy":72,"./rc4":74,"./ripemd160":75,"./sha1":76,"./sha224":77,"./sha256":78,"./sha3":79,"./sha384":80,"./sha512":81,"./tripledes":82,"./x64-core":83}],59:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9192,7 +9275,7 @@ module.exports = transfer;
 	return CryptoJS.lib.WordArray;
 
 }));
-},{"./core":53}],61:[function(require,module,exports){
+},{"./core":52}],60:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9461,7 +9544,7 @@ module.exports = transfer;
 	return CryptoJS.MD5;
 
 }));
-},{"./core":53}],62:[function(require,module,exports){
+},{"./core":52}],61:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9540,7 +9623,7 @@ module.exports = transfer;
 	return CryptoJS.mode.CFB;
 
 }));
-},{"./cipher-core":52,"./core":53}],63:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52}],62:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9657,7 +9740,7 @@ module.exports = transfer;
 	return CryptoJS.mode.CTRGladman;
 
 }));
-},{"./cipher-core":52,"./core":53}],64:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52}],63:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9716,7 +9799,7 @@ module.exports = transfer;
 	return CryptoJS.mode.CTR;
 
 }));
-},{"./cipher-core":52,"./core":53}],65:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52}],64:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9757,7 +9840,7 @@ module.exports = transfer;
 	return CryptoJS.mode.ECB;
 
 }));
-},{"./cipher-core":52,"./core":53}],66:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52}],65:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9812,7 +9895,7 @@ module.exports = transfer;
 	return CryptoJS.mode.OFB;
 
 }));
-},{"./cipher-core":52,"./core":53}],67:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52}],66:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9862,7 +9945,7 @@ module.exports = transfer;
 	return CryptoJS.pad.Ansix923;
 
 }));
-},{"./cipher-core":52,"./core":53}],68:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52}],67:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9907,7 +9990,7 @@ module.exports = transfer;
 	return CryptoJS.pad.Iso10126;
 
 }));
-},{"./cipher-core":52,"./core":53}],69:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52}],68:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9948,7 +10031,7 @@ module.exports = transfer;
 	return CryptoJS.pad.Iso97971;
 
 }));
-},{"./cipher-core":52,"./core":53}],70:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52}],69:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9979,7 +10062,7 @@ module.exports = transfer;
 	return CryptoJS.pad.NoPadding;
 
 }));
-},{"./cipher-core":52,"./core":53}],71:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52}],70:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10025,7 +10108,7 @@ module.exports = transfer;
 	return CryptoJS.pad.ZeroPadding;
 
 }));
-},{"./cipher-core":52,"./core":53}],72:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52}],71:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10171,7 +10254,7 @@ module.exports = transfer;
 	return CryptoJS.PBKDF2;
 
 }));
-},{"./core":53,"./hmac":58,"./sha1":77}],73:[function(require,module,exports){
+},{"./core":52,"./hmac":57,"./sha1":76}],72:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10362,7 +10445,7 @@ module.exports = transfer;
 	return CryptoJS.RabbitLegacy;
 
 }));
-},{"./cipher-core":52,"./core":53,"./enc-base64":54,"./evpkdf":56,"./md5":61}],74:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52,"./enc-base64":53,"./evpkdf":55,"./md5":60}],73:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10555,7 +10638,7 @@ module.exports = transfer;
 	return CryptoJS.Rabbit;
 
 }));
-},{"./cipher-core":52,"./core":53,"./enc-base64":54,"./evpkdf":56,"./md5":61}],75:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52,"./enc-base64":53,"./evpkdf":55,"./md5":60}],74:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10695,7 +10778,7 @@ module.exports = transfer;
 	return CryptoJS.RC4;
 
 }));
-},{"./cipher-core":52,"./core":53,"./enc-base64":54,"./evpkdf":56,"./md5":61}],76:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52,"./enc-base64":53,"./evpkdf":55,"./md5":60}],75:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10963,7 +11046,7 @@ module.exports = transfer;
 	return CryptoJS.RIPEMD160;
 
 }));
-},{"./core":53}],77:[function(require,module,exports){
+},{"./core":52}],76:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11114,7 +11197,7 @@ module.exports = transfer;
 	return CryptoJS.SHA1;
 
 }));
-},{"./core":53}],78:[function(require,module,exports){
+},{"./core":52}],77:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11195,7 +11278,7 @@ module.exports = transfer;
 	return CryptoJS.SHA224;
 
 }));
-},{"./core":53,"./sha256":79}],79:[function(require,module,exports){
+},{"./core":52,"./sha256":78}],78:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11395,7 +11478,7 @@ module.exports = transfer;
 	return CryptoJS.SHA256;
 
 }));
-},{"./core":53}],80:[function(require,module,exports){
+},{"./core":52}],79:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11719,7 +11802,7 @@ module.exports = transfer;
 	return CryptoJS.SHA3;
 
 }));
-},{"./core":53,"./x64-core":84}],81:[function(require,module,exports){
+},{"./core":52,"./x64-core":83}],80:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11803,7 +11886,7 @@ module.exports = transfer;
 	return CryptoJS.SHA384;
 
 }));
-},{"./core":53,"./sha512":82,"./x64-core":84}],82:[function(require,module,exports){
+},{"./core":52,"./sha512":81,"./x64-core":83}],81:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -12127,7 +12210,7 @@ module.exports = transfer;
 	return CryptoJS.SHA512;
 
 }));
-},{"./core":53,"./x64-core":84}],83:[function(require,module,exports){
+},{"./core":52,"./x64-core":83}],82:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -12898,7 +12981,7 @@ module.exports = transfer;
 	return CryptoJS.TripleDES;
 
 }));
-},{"./cipher-core":52,"./core":53,"./enc-base64":54,"./evpkdf":56,"./md5":61}],84:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52,"./enc-base64":53,"./evpkdf":55,"./md5":60}],83:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -13203,7 +13286,7 @@ module.exports = transfer;
 	return CryptoJS;
 
 }));
-},{"./core":53}],85:[function(require,module,exports){
+},{"./core":52}],84:[function(require,module,exports){
 /*! https://mths.be/utf8js v2.1.2 by @mathias */
 ;(function(root) {
 
@@ -13449,25 +13532,25 @@ module.exports = transfer;
 
 }(this));
 
-},{}],86:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
 module.exports = XMLHttpRequest;
 
 },{}],"bignumber.js":[function(require,module,exports){
-/*! bignumber.js v2.0.7 https://github.com/MikeMcl/bignumber.js/LICENCE */
+/*! bignumber.js v4.0.2 https://github.com/MikeMcl/bignumber.js/LICENCE */
 
-;(function (global) {
+;(function (globalObj) {
     'use strict';
 
     /*
-      bignumber.js v2.0.7
+      bignumber.js v4.0.2
       A JavaScript library for arbitrary-precision arithmetic.
       https://github.com/MikeMcl/bignumber.js
-      Copyright (c) 2015 Michael Mclaughlin <M8ch88l@gmail.com>
+      Copyright (c) 2017 Michael Mclaughlin <M8ch88l@gmail.com>
       MIT Expat Licence
     */
 
 
-    var BigNumber, crypto, parseNumeric,
+    var BigNumber,
         isNumeric = /^-?(\d+(\.\d*)?|\.\d+)(e[+-]?\d+)?$/i,
         mathceil = Math.ceil,
         mathfloor = Math.floor,
@@ -13493,8 +13576,8 @@ module.exports = XMLHttpRequest;
     /*
      * Create and return a BigNumber constructor.
      */
-    function another(configObj) {
-        var div,
+    function constructorFactory(config) {
+        var div, parseNumeric,
 
             // id tracks the caller function, so its name can be included in error messages.
             id = 0,
@@ -13580,7 +13663,7 @@ module.exports = XMLHttpRequest;
 
             // The maximum number of significant digits of the result of the toPower operation.
             // If POW_PRECISION is 0, there will be unlimited significant digits.
-            POW_PRECISION = 100,                     // 0 to MAX
+            POW_PRECISION = 0,                       // 0 to MAX
 
             // The format specification used by the BigNumber.prototype.toFormat method.
             FORMAT = {
@@ -13713,7 +13796,9 @@ module.exports = XMLHttpRequest;
 
                 // Disallow numbers with over 15 significant digits if number type.
                 // 'new BigNumber() number type has more than 15 significant digits: {n}'
-                if ( num && ERRORS && len > 15 ) raise( id, tooManyDigits, x.s * n );
+                if ( num && ERRORS && len > 15 && ( n > MAX_SAFE_INTEGER || n !== mathfloor(n) ) ) {
+                    raise( id, tooManyDigits, x.s * n );
+                }
 
                 e = e - i - 1;
 
@@ -13768,7 +13853,7 @@ module.exports = XMLHttpRequest;
         // CONSTRUCTOR PROPERTIES
 
 
-        BigNumber.another = another;
+        BigNumber.another = constructorFactory;
 
         BigNumber.ROUND_UP = 0;
         BigNumber.ROUND_DOWN = 1;
@@ -13815,7 +13900,7 @@ module.exports = XMLHttpRequest;
          * Ignore properties/parameters set to null or undefined.
          * Return an object with the properties current values.
          */
-        BigNumber.config = function () {
+        BigNumber.config = BigNumber.set = function () {
             var v, p,
                 i = 0,
                 r = {},
@@ -13895,9 +13980,19 @@ module.exports = XMLHttpRequest;
             // 'config() crypto unavailable: {crypto}'
             if ( has( p = 'CRYPTO' ) ) {
 
-                if ( v === !!v || v === 1 || v === 0 ) {
-                    CRYPTO = !!( v && crypto && typeof crypto == 'object' );
-                    if ( v && !CRYPTO && ERRORS ) raise( 2, 'crypto unavailable', crypto );
+                if ( v === true || v === false || v === 1 || v === 0 ) {
+                    if (v) {
+                        v = typeof crypto == 'undefined';
+                        if ( !v && crypto && (crypto.getRandomValues || crypto.randomBytes)) {
+                            CRYPTO = true;
+                        } else if (ERRORS) {
+                            raise( 2, 'crypto unavailable', v ? void 0 : crypto );
+                        } else {
+                            CRYPTO = false;
+                        }
+                    } else {
+                        CRYPTO = false;
+                    }
                 } else if (ERRORS) {
                     raise( 2, p + notBool, v );
                 }
@@ -13987,7 +14082,7 @@ module.exports = XMLHttpRequest;
                 if (CRYPTO) {
 
                     // Browsers supporting crypto.getRandomValues.
-                    if ( crypto && crypto.getRandomValues ) {
+                    if (crypto.getRandomValues) {
 
                         a = crypto.getRandomValues( new Uint32Array( k *= 2 ) );
 
@@ -14020,7 +14115,7 @@ module.exports = XMLHttpRequest;
                         i = k / 2;
 
                     // Node.js supporting crypto.randomBytes.
-                    } else if ( crypto && crypto.randomBytes ) {
+                    } else if (crypto.randomBytes) {
 
                         // buffer
                         a = crypto.randomBytes( k *= 7 );
@@ -14045,13 +14140,14 @@ module.exports = XMLHttpRequest;
                             }
                         }
                         i = k / 7;
-                    } else if (ERRORS) {
-                        raise( 14, 'crypto unavailable', crypto );
+                    } else {
+                        CRYPTO = false;
+                        if (ERRORS) raise( 14, 'crypto unavailable', crypto );
                     }
                 }
 
-                // Use Math.random: CRYPTO is false or crypto is unavailable and ERRORS is false.
-                if (!i) {
+                // Use Math.random.
+                if (!CRYPTO) {
 
                     for ( ; i < k; ) {
                         v = random53bitInt();
@@ -14077,7 +14173,7 @@ module.exports = XMLHttpRequest;
                 } else {
 
                     // Remove leading elements which are zero and adjust exponent accordingly.
-                    for ( e = -1 ; c[0] === 0; c.shift(), e -= LOG_BASE);
+                    for ( e = -1 ; c[0] === 0; c.splice(0, 1), e -= LOG_BASE);
 
                     // Count the digits of the first element of c to determine leading zeros, and...
                     for ( i = 1, v = c[0]; v >= 10; v /= 10, i++);
@@ -14170,7 +14266,7 @@ module.exports = XMLHttpRequest;
 
                         if ( !d ) {
                             ++e;
-                            xc.unshift(1);
+                            xc = [1].concat(xc);
                         }
                     }
                 }
@@ -14208,7 +14304,7 @@ module.exports = XMLHttpRequest;
                     x[i] = temp % base;
                 }
 
-                if (carry) x.unshift(carry);
+                if (carry) x = [carry].concat(x);
 
                 return x;
             }
@@ -14242,7 +14338,7 @@ module.exports = XMLHttpRequest;
                 }
 
                 // Remove leading zeros.
-                for ( ; !a[0] && a.length > 1; a.shift() );
+                for ( ; !a[0] && a.length > 1; a.splice(0, 1) );
             }
 
             // x: dividend, y: divisor.
@@ -14311,7 +14407,7 @@ module.exports = XMLHttpRequest;
                     // Add zeros to make remainder as long as divisor.
                     for ( ; remL < yL; rem[remL++] = 0 );
                     yz = yc.slice();
-                    yz.unshift(0);
+                    yz = [0].concat(yz);
                     yc0 = yc[0];
                     if ( yc[1] >= base / 2 ) yc0++;
                     // Not necessary, but to prevent trial digit n > base, when using base 3.
@@ -14382,7 +14478,7 @@ module.exports = XMLHttpRequest;
                                 prodL = prod.length;
                             }
 
-                            if ( prodL < remL ) prod.unshift(0);
+                            if ( prodL < remL ) prod = [0].concat(prod);
 
                             // Subtract product from remainder.
                             subtract( rem, prod, remL, base );
@@ -14423,7 +14519,7 @@ module.exports = XMLHttpRequest;
                     more = rem[0] != null;
 
                     // Leading zero?
-                    if ( !qc[0] ) qc.shift();
+                    if ( !qc[0] ) qc.splice(0, 1);
                 }
 
                 if ( base == BASE ) {
@@ -14583,11 +14679,11 @@ module.exports = XMLHttpRequest;
 
         // Handle values that fail the validity test in BigNumber.
         parseNumeric = (function () {
-            var basePrefix = /^(-?)0([xbo])/i,
+            var basePrefix = /^(-?)0([xbo])(?=\w[\w.]*$)/i,
                 dotAfter = /^([^.]+)\.$/,
                 dotBefore = /^\.([^.]+)$/,
                 isInfinityOrNaN = /^-?(Infinity|NaN)$/,
-                whitespaceOrPlus = /^\s*\+|^\s+|\s+$/g;
+                whitespaceOrPlus = /^\s*\+(?=[\w.])|^\s+|\s+$/g;
 
             return function ( x, str, num, b ) {
                 var base,
@@ -14755,7 +14851,7 @@ module.exports = XMLHttpRequest;
                             sd -= x.e + 1;
 
                             // 1, 0.1, 0.01, 0.001, 0.0001 etc.
-                            xc[0] = pows10[ sd % LOG_BASE ];
+                            xc[0] = pows10[ ( LOG_BASE - sd % LOG_BASE ) % LOG_BASE ];
                             x.e = -sd || 0;
                         } else {
 
@@ -15133,7 +15229,7 @@ module.exports = XMLHttpRequest;
             }
 
             // Remove leading zeros and adjust exponent accordingly.
-            for ( ; xc[0] == 0; xc.shift(), --ye );
+            for ( ; xc[0] == 0; xc.splice(0, 1), --ye );
 
             // Zero?
             if ( !xc[0] ) {
@@ -15297,11 +15393,11 @@ module.exports = XMLHttpRequest;
             // Only start adding at yc.length - 1 as the further digits of xc can be ignored.
             for ( a = 0; b; ) {
                 a = ( xc[--b] = xc[b] + yc[b] + a ) / BASE | 0;
-                xc[b] %= BASE;
+                xc[b] = BASE === xc[b] ? 0 : xc[b] % BASE;
             }
 
             if (a) {
-                xc.unshift(a);
+                xc = [a].concat(xc);
                 ++ye;
             }
 
@@ -15590,7 +15686,7 @@ module.exports = XMLHttpRequest;
             if (c) {
                 ++e;
             } else {
-                zc.shift();
+                zc.splice(0, 1);
             }
 
             return normalise( y, zc, e );
@@ -15808,59 +15904,91 @@ module.exports = XMLHttpRequest;
          * Return the value of this BigNumber converted to a number primitive.
          */
         P.toNumber = function () {
-            var x = this;
-
-            // Ensure zero has correct sign.
-            return +x || ( x.s ? x.s * 0 : NaN );
+            return +this;
         };
 
 
         /*
          * Return a BigNumber whose value is the value of this BigNumber raised to the power n.
+         * If m is present, return the result modulo m.
          * If n is negative round according to DECIMAL_PLACES and ROUNDING_MODE.
-         * If POW_PRECISION is not 0, round to POW_PRECISION using ROUNDING_MODE.
+         * If POW_PRECISION is non-zero and m is not present, round to POW_PRECISION using
+         * ROUNDING_MODE.
          *
-         * n {number} Integer, -9007199254740992 to 9007199254740992 inclusive.
-         * (Performs 54 loop iterations for n of 9007199254740992.)
+         * The modular power operation works efficiently when x, n, and m are positive integers,
+         * otherwise it is equivalent to calculating x.toPower(n).modulo(m) (with POW_PRECISION 0).
+         *
+         * n {number} Integer, -MAX_SAFE_INTEGER to MAX_SAFE_INTEGER inclusive.
+         * [m] {number|string|BigNumber} The modulus.
          *
          * 'pow() exponent not an integer: {n}'
          * 'pow() exponent out of range: {n}'
+         *
+         * Performs 54 loop iterations for n of 9007199254740991.
          */
-        P.toPower = P.pow = function (n) {
-            var k, y,
+        P.toPower = P.pow = function ( n, m ) {
+            var k, y, z,
                 i = mathfloor( n < 0 ? -n : +n ),
                 x = this;
+
+            if ( m != null ) {
+                id = 23;
+                m = new BigNumber(m);
+            }
 
             // Pass ±Infinity to Math.pow if exponent is out of range.
             if ( !isValidInt( n, -MAX_SAFE_INTEGER, MAX_SAFE_INTEGER, 23, 'exponent' ) &&
               ( !isFinite(n) || i > MAX_SAFE_INTEGER && ( n /= 0 ) ||
-                parseFloat(n) != n && !( n = NaN ) ) ) {
-                return new BigNumber( Math.pow( +x, n ) );
+                parseFloat(n) != n && !( n = NaN ) ) || n == 0 ) {
+                k = Math.pow( +x, n );
+                return new BigNumber( m ? k % m : k );
             }
 
-            // Truncating each coefficient array to a length of k after each multiplication equates
-            // to truncating significant digits to POW_PRECISION + [28, 41], i.e. there will be a
-            // minimum of 28 guard digits retained. (Using + 1.5 would give [9, 21] guard digits.)
-            k = POW_PRECISION ? mathceil( POW_PRECISION / LOG_BASE + 2 ) : 0;
+            if (m) {
+                if ( n > 1 && x.gt(ONE) && x.isInt() && m.gt(ONE) && m.isInt() ) {
+                    x = x.mod(m);
+                } else {
+                    z = m;
+
+                    // Nullify m so only a single mod operation is performed at the end.
+                    m = null;
+                }
+            } else if (POW_PRECISION) {
+
+                // Truncating each coefficient array to a length of k after each multiplication
+                // equates to truncating significant digits to POW_PRECISION + [28, 41],
+                // i.e. there will be a minimum of 28 guard digits retained.
+                // (Using + 1.5 would give [9, 21] guard digits.)
+                k = mathceil( POW_PRECISION / LOG_BASE + 2 );
+            }
+
             y = new BigNumber(ONE);
 
             for ( ; ; ) {
-
                 if ( i % 2 ) {
                     y = y.times(x);
                     if ( !y.c ) break;
-                    if ( k && y.c.length > k ) y.c.length = k;
+                    if (k) {
+                        if ( y.c.length > k ) y.c.length = k;
+                    } else if (m) {
+                        y = y.mod(m);
+                    }
                 }
 
                 i = mathfloor( i / 2 );
                 if ( !i ) break;
-
                 x = x.times(x);
-                if ( k && x.c && x.c.length > k ) x.c.length = k;
+                if (k) {
+                    if ( x.c && x.c.length > k ) x.c.length = k;
+                } else if (m) {
+                    x = x.mod(m);
+                }
             }
 
+            if (m) return y;
             if ( n < 0 ) y = ONE.div(y);
-            return k ? round( y, POW_PRECISION, ROUNDING_MODE ) : y;
+
+            return z ? y.mod(z) : k ? round( y, POW_PRECISION, ROUNDING_MODE ) : y;
         };
 
 
@@ -15938,26 +16066,30 @@ module.exports = XMLHttpRequest;
         };
 
 
-
         /*
-         * Return as toString, but do not accept a base argument.
+         * Return as toString, but do not accept a base argument, and include the minus sign for
+         * negative zero.
          */
         P.valueOf = P.toJSON = function () {
-            return this.toString();
+            var str,
+                n = this,
+                e = n.e;
+
+            if ( e === null ) return n.toString();
+
+            str = coeffToString( n.c );
+
+            str = e <= TO_EXP_NEG || e >= TO_EXP_POS
+                ? toExponential( str, e )
+                : toFixedPoint( str, e );
+
+            return n.s < 0 ? '-' + str : str;
         };
 
 
-        // Aliases for BigDecimal methods.
-        //P.add = P.plus;         // P.add included above
-        //P.subtract = P.minus;   // P.sub included above
-        //P.multiply = P.times;   // P.mul included above
-        //P.divide = P.div;
-        //P.remainder = P.mod;
-        //P.compareTo = P.cmp;
-        //P.negate = P.neg;
+        P.isBigNumber = true;
 
-
-        if ( configObj != null ) BigNumber.config(configObj);
+        if ( config != null ) BigNumber.config(config);
 
         return BigNumber;
     }
@@ -16120,24 +16252,26 @@ module.exports = XMLHttpRequest;
     // EXPORT
 
 
-    BigNumber = another();
+    BigNumber = constructorFactory();
+    BigNumber['default'] = BigNumber.BigNumber = BigNumber;
+
 
     // AMD.
     if ( typeof define == 'function' && define.amd ) {
         define( function () { return BigNumber; } );
 
-    // Node and other environments that support module.exports.
+    // Node.js and other environments that support module.exports.
     } else if ( typeof module != 'undefined' && module.exports ) {
         module.exports = BigNumber;
-        if ( !crypto ) try { crypto = require('crypto'); } catch (e) {}
 
     // Browser.
     } else {
-        global.BigNumber = BigNumber;
+        if ( !globalObj ) globalObj = typeof self != 'undefined' ? self : Function('return this')();
+        globalObj.BigNumber = BigNumber;
     }
 })(this);
 
-},{"crypto":50}],"web3":[function(require,module,exports){
+},{}],"web3":[function(require,module,exports){
 var Web3 = require('./lib/web3');
 
 // dont override global variable
@@ -78311,7 +78445,7 @@ var EmbarkJS =
 	    var ipfs;
 	    if (provider === 'whisper') {
 	        this.currentMessages = EmbarkJS.Messages.Whisper;
-	        if (typeof variable === 'undefined') {
+	        if (typeof variable === 'undefined' && typeof(web3) === 'undefined') {
 	            if (options === undefined) {
 	                web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 	            } else {
@@ -78321,6 +78455,8 @@ var EmbarkJS =
 	        web3.version.getWhisper(function(err, res) {
 	            if (err) {
 	                console.log("whisper not available");
+	            } else if (web3.version.whisper >= 5) {
+	                console.log("this version of whisper is not supported yet; try a version of geth bellow 1.6.1");
 	            } else {
 	                self.currentMessages.identity = web3.shh.newIdentity();
 	            }
@@ -78333,7 +78469,11 @@ var EmbarkJS =
 	            ipfs = HaadIpfsApi(options.server, options.port);
 	        }
 	        this.currentMessages.orbit = new Orbit(ipfs);
-	        this.currentMessages.orbit.connect(web3.eth.accounts[0]);
+	        if (typeof(web3) === "undefined") {
+	          this.currentMessages.orbit.connect(Math.random().toString(36).substring(2));
+	        } else {
+	          this.currentMessages.orbit.connect(web3.eth.accounts[0]);
+	        }
 	    } else {
 	        throw Error('Unknown message provider');
 	    }
@@ -78523,17 +78663,58 @@ var EmbarkJS =
 /***/ }
 /******/ ]);
 
+var whenEnvIsLoaded = function(cb) {
+  if (typeof document !== 'undefined' && document !== null) {
+      document.addEventListener('DOMContentLoaded', cb);
+  } else {
+    cb();
+  }
+}
+whenEnvIsLoaded(function() {
 if (typeof web3 !== 'undefined' && typeof Web3 !== 'undefined') {
 	web3 = new Web3(web3.currentProvider);
 } else if (typeof Web3 !== 'undefined') {
 	web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 }
 web3.eth.defaultAccount = web3.eth.accounts[0];
+})
 
-SoupContract = new EmbarkJS.Contract({abi: [{"constant":true,"inputs":[{"name":"user","type":"address"}],"name":"checkBallanceOf","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"minBalanceForAccounts","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"weekdays","type":"uint256[]"}],"name":"orderForDays","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"dag","type":"uint256"}],"name":"getOrderAddressenForDay","outputs":[{"name":"","type":"address[]"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"soupToken","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_value","type":"uint256"}],"name":"burnFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"day","type":"uint256"}],"name":"burnSoupTokensForDay","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"day","type":"uint256"}],"name":"getAmountOrdersForDay","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"GetTotalAmount","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"target","type":"address"},{"name":"mintedAmount","type":"uint256"}],"name":"CreateAndTransferForAdmin","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"minimumBalanceInFinney","type":"uint256"}],"name":"setMinBalance","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"},{"name":"","type":"uint256"}],"name":"ordersFor","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"getSoupTokenAddress","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"type":"function"},{"inputs":[{"name":"name","type":"string"},{"name":"jaak","type":"string"}],"payable":true,"type":"constructor"}], address: '0x0cfc1fb0722b5f5c072ceb30af5da56af02a4a09', code: '60606040526611c37937e080006002556040516117cf3803806117cf833981016040528051602082015190820191015b5b60008054600160a060020a03191633600160a060020a03161790555b8181610056610186565b6040808252835190820152825181906020808301916060840191870190808383821561009d575b80518252602083111561009d57601f19909201916020918201910161007d565b505050905090810190601f1680156100c95780820380516001836020036101000a031916815260200191505b5083810382528451815284516020918201918601908083838215610108575b80518252602083111561010857601f1990920191602091820191016100e8565b505050905090810190601f1680156101345780820380516001836020036101000a031916815260200191505b50945050505050604051809103906000f080151561014e57fe5b60018054600160a060020a0319908116600160a060020a039384161790915560008054909116339092169190911790555b5050610196565b604051610b8880610c4783390190565b610aa2806101a56000396000f300606060405236156100d85763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166344cc796f81146100da57806347f1d8d71461010857806354830abf1461012a5780635bc73d0d1461019157806368e06023146101ff57806379cc67901461022b5780638da5cb5b1461025e5780639077309b1461028a578063c6d779e6146102b1578063c7fbd741146102d6578063c81ab732146102f8578063c91d956c14610319578063d8eef28b1461032e578063e78f226114610360578063f2fde38b1461038c575bfe5b34156100e257fe5b6100f6600160a060020a03600435166103aa565b60408051918252519081900360200190f35b341561011057fe5b6100f6610435565b60408051918252519081900360200190f35b341561013257fe5b61017d60048080359060200190820180359060200190808060200260200160405190810160405280939291908181526020018383602002808284375094965061043b95505050505050565b604080519115158252519081900360200190f35b341561019957fe5b6101a4600435610594565b60408051602080825283518183015283519192839290830191858101910280838382156101ec575b8051825260208311156101ec57601f1990920191602091820191016101cc565b5050509050019250505060405180910390f35b341561020757fe5b61020f610607565b60408051600160a060020a039092168252519081900360200190f35b341561023357fe5b61017d600160a060020a0360043516602435610616565b604080519115158252519081900360200190f35b341561026657fe5b61020f6106c7565b60408051600160a060020a039092168252519081900360200190f35b341561029257fe5b61017d6004356106d6565b604080519115158252519081900360200190f35b34156102b957fe5b6100f660043561076b565b60408051918252519081900360200190f35b34156102de57fe5b6100f6610780565b60408051918252519081900360200190f35b341561030057fe5b610317600160a060020a03600435166024356107fe565b005b341561032157fe5b6103176004356108e2565b005b341561033657fe5b61020f600435602435610910565b60408051600160a060020a039092168252519081900360200190f35b341561036857fe5b61020f610952565b60408051600160a060020a039092168252519081900360200190f35b341561039457fe5b610317600160a060020a03600435166109d0565b005b600154604080516000602091820181905282517f70a08231000000000000000000000000000000000000000000000000000000008152600160a060020a0386811660048301529351919493909316926370a0823192602480830193919282900301818787803b151561041857fe5b6102c65a03f1151561042657fe5b5050604051519150505b919050565b60025481565b60008080805b600582101561047257848281518110151561045857fe5b90602001906020020151830192505b600190910190610441565b600154604080516000602091820181905282517f70a08231000000000000000000000000000000000000000000000000000000008152600160a060020a0333811660048301529351889594909416936370a082319360248084019491938390030190829087803b15156104e157fe5b6102c65a03f115156104ef57fe5b5050506040518051905010156105055760006000fd5b5060005b600581101561058757848181518110151561052057fe5b906020019060200201516001141561057e5760008181526003602052604090208054600181016105508382610a19565b916000526020600020900160005b8154600160a060020a033381166101009390930a92830292021916179055505b5b600101610509565b600193505b505050919050565b61059c610a43565b600082815260036020908152604091829020805483518184028101840190945280845290918301828280156105fa57602002820191906000526020600020905b8154600160a060020a031681526001909101906020018083116105dc575b505050505090505b919050565b600154600160a060020a031681565b6000805433600160a060020a039081169116146106335760006000fd5b600154604080516000602091820181905282517f79cc6790000000000000000000000000000000000000000000000000000000008152600160a060020a03888116600483015260248201889052935193909416936379cc6790936044808301949391928390030190829087803b15156106a857fe5b6102c65a03f115156106b657fe5b5050604051519150505b5b92915050565b600054600160a060020a031681565b60008054819033600160a060020a039081169116146106f55760006000fd5b5060005b60008381526003602052604090205481101561075f576000838152600360205260409020805461075591908390811061072e57fe5b906000526020600020900160005b9054906101000a9004600160a060020a03166001610616565b505b6001016106f9565b600191505b5b50919050565b6000818152600360205260409020545b919050565b600154604080516000602091820181905282517f18160ddd00000000000000000000000000000000000000000000000000000000815292519093600160a060020a0316926318160ddd92600480830193919282900301818787803b15156107e357fe5b6102c65a03f115156107f157fe5b5050604051519150505b90565b60005433600160a060020a0390811691161461081a5760006000fd5b600154604080517f79c65068000000000000000000000000000000000000000000000000000000008152600160a060020a03858116600483015260248201859052915191909216916379c6506891604480830192600092919082900301818387803b151561088457fe5b6102c65a03f1151561089257fe5b50505060025482600160a060020a03163110156108db57600254604051600160a060020a038416918231900380156108fc02916000818181858888f1935050505015156108db57fe5b5b5b5b5050565b60005433600160a060020a039081169116146108fe5760006000fd5b66038d7ea4c6800081026002555b5b50565b60036020528160005260406000208181548110151561092b57fe5b906000526020600020900160005b915091509054906101000a9004600160a060020a031681565b600154604080516000602091820181905282517f38cc483100000000000000000000000000000000000000000000000000000000815292519093600160a060020a0316926338cc483192600480830193919282900301818787803b15156107e357fe5b6102c65a03f115156107f157fe5b5050604051519150505b90565b60005433600160a060020a039081169116146109ec5760006000fd5b6000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a0383161790555b5b50565b815481835581811511610a3d57600083815260209020610a3d918101908301610a55565b5b505050565b60408051602081019091526000815290565b6107fb91905b80821115610a6f5760008155600101610a5b565b5090565b905600a165627a7a72305820f8a618c9e82fc321fa9fb93b5a03c1835c7ef877ba00a12d7c89afbb7e6a5c78002960a0604052600d60608190527f536f7570546f6b656e20302e3100000000000000000000000000000000000000608090815261003e91600191906100df565b50341561004757fe5b604051610b88380380610b88833981016040528051602082015190820191015b5b60008054600160a060020a03191633600160a060020a03161790555b60008054600160a060020a033316600160a060020a0319918216811790925560058054909116909117905581516100c29060029060208501906100df565b5080516100d69060039060208401906100df565b505b505061017f565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061012057805160ff191683800117855561014d565b8280016001018555821561014d579182015b8281111561014d578251825591602001919060010190610132565b5b5061015a92915061015e565b5090565b61017c91905b8082111561015a5760008155600101610164565b5090565b90565b6109fa8061018e6000396000f300606060405236156100cd5763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166306fdde0381146100cf57806318160ddd1461015f57806323b872dd1461018157806338cc4831146101ba5780633c7e20f5146101e657806342966c68146102125780635a3b7e421461023957806370a08231146102c957806379c65068146102f757806379cc6790146103185780638da5cb5b1461034b57806395d89b4114610377578063a9059cbb14610407578063f2fde38b14610420575bfe5b34156100d757fe5b6100df61043e565b604080516020808252835181830152835191928392908301918501908083838215610125575b80518252602083111561012557601f199092019160209182019101610105565b505050905090810190601f1680156101515780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b341561016757fe5b61016f6104c9565b60408051918252519081900360200190f35b341561018957fe5b6101a6600160a060020a03600435811690602435166044356104cf565b604080519115158252519081900360200190f35b34156101c257fe5b6101ca610596565b60408051600160a060020a039092168252519081900360200190f35b34156101ee57fe5b6101ca61059b565b60408051600160a060020a039092168252519081900360200190f35b341561021a57fe5b6101a66004356105aa565b604080519115158252519081900360200190f35b341561024157fe5b6100df610637565b604080516020808252835181830152835191928392908301918501908083838215610125575b80518252602083111561012557601f199092019160209182019101610105565b505050905090810190601f1680156101515780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b34156102d157fe5b61016f600160a060020a03600435166106c4565b60408051918252519081900360200190f35b34156102ff57fe5b610316600160a060020a03600435166024356106d6565b005b341561032057fe5b6101a6600160a060020a036004351660243561077a565b604080519115158252519081900360200190f35b341561035357fe5b6101ca610826565b60408051600160a060020a039092168252519081900360200190f35b341561037f57fe5b6100df610835565b604080516020808252835181830152835191928392908301918501908083838215610125575b80518252602083111561012557601f199092019160209182019101610105565b505050905090810190601f1680156101515780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b610316600160a060020a03600435166024356108c3565b005b341561042857fe5b610316600160a060020a0360043516610982565b005b6002805460408051602060018416156101000260001901909316849004601f810184900484028201840190925281815292918301828280156104c15780601f10610496576101008083540402835291602001916104c1565b820191906000526020600020905b8154815290600101906020018083116104a457829003601f168201915b505050505081565b60045481565b6000600160a060020a03831615156104e75760006000fd5b600160a060020a0384166000908152600660205260409020548290101561050e5760006000fd5b600160a060020a03831660009081526006602052604090205482810110156105365760006000fd5b600160a060020a03808516600081815260066020908152604080832080548890039055938716808352918490208054870190558351868152935191936000805160206109af833981519152929081900390910190a35060015b9392505050565b305b90565b600554600160a060020a031681565b600160a060020a033316600090815260066020526040812054829010156105d15760006000fd5b600160a060020a03331660008181526006602090815260409182902080548690039055600480548690039055815185815291517fcc16f5dbb4873280815c1ee09dbd06736cffcc184412cf7a71a0fdb75d397ca59281900390910190a25060015b919050565b60018054604080516020600284861615610100026000190190941693909304601f810184900484028201840190925281815292918301828280156104c15780601f10610496576101008083540402835291602001916104c1565b820191906000526020600020905b8154815290600101906020018083116104a457829003601f168201915b505050505081565b60066020526000908152604090205481565b60005433600160a060020a039081169116146106f25760006000fd5b600160a060020a03808316600090815260066020908152604080832080548601905560048054860190558254815186815291519416936000805160206109af833981519152929181900390910190a3600054604080518381529051600160a060020a038086169316916000805160206109af833981519152919081900360200190a35b5b5050565b6000805433600160a060020a039081169116146107975760006000fd5b600160a060020a038316600090815260066020526040902054829010156107be5760006000fd5b600160a060020a03831660008181526006602090815260409182902080548690039055600480548690039055815185815291517fcc16f5dbb4873280815c1ee09dbd06736cffcc184412cf7a71a0fdb75d397ca59281900390910190a25060015b5b92915050565b600054600160a060020a031681565b6003805460408051602060026001851615610100026000190190941693909304601f810184900484028201840190925281815292918301828280156104c15780601f10610496576101008083540402835291602001916104c1565b820191906000526020600020905b8154815290600101906020018083116104a457829003601f168201915b505050505081565b600160a060020a03821615156108d95760006000fd5b600160a060020a033316600090815260066020526040902054819010156109005760006000fd5b600160a060020a03821660009081526006602052604090205481810110156109285760006000fd5b600160a060020a03338116600081815260066020908152604080832080548790039055938616808352918490208054860190558351858152935191936000805160206109af833981519152929081900390910190a35b5050565b6000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a0383161790555b505600ddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3efa165627a7a72305820ddadd5969b1b1d049b0d83de872490f2514132938d84122d1f488387c96e85550029', gasEstimates: {"creation":[null,544400],"external":{"CreateAndTransferForAdmin(address,uint256)":null,"GetTotalAmount()":null,"burnFrom(address,uint256)":null,"burnSoupTokensForDay(uint256)":null,"checkBallanceOf(address)":null,"getAmountOrdersForDay(uint256)":627,"getOrderAddressenForDay(uint256)":null,"getSoupTokenAddress()":null,"minBalanceForAccounts()":395,"orderForDays(uint256[])":null,"ordersFor(uint256,uint256)":1195,"owner()":658,"setMinBalance(uint256)":20697,"soupToken()":614,"transferOwnership(address)":21123},"internal":{}}});
-CoinOwned = new EmbarkJS.Contract({abi: [{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"type":"function"},{"inputs":[],"payable":false,"type":"constructor"}], address: '0x71aab2d6199414ab985ebfd6c6bc008a93c314c1', code: '6060604052341561000c57fe5b5b60008054600160a060020a03191633600160a060020a03161790555b5b610122806100396000396000f300606060405263ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416638da5cb5b81146043578063f2fde38b146079575bfe5b3415604a57fe5b605060a1565b6040805173ffffffffffffffffffffffffffffffffffffffff9092168252519081900360200190f35b3415608057fe5b609f73ffffffffffffffffffffffffffffffffffffffff6004351660bd565b005b60005473ffffffffffffffffffffffffffffffffffffffff1681565b6000805473ffffffffffffffffffffffffffffffffffffffff191673ffffffffffffffffffffffffffffffffffffffff83161790555b505600a165627a7a7230582068652e1468074aa57cb0ce9ebc8838ab0f1d8a8e3c78b5db78074a1c5fd660760029', gasEstimates: {"creation":[20476,58000],"external":{"owner()":370,"transferOwnership(address)":20371},"internal":{}}});
-ContractOwned = new EmbarkJS.Contract({abi: [{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"type":"function"},{"inputs":[],"payable":false,"type":"constructor"}], address: '0x69b8cd16f003b814c7e4abfbc90ed568c2dd5f11', code: '6060604052341561000c57fe5b5b60008054600160a060020a03191633600160a060020a03161790555b5b610154806100396000396000f300606060405263ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416638da5cb5b8114610045578063f2fde38b1461007e575bfe5b341561004d57fe5b6100556100a9565b6040805173ffffffffffffffffffffffffffffffffffffffff9092168252519081900360200190f35b341561008657fe5b6100a773ffffffffffffffffffffffffffffffffffffffff600435166100c5565b005b60005473ffffffffffffffffffffffffffffffffffffffff1681565b6000543373ffffffffffffffffffffffffffffffffffffffff9081169116146100ee5760006000fd5b6000805473ffffffffffffffffffffffffffffffffffffffff191673ffffffffffffffffffffffffffffffffffffffff83161790555b5b505600a165627a7a72305820cffe3c396a24e73b4c5819d5d3df3b4926179c12f0abd3d9f41539d2be0917d50029', gasEstimates: {"creation":[20482,68000],"external":{"owner()":370,"transferOwnership(address)":20612},"internal":{}}});
-SoupToken = new EmbarkJS.Contract({abi: [{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[],"name":"getAddress","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"eigenaar","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_value","type":"uint256"}],"name":"burn","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"standard","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"balanceOf","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"target","type":"address"},{"name":"mintedAmount","type":"uint256"}],"name":"mintToken","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_value","type":"uint256"}],"name":"burnFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transfer","outputs":[],"payable":true,"type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"type":"function"},{"inputs":[{"name":"tokenName","type":"string"},{"name":"tokenSymbol","type":"string"}],"payable":false,"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Burn","type":"event"}], address: '0x3ab3479c2697eb73a7201805b99ebd940b3a23be', code: '60a0604052600d60608190527f536f7570546f6b656e20302e3100000000000000000000000000000000000000608090815261003e91600191906100df565b50341561004757fe5b604051610b88380380610b88833981016040528051602082015190820191015b5b60008054600160a060020a03191633600160a060020a03161790555b60008054600160a060020a033316600160a060020a0319918216811790925560058054909116909117905581516100c29060029060208501906100df565b5080516100d69060039060208401906100df565b505b505061017f565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061012057805160ff191683800117855561014d565b8280016001018555821561014d579182015b8281111561014d578251825591602001919060010190610132565b5b5061015a92915061015e565b5090565b61017c91905b8082111561015a5760008155600101610164565b5090565b90565b6109fa8061018e6000396000f300606060405236156100cd5763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166306fdde0381146100cf57806318160ddd1461015f57806323b872dd1461018157806338cc4831146101ba5780633c7e20f5146101e657806342966c68146102125780635a3b7e421461023957806370a08231146102c957806379c65068146102f757806379cc6790146103185780638da5cb5b1461034b57806395d89b4114610377578063a9059cbb14610407578063f2fde38b14610420575bfe5b34156100d757fe5b6100df61043e565b604080516020808252835181830152835191928392908301918501908083838215610125575b80518252602083111561012557601f199092019160209182019101610105565b505050905090810190601f1680156101515780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b341561016757fe5b61016f6104c9565b60408051918252519081900360200190f35b341561018957fe5b6101a6600160a060020a03600435811690602435166044356104cf565b604080519115158252519081900360200190f35b34156101c257fe5b6101ca610596565b60408051600160a060020a039092168252519081900360200190f35b34156101ee57fe5b6101ca61059b565b60408051600160a060020a039092168252519081900360200190f35b341561021a57fe5b6101a66004356105aa565b604080519115158252519081900360200190f35b341561024157fe5b6100df610637565b604080516020808252835181830152835191928392908301918501908083838215610125575b80518252602083111561012557601f199092019160209182019101610105565b505050905090810190601f1680156101515780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b34156102d157fe5b61016f600160a060020a03600435166106c4565b60408051918252519081900360200190f35b34156102ff57fe5b610316600160a060020a03600435166024356106d6565b005b341561032057fe5b6101a6600160a060020a036004351660243561077a565b604080519115158252519081900360200190f35b341561035357fe5b6101ca610826565b60408051600160a060020a039092168252519081900360200190f35b341561037f57fe5b6100df610835565b604080516020808252835181830152835191928392908301918501908083838215610125575b80518252602083111561012557601f199092019160209182019101610105565b505050905090810190601f1680156101515780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b610316600160a060020a03600435166024356108c3565b005b341561042857fe5b610316600160a060020a0360043516610982565b005b6002805460408051602060018416156101000260001901909316849004601f810184900484028201840190925281815292918301828280156104c15780601f10610496576101008083540402835291602001916104c1565b820191906000526020600020905b8154815290600101906020018083116104a457829003601f168201915b505050505081565b60045481565b6000600160a060020a03831615156104e75760006000fd5b600160a060020a0384166000908152600660205260409020548290101561050e5760006000fd5b600160a060020a03831660009081526006602052604090205482810110156105365760006000fd5b600160a060020a03808516600081815260066020908152604080832080548890039055938716808352918490208054870190558351868152935191936000805160206109af833981519152929081900390910190a35060015b9392505050565b305b90565b600554600160a060020a031681565b600160a060020a033316600090815260066020526040812054829010156105d15760006000fd5b600160a060020a03331660008181526006602090815260409182902080548690039055600480548690039055815185815291517fcc16f5dbb4873280815c1ee09dbd06736cffcc184412cf7a71a0fdb75d397ca59281900390910190a25060015b919050565b60018054604080516020600284861615610100026000190190941693909304601f810184900484028201840190925281815292918301828280156104c15780601f10610496576101008083540402835291602001916104c1565b820191906000526020600020905b8154815290600101906020018083116104a457829003601f168201915b505050505081565b60066020526000908152604090205481565b60005433600160a060020a039081169116146106f25760006000fd5b600160a060020a03808316600090815260066020908152604080832080548601905560048054860190558254815186815291519416936000805160206109af833981519152929181900390910190a3600054604080518381529051600160a060020a038086169316916000805160206109af833981519152919081900360200190a35b5b5050565b6000805433600160a060020a039081169116146107975760006000fd5b600160a060020a038316600090815260066020526040902054829010156107be5760006000fd5b600160a060020a03831660008181526006602090815260409182902080548690039055600480548690039055815185815291517fcc16f5dbb4873280815c1ee09dbd06736cffcc184412cf7a71a0fdb75d397ca59281900390910190a25060015b5b92915050565b600054600160a060020a031681565b6003805460408051602060026001851615610100026000190190941693909304601f810184900484028201840190925281815292918301828280156104c15780601f10610496576101008083540402835291602001916104c1565b820191906000526020600020905b8154815290600101906020018083116104a457829003601f168201915b505050505081565b600160a060020a03821615156108d95760006000fd5b600160a060020a033316600090815260066020526040902054819010156109005760006000fd5b600160a060020a03821660009081526006602052604090205481810110156109285760006000fd5b600160a060020a03338116600081815260066020908152604080832080548790039055938616808352918490208054860190558351858152935191936000805160206109af833981519152929081900390910190a35b5050565b6000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a0383161790555b505600ddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3efa165627a7a72305820ddadd5969b1b1d049b0d83de872490f2514132938d84122d1f488387c96e85550029', gasEstimates: {"creation":[null,510800],"external":{"balanceOf(address)":674,"burn(uint256)":42695,"burnFrom(address,uint256)":43181,"eigenaar()":614,"getAddress()":317,"mintToken(address,uint256)":null,"name()":null,"owner()":746,"standard()":null,"symbol()":null,"totalSupply()":395,"transfer(address,uint256)":43814,"transferFrom(address,address,uint256)":null,"transferOwnership(address)":20791},"internal":{}}});
+if (whenEnvIsLoaded === undefined) {
+  var whenEnvIsLoaded = function(cb) {
+    if (typeof document !== 'undefined' && document !== null) {
+        document.addEventListener('DOMContentLoaded', cb);
+    } else {
+      cb();
+    }
+  }
+}
+whenEnvIsLoaded(function() {
+SoupContract = new EmbarkJS.Contract({abi: [{"constant":false,"inputs":[{"name":"user","type":"address"}],"name":"removeAdmin","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"isAdmin","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"user","type":"address"}],"name":"checkBallanceOf","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"minBalanceForAccounts","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"weekdays","type":"uint256[]"}],"name":"orderForDays","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"dag","type":"uint256"}],"name":"getOrderAddressenForDay","outputs":[{"name":"","type":"address[]"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"soupToken","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"user","type":"address"}],"name":"addAdmin","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_value","type":"uint256"}],"name":"burnFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"day","type":"uint256"}],"name":"burnSoupTokensForDay","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"day","type":"uint256"}],"name":"getAmountOrdersForDay","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"GetTotalAmount","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"target","type":"address"},{"name":"mintedAmount","type":"uint256"}],"name":"CreateAndTransferForAdmin","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"minimumBalanceInFinney","type":"uint256"}],"name":"setMinBalance","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"},{"name":"","type":"uint256"}],"name":"ordersFor","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"name","type":"string"},{"name":"jaak","type":"string"}],"name":"setSoupToken","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"type":"function"},{"inputs":[],"payable":true,"type":"constructor"}], address: '0x71aab2d6199414ab985ebfd6c6bc008a93c314c1', code: '60606040526611c37937e080006003555b5b60008054600160a060020a03191633600160a060020a031690811782558152600160208190526040909120805460ff191690911790555b60008054600160a060020a03191633600160a060020a03161790555b5b6118e0806100746000396000f300606060405236156100f95763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416631785f53c81146100fb57806324d7806c1461011957806344cc796f1461014957806347f1d8d71461017757806354830abf146101995780635bc73d0d1461020057806368e060231461026e578063704802751461029a57806379cc6790146102b85780638da5cb5b146102eb5780639077309b14610317578063c6d779e61461033e578063c7fbd74114610363578063c81ab73214610385578063c91d956c146103a6578063d8eef28b146103bb578063ed1dbea8146103ed578063f2fde38b14610482575bfe5b341561010357fe5b610117600160a060020a03600435166104a0565b005b341561012157fe5b610135600160a060020a03600435166104e1565b604080519115158252519081900360200190f35b341561015157fe5b610165600160a060020a03600435166104f6565b60408051918252519081900360200190f35b341561017f57fe5b610165610581565b60408051918252519081900360200190f35b34156101a157fe5b61013560048080359060200190820180359060200190808060200260200160405190810160405280939291908181526020018383602002808284375094965061058795505050505050565b604080519115158252519081900360200190f35b341561020857fe5b6102136004356106e0565b604080516020808252835181830152835191928392908301918581019102808383821561025b575b80518252602083111561025b57601f19909201916020918201910161023b565b5050509050019250505060405180910390f35b341561027657fe5b61027e610753565b60408051600160a060020a039092168252519081900360200190f35b34156102a257fe5b610117600160a060020a0360043516610762565b005b34156102c057fe5b610135600160a060020a03600435166024356107a9565b604080519115158252519081900360200190f35b34156102f357fe5b61027e61085a565b60408051600160a060020a039092168252519081900360200190f35b341561031f57fe5b610135600435610869565b604080519115158252519081900360200190f35b341561034657fe5b6101656004356108fe565b60408051918252519081900360200190f35b341561036b57fe5b610165610913565b60408051918252519081900360200190f35b341561038d57fe5b610117600160a060020a0360043516602435610991565b005b34156103ae57fe5b610117600435610a7f565b005b34156103c357fe5b61027e600435602435610aad565b60408051600160a060020a039092168252519081900360200190f35b34156103f557fe5b610117600480803590602001908201803590602001908080601f0160208091040260200160405190810160405280939291908181526020018383808284375050604080516020601f89358b01803591820183900483028401830190945280835297999881019791965091820194509250829150840183828082843750949650610aef95505050505050565b005b341561048a57fe5b610117600160a060020a0360043516610c40565b005b60005433600160a060020a039081169116146104bc5760006000fd5b600160a060020a0381166000908152600160205260409020805460ff191690555b5b50565b60016020526000908152604090205460ff1681565b600254604080516000602091820181905282517f70a08231000000000000000000000000000000000000000000000000000000008152600160a060020a0386811660048301529351919493909316926370a0823192602480830193919282900301818787803b151561056457fe5b6102c65a03f1151561057257fe5b5050604051519150505b919050565b60035481565b60008080805b60058210156105be5784828151811015156105a457fe5b90602001906020020151830192505b60019091019061058d565b600254604080516000602091820181905282517f70a08231000000000000000000000000000000000000000000000000000000008152600160a060020a0333811660048301529351889594909416936370a082319360248084019491938390030190829087803b151561062d57fe5b6102c65a03f1151561063b57fe5b5050506040518051905010156106515760006000fd5b5060005b60058110156106d357848181518110151561066c57fe5b90602001906020020151600114156106ca57600081815260046020526040902080546001810161069c8382610c6c565b916000526020600020900160005b8154600160a060020a033381166101009390930a92830292021916179055505b5b600101610655565b600193505b505050919050565b6106e8610c96565b6000828152600460209081526040918290208054835181840281018401909452808452909183018282801561074657602002820191906000526020600020905b8154600160a060020a03168152600190910190602001808311610728575b505050505090505b919050565b600254600160a060020a031681565b60005433600160a060020a0390811691161461077e5760006000fd5b600160a060020a0381166000908152600160208190526040909120805460ff191690911790555b5b50565b6000805433600160a060020a039081169116146107c65760006000fd5b600254604080516000602091820181905282517f79cc6790000000000000000000000000000000000000000000000000000000008152600160a060020a03888116600483015260248201889052935193909416936379cc6790936044808301949391928390030190829087803b151561083b57fe5b6102c65a03f1151561084957fe5b5050604051519150505b5b92915050565b600054600160a060020a031681565b60008054819033600160a060020a039081169116146108885760006000fd5b5060005b6000838152600460205260409020548110156108f257600083815260046020526040902080546108e89190839081106108c157fe5b906000526020600020900160005b9054906101000a9004600160a060020a031660016107a9565b505b60010161088c565b600191505b5b50919050565b6000818152600460205260409020545b919050565b600254604080516000602091820181905282517f18160ddd00000000000000000000000000000000000000000000000000000000815292519093600160a060020a0316926318160ddd92600480830193919282900301818787803b151561097657fe5b6102c65a03f1151561098457fe5b5050604051519150505b90565b33600160a060020a03811660009081526001602052604090205460ff1615156109b657fe5b600254604080517f79c65068000000000000000000000000000000000000000000000000000000008152600160a060020a03868116600483015260248201869052915191909216916379c6506891604480830192600092919082900301818387803b1515610a2057fe5b6102c65a03f11515610a2e57fe5b50505060035483600160a060020a0316311015610a7757600354604051600160a060020a038516918231900380156108fc02916000818181858888f193505050501515610a7757fe5b5b5b5b505050565b60005433600160a060020a03908116911614610a9b5760006000fd5b66038d7ea4c6800081026003555b5b50565b600460205281600052604060002081815481101515610ac857fe5b906000526020600020900160005b915091509054906101000a9004600160a060020a031681565b60005433600160a060020a03908116911614610b0b5760006000fd5b8181610b15610ca8565b60408082528351908201528251819060208083019160608401918701908083838215610b5c575b805182526020831115610b5c57601f199092019160209182019101610b3c565b505050905090810190601f168015610b885780820380516001836020036101000a031916815260200191505b5083810382528451815284516020918201918601908083838215610bc7575b805182526020831115610bc757601f199092019160209182019101610ba7565b505050905090810190601f168015610bf35780820380516001836020036101000a031916815260200191505b50945050505050604051809103906000f0801515610c0d57fe5b6002805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a03929092169190911790555b5b5050565b6000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a0383161790555b50565b815481835581811511610a7757600083815260209020610a77918101908301610cb8565b5b505050565b60408051602081019091526000815290565b604051610bdb80610cda83390190565b61098e91905b80821115610cd25760008155600101610cbe565b5090565b90560060a0604052600f60608190527f536f7570546f6b656e2032362f30360000000000000000000000000000000000608090815261003e91600291906100fa565b50341561004757fe5b604051610bdb380380610bdb833981016040528051602082015190820191015b5b60008054600160a060020a03191633600160a060020a031690811782558152600160208190526040909120805460ff191690911790555b60008054600160a060020a033316600160a060020a0319918216811790925560068054909116909117905581516100dd9060039060208501906100fa565b5080516100f19060049060208401906100fa565b505b505061019a565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061013b57805160ff1916838001178555610168565b82800160010185558215610168579182015b8281111561016857825182559160200191906001019061014d565b5b50610175929150610179565b5090565b61019791905b80821115610175576000815560010161017f565b5090565b90565b610a32806101a96000396000f300606060405236156100d85763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166306fdde0381146100da5780631785f53c1461016a57806318160ddd1461018857806323b872dd146101aa57806324d7806c146101e35780633c7e20f5146102135780635a3b7e421461023f57806370480275146102cf57806370a08231146102ed57806379c650681461031b57806379cc67901461033c5780638da5cb5b1461036f57806395d89b411461039b578063a9059cbb1461042b578063f2fde38b1461044c575bfe5b34156100e257fe5b6100ea61046a565b604080516020808252835181830152835191928392908301918501908083838215610130575b80518252602083111561013057601f199092019160209182019101610110565b505050905090810190601f16801561015c5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b341561017257fe5b610186600160a060020a03600435166104f8565b005b341561019057fe5b610198610539565b60408051918252519081900360200190f35b34156101b257fe5b6101cf600160a060020a036004358116906024351660443561053f565b604080519115158252519081900360200190f35b34156101eb57fe5b6101cf600160a060020a0360043516610606565b604080519115158252519081900360200190f35b341561021b57fe5b61022361061b565b60408051600160a060020a039092168252519081900360200190f35b341561024757fe5b6100ea61062a565b604080516020808252835181830152835191928392908301918501908083838215610130575b80518252602083111561013057601f199092019160209182019101610110565b505050905090810190601f16801561015c5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b34156102d757fe5b610186600160a060020a03600435166106b5565b005b34156102f557fe5b610198600160a060020a03600435166106fc565b60408051918252519081900360200190f35b341561032357fe5b610186600160a060020a036004351660243561070e565b005b341561034457fe5b6101cf600160a060020a03600435166024356107b2565b604080519115158252519081900360200190f35b341561037757fe5b61022361085e565b60408051600160a060020a039092168252519081900360200190f35b34156103a357fe5b6100ea61086d565b604080516020808252835181830152835191928392908301918501908083838215610130575b80518252602083111561013057601f199092019160209182019101610110565b505050905090810190601f16801561015c5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b341561043357fe5b610186600160a060020a03600435166024356108fb565b005b341561045457fe5b610186600160a060020a03600435166109ba565b005b6003805460408051602060026001851615610100026000190190941693909304601f810184900484028201840190925281815292918301828280156104f05780601f106104c5576101008083540402835291602001916104f0565b820191906000526020600020905b8154815290600101906020018083116104d357829003601f168201915b505050505081565b60005433600160a060020a039081169116146105145760006000fd5b600160a060020a0381166000908152600160205260409020805460ff191690555b5b50565b60055481565b6000600160a060020a03831615156105575760006000fd5b600160a060020a0384166000908152600760205260409020548290101561057e5760006000fd5b600160a060020a03831660009081526007602052604090205482810110156105a65760006000fd5b600160a060020a03808516600081815260076020908152604080832080548890039055938716808352918490208054870190558351868152935191936000805160206109e7833981519152929081900390910190a35060015b9392505050565b60016020526000908152604090205460ff1681565b600654600160a060020a031681565b6002805460408051602060018416156101000260001901909316849004601f810184900484028201840190925281815292918301828280156104f05780601f106104c5576101008083540402835291602001916104f0565b820191906000526020600020905b8154815290600101906020018083116104d357829003601f168201915b505050505081565b60005433600160a060020a039081169116146106d15760006000fd5b600160a060020a0381166000908152600160208190526040909120805460ff191690911790555b5b50565b60076020526000908152604090205481565b60005433600160a060020a0390811691161461072a5760006000fd5b600160a060020a03808316600090815260076020908152604080832080548601905560058054860190558254815186815291519416936000805160206109e7833981519152929181900390910190a3600054604080518381529051600160a060020a038086169316916000805160206109e7833981519152919081900360200190a35b5b5050565b6000805433600160a060020a039081169116146107cf5760006000fd5b600160a060020a038316600090815260076020526040902054829010156107f65760006000fd5b600160a060020a03831660008181526007602090815260409182902080548690039055600580548690039055815185815291517fcc16f5dbb4873280815c1ee09dbd06736cffcc184412cf7a71a0fdb75d397ca59281900390910190a25060015b5b92915050565b600054600160a060020a031681565b6004805460408051602060026001851615610100026000190190941693909304601f810184900484028201840190925281815292918301828280156104f05780601f106104c5576101008083540402835291602001916104f0565b820191906000526020600020905b8154815290600101906020018083116104d357829003601f168201915b505050505081565b600160a060020a03821615156109115760006000fd5b600160a060020a033316600090815260076020526040902054819010156109385760006000fd5b600160a060020a03821660009081526007602052604090205481810110156109605760006000fd5b600160a060020a03338116600081815260076020908152604080832080548790039055938616808352918490208054860190558351858152935191936000805160206109e7833981519152929081900390910190a35b5050565b6000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a0383161790555b505600ddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3efa165627a7a72305820a3037fded472c9f7651bf24a178b08798cc8651e529172170cf022fc0336862c0029a165627a7a72305820735b7931a482d56a775accd13148941b6441987c70e48ed6e5cf2f9d1d12c6fa0029', gasEstimates: {"creation":[82345,1273600],"external":{"CreateAndTransferForAdmin(address,uint256)":null,"GetTotalAmount()":null,"addAdmin(address)":21050,"burnFrom(address,uint256)":null,"burnSoupTokensForDay(uint256)":null,"checkBallanceOf(address)":null,"getAmountOrdersForDay(uint256)":693,"getOrderAddressenForDay(uint256)":null,"isAdmin(address)":554,"minBalanceForAccounts()":439,"orderForDays(uint256[])":null,"ordersFor(uint256,uint256)":1261,"owner()":724,"removeAdmin(address)":20878,"setMinBalance(uint256)":20763,"setSoupToken(string,string)":null,"soupToken()":658,"transferOwnership(address)":20879},"internal":{}}});
+});
+if (whenEnvIsLoaded === undefined) {
+  var whenEnvIsLoaded = function(cb) {
+    if (typeof document !== 'undefined' && document !== null) {
+        document.addEventListener('DOMContentLoaded', cb);
+    } else {
+      cb();
+    }
+  }
+}
+whenEnvIsLoaded(function() {
+Owned = new EmbarkJS.Contract({abi: [{"constant":false,"inputs":[{"name":"user","type":"address"}],"name":"removeAdmin","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"isAdmin","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"user","type":"address"}],"name":"addAdmin","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"type":"function"},{"inputs":[],"payable":false,"type":"constructor"}], address: '0x69b8cd16f003b814c7e4abfbc90ed568c2dd5f11', code: '6060604052341561000c57fe5b5b60008054600160a060020a03191633600160a060020a031690811782558152600160208190526040909120805460ff191690911790555b5b610220806100546000396000f300606060405263ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416631785f53c811461006657806324d7806c1461008457806370480275146100b45780638da5cb5b146100d2578063f2fde38b146100fe575bfe5b341561006e57fe5b610082600160a060020a036004351661011c565b005b341561008c57fe5b6100a0600160a060020a036004351661015d565b604080519115158252519081900360200190f35b34156100bc57fe5b610082600160a060020a0360043516610172565b005b34156100da57fe5b6100e26101b9565b60408051600160a060020a039092168252519081900360200190f35b341561010657fe5b610082600160a060020a03600435166101c8565b005b60005433600160a060020a039081169116146101385760006000fd5b600160a060020a0381166000908152600160205260409020805460ff191690555b5b50565b60016020526000908152604090205460ff1681565b60005433600160a060020a0390811691161461018e5760006000fd5b600160a060020a0381166000908152600160208190526040909120805460ff191690911790555b5b50565b600054600160a060020a031681565b6000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a0383161790555b505600a165627a7a72305820e8477ec8b7e261b51616c48ea8db4963f54526d8b385a7fb16dc378ff84effb70029', gasEstimates: {"creation":[40820,108800],"external":{"addAdmin(address)":20922,"isAdmin(address)":536,"owner()":574,"removeAdmin(address)":20860,"transferOwnership(address)":20575},"internal":{}}});
+});
+if (whenEnvIsLoaded === undefined) {
+  var whenEnvIsLoaded = function(cb) {
+    if (typeof document !== 'undefined' && document !== null) {
+        document.addEventListener('DOMContentLoaded', cb);
+    } else {
+      cb();
+    }
+  }
+}
+whenEnvIsLoaded(function() {
+SoupToken = new EmbarkJS.Contract({abi: [{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"user","type":"address"}],"name":"removeAdmin","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"isAdmin","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"eigenaar","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"standard","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"user","type":"address"}],"name":"addAdmin","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"balanceOf","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"target","type":"address"},{"name":"mintedAmount","type":"uint256"}],"name":"mintToken","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_value","type":"uint256"}],"name":"burnFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transfer","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"type":"function"},{"inputs":[{"name":"tokenName","type":"string"},{"name":"tokenSymbol","type":"string"}],"payable":false,"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Burn","type":"event"}], address: '0x3ab3479c2697eb73a7201805b99ebd940b3a23be', code: '60a0604052600f60608190527f536f7570546f6b656e2032362f30360000000000000000000000000000000000608090815261003e91600291906100fa565b50341561004757fe5b604051610bdb380380610bdb833981016040528051602082015190820191015b5b60008054600160a060020a03191633600160a060020a031690811782558152600160208190526040909120805460ff191690911790555b60008054600160a060020a033316600160a060020a0319918216811790925560068054909116909117905581516100dd9060039060208501906100fa565b5080516100f19060049060208401906100fa565b505b505061019a565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061013b57805160ff1916838001178555610168565b82800160010185558215610168579182015b8281111561016857825182559160200191906001019061014d565b5b50610175929150610179565b5090565b61019791905b80821115610175576000815560010161017f565b5090565b90565b610a32806101a96000396000f300606060405236156100d85763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166306fdde0381146100da5780631785f53c1461016a57806318160ddd1461018857806323b872dd146101aa57806324d7806c146101e35780633c7e20f5146102135780635a3b7e421461023f57806370480275146102cf57806370a08231146102ed57806379c650681461031b57806379cc67901461033c5780638da5cb5b1461036f57806395d89b411461039b578063a9059cbb1461042b578063f2fde38b1461044c575bfe5b34156100e257fe5b6100ea61046a565b604080516020808252835181830152835191928392908301918501908083838215610130575b80518252602083111561013057601f199092019160209182019101610110565b505050905090810190601f16801561015c5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b341561017257fe5b610186600160a060020a03600435166104f8565b005b341561019057fe5b610198610539565b60408051918252519081900360200190f35b34156101b257fe5b6101cf600160a060020a036004358116906024351660443561053f565b604080519115158252519081900360200190f35b34156101eb57fe5b6101cf600160a060020a0360043516610606565b604080519115158252519081900360200190f35b341561021b57fe5b61022361061b565b60408051600160a060020a039092168252519081900360200190f35b341561024757fe5b6100ea61062a565b604080516020808252835181830152835191928392908301918501908083838215610130575b80518252602083111561013057601f199092019160209182019101610110565b505050905090810190601f16801561015c5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b34156102d757fe5b610186600160a060020a03600435166106b5565b005b34156102f557fe5b610198600160a060020a03600435166106fc565b60408051918252519081900360200190f35b341561032357fe5b610186600160a060020a036004351660243561070e565b005b341561034457fe5b6101cf600160a060020a03600435166024356107b2565b604080519115158252519081900360200190f35b341561037757fe5b61022361085e565b60408051600160a060020a039092168252519081900360200190f35b34156103a357fe5b6100ea61086d565b604080516020808252835181830152835191928392908301918501908083838215610130575b80518252602083111561013057601f199092019160209182019101610110565b505050905090810190601f16801561015c5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b341561043357fe5b610186600160a060020a03600435166024356108fb565b005b341561045457fe5b610186600160a060020a03600435166109ba565b005b6003805460408051602060026001851615610100026000190190941693909304601f810184900484028201840190925281815292918301828280156104f05780601f106104c5576101008083540402835291602001916104f0565b820191906000526020600020905b8154815290600101906020018083116104d357829003601f168201915b505050505081565b60005433600160a060020a039081169116146105145760006000fd5b600160a060020a0381166000908152600160205260409020805460ff191690555b5b50565b60055481565b6000600160a060020a03831615156105575760006000fd5b600160a060020a0384166000908152600760205260409020548290101561057e5760006000fd5b600160a060020a03831660009081526007602052604090205482810110156105a65760006000fd5b600160a060020a03808516600081815260076020908152604080832080548890039055938716808352918490208054870190558351868152935191936000805160206109e7833981519152929081900390910190a35060015b9392505050565b60016020526000908152604090205460ff1681565b600654600160a060020a031681565b6002805460408051602060018416156101000260001901909316849004601f810184900484028201840190925281815292918301828280156104f05780601f106104c5576101008083540402835291602001916104f0565b820191906000526020600020905b8154815290600101906020018083116104d357829003601f168201915b505050505081565b60005433600160a060020a039081169116146106d15760006000fd5b600160a060020a0381166000908152600160208190526040909120805460ff191690911790555b5b50565b60076020526000908152604090205481565b60005433600160a060020a0390811691161461072a5760006000fd5b600160a060020a03808316600090815260076020908152604080832080548601905560058054860190558254815186815291519416936000805160206109e7833981519152929181900390910190a3600054604080518381529051600160a060020a038086169316916000805160206109e7833981519152919081900360200190a35b5b5050565b6000805433600160a060020a039081169116146107cf5760006000fd5b600160a060020a038316600090815260076020526040902054829010156107f65760006000fd5b600160a060020a03831660008181526007602090815260409182902080548690039055600580548690039055815185815291517fcc16f5dbb4873280815c1ee09dbd06736cffcc184412cf7a71a0fdb75d397ca59281900390910190a25060015b5b92915050565b600054600160a060020a031681565b6004805460408051602060026001851615610100026000190190941693909304601f810184900484028201840190925281815292918301828280156104f05780601f106104c5576101008083540402835291602001916104f0565b820191906000526020600020905b8154815290600101906020018083116104d357829003601f168201915b505050505081565b600160a060020a03821615156109115760006000fd5b600160a060020a033316600090815260076020526040902054819010156109385760006000fd5b600160a060020a03821660009081526007602052604090205481810110156109605760006000fd5b600160a060020a03338116600081815260076020908152604080832080548790039055938616808352918490208054860190558351858152935191936000805160206109e7833981519152929081900390910190a35b5050565b6000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a0383161790555b505600ddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3efa165627a7a72305820a3037fded472c9f7651bf24a178b08798cc8651e529172170cf022fc0336862c0029', gasEstimates: {"creation":[null,522000],"external":{"addAdmin(address)":21050,"balanceOf(address)":696,"burnFrom(address,uint256)":43203,"eigenaar()":636,"isAdmin(address)":620,"mintToken(address,uint256)":null,"name()":null,"owner()":768,"removeAdmin(address)":20900,"standard()":null,"symbol()":null,"totalSupply()":417,"transfer(address,uint256)":43855,"transferFrom(address,address,uint256)":null,"transferOwnership(address)":20813},"internal":{}}});
+});
 
 EmbarkJS.Storage.setProvider('ipfs', {server: 'localhost', port: '5001'});
 
