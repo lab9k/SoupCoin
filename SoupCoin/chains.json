@@ -1369,5 +1369,22 @@
       }
     },
     "name": "development"
+  },
+  "0xaa33a1991e348271fa7b416578e3c6effc370e2801e06cf25ff3d2f6395f2d12": {
+    "contracts": {
+      "0x788e29a84d34b11b03e60384dcff2b095be6203469a8654f67b9734e60479f2c": {
+        "name": "SoupContract",
+        "address": "0xb002a2b727f8c0d536dc3b2900077ff7ce928b71"
+      },
+      "0x74b4a5fad36f49544ee7fbb27222d8898626414efb3a79bedb2d9d4694fa7087": {
+        "name": "Owned",
+        "address": "0xaa0f26002429d504aef9bf1c067084a031047c86"
+      },
+      "0x081c53c9cb179f41a5d7d4a05ac7f11b8fd100f6439daef97a2e5a59040aecb1": {
+        "name": "SoupToken",
+        "address": "0xee7bd46a8af101b042d70f5ebb3e467774181780"
+      }
+    },
+    "name": "development"
   }
 }
