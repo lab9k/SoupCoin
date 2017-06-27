@@ -155,7 +155,7 @@ Go to `http://gist.github.com` and create a gist, pasting a single line into it 
 [Mine looks like this.](https://gist.github.com/cryptogoth/4e404fb58808a241f622afe80a659c05)
 
 Copy the address of the gist, e.g. https://gist.github.com/cryptogoth/4e404fb58808a241f622afe80a659c05
-Go to the `Crypto Faucet` section of https://rinkeby.io
+Go to the `Crypto Faucet` section of www.rinkeby.io
 and paste it into the blank.
 
 Choose an option from the dropdown which corresponds to how much Ether you need and how frequently (requesting more Ether will take
