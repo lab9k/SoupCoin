@@ -54,9 +54,6 @@ contract SoupContract is Owned {
 		for (uint i =0; i < ordersFor[day].length; i++) {
 			burnFrom(ordersFor[day][i], 1);
 		}
-
-		
-
 		return true;
 	}
 
