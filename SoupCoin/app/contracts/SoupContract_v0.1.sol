@@ -86,4 +86,8 @@ contract SoupContract is Owned {
         return soupToken.burnFrom(_from, _value);
     }
 
+	function listAllAdmins() returns (bool success){
+		return false;
+	}
+
 }
