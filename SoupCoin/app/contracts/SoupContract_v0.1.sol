@@ -86,11 +86,4 @@ contract SoupContract is Owned {
         return soupToken.burnFrom(_from, _value);
     }
 
-	function listAllAdmins() returns (mapping (address => bool)){
-		string ret = "";
-		for (var key in isAdmin) {
-    		ret += isAdmin[key];
-		}
-	}
-
 }
