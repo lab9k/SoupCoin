@@ -1369,5 +1369,51 @@
       }
     },
     "name": "development"
+  },
+  "0xe914dcc63f67085edc198bda3d75ab3172cb4ebcd2cf3e7d0b343d9ded84e4f2": {
+    "contracts": {
+      "0x788e29a84d34b11b03e60384dcff2b095be6203469a8654f67b9734e60479f2c": {
+        "name": "SoupContract",
+        "address": "0x4781db4ead4dc73c32c056f167e0cdc6dac4e1d6"
+      },
+      "0x74b4a5fad36f49544ee7fbb27222d8898626414efb3a79bedb2d9d4694fa7087": {
+        "name": "Owned",
+        "address": "0xac7d484e598901b9f470f5cca938c348ff4ec027"
+      },
+      "0x081c53c9cb179f41a5d7d4a05ac7f11b8fd100f6439daef97a2e5a59040aecb1": {
+        "name": "SoupToken",
+        "address": "0xe35b378546b0764abd93c8035162be6700720809"
+      },
+      "0xd61105d3971f204147e8c18a71e52b269042dd27b16a7b8ea6cd518350c01c95": {
+        "name": "SoupContract",
+        "address": "0xf84473fc6bbc0e2ec58f97be49ba3f1043d0c4c8"
+      },
+      "0x2305141b935d429ed5a12065917e4db53e03f6e7db1b54238f3343739edb08cd": {
+        "name": "Owned",
+        "address": "0xb4d62f3212cd3e1a8c718a7d62fcacb5ee6e1560"
+      },
+      "0x6c2f301d04bc35dd13029c0f319f0a22bf3cb1f36374b1e2304874b18a2864e8": {
+        "name": "SoupToken",
+        "address": "0xb2c9aab24813695898835f8306f63842c8a9876e"
+      }
+    },
+    "name": "development"
+  },
+  "0xfcc3b7a8c528839afa682c0876015d621ed7fe5f9402c58560c7caf20ac51f4f": {
+    "contracts": {
+      "0xd61105d3971f204147e8c18a71e52b269042dd27b16a7b8ea6cd518350c01c95": {
+        "name": "SoupContract",
+        "address": "0xea3f958782a444646265fbc1745d527291111165"
+      },
+      "0x2305141b935d429ed5a12065917e4db53e03f6e7db1b54238f3343739edb08cd": {
+        "name": "Owned",
+        "address": "0x27af8d98385840f71f6701f7d1d353161bbbee94"
+      },
+      "0x6c2f301d04bc35dd13029c0f319f0a22bf3cb1f36374b1e2304874b18a2864e8": {
+        "name": "SoupToken",
+        "address": "0x9b97ffb3382eaa7ee3f01ac81a9db9a322cca4d2"
+      }
+    },
+    "name": "development"
   }
 }

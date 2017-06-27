@@ -10,8 +10,8 @@ contract SoupContract is Owned {
 
 	mapping (uint => address[]) public ordersFor;
 
-	function SoupContract() payable{
-
+	function SoupContract(string tokenName,string tokenSymbol) payable{
+		soupToken = new SoupToken(tokenName,tokenSymbol);
 		owner = msg.sender;
 	
 	}

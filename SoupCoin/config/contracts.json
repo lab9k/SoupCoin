@@ -1,6 +1,6 @@
 {
   "default": {
-    "gas": 2000000,
+    "gas": 3000000,
     "contracts": {
       "SoupContract": {
         "args": [
@@ -10,3 +10,4 @@
     }
   }
 }
+ 
