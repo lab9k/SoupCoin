@@ -87,7 +87,8 @@ contract SoupContract is Owned {
     }
 
 	function listAllAdmins() returns (bool success){
-		return false;
+		return false; 
+		
 	}
 
 }
