@@ -1,10 +1,18 @@
 # SoupCoin
 
-## Initial testing environment
+## See it in action
+
+Go to [this page](https://lab9k.github.io/SoupCoin "SoupCoin") to see the app in action. You need MetaMask to use the application. Get it [here](https://metamask.io/ "MetaMask").
+
+## Help us out
+
+Follow the guides below to set up your testing environments, and help improve our contract/frontend!
+
+### Initial testing environment
 
 This will setup your environment to test your contracts on a private local testnet. Setup to test your contracts on a live testnet are below.
 
-### Windows
+#### Windows
 
 1. install nodejs v8.1.2: [link](https://nodejs.org/en/)
 
@@ -37,21 +45,21 @@ This will setup your environment to test your contracts on a private local testn
 
         $ embark run
 
-### Linux
+#### Linux
 
 * similar to windows installation, with some extra steps when installing embark
 
     a detailed description can be found [here](https://github.com/iurimatias/embark-framework/wiki/Install-on-Linux)
 
-### OSX
+#### OSX
 
 * similar to windows installation, with some extra steps when installing embark
 
     a detailed description can be found [here](https://github.com/iurimatias/embark-framework/wiki/Install-on-OSX)
 
-## Live testnet environment
+### Live testnet environment
 
-### Step 1: Download Geth
+#### Step 1: Download Geth
 First, download the latest geth (1.6.1) to your laptop.
 https://geth.ethereum.org/downloads/
 
@@ -61,13 +69,13 @@ Extract it and copy the `geth` binary to somewhere in your path.
 Unknown whether Parity works as well. It will probably take some finagling
 to work with the Geth-style Genesis block.
 
-### Step 2: Download genesis block
+#### Step 2: Download genesis block
 
 ```
 wget https://www.rinkeby.io/rinkeby.json
 ```
 
-### Step 3: Initialize 
+#### Step 3: Initialize 
 
 At this point, you should probably start a `tmux` or `screen` session, so if you get
 interrupted during syncing it will still keep going in the background.
@@ -91,7 +99,7 @@ You can download Geth from https://geth.ethereum.org/downloads/.
 On a MacBook Air with a 10 MBps (standard home internet download speeds),
 I was able to sync all 187k blocks in < 7 minutes.
 
-### Step 4: Create an account
+#### Step 4: Create an account
 
 In a separate `tmux` pane or `screen` buffer or a separate terminal completely, create an account and save the password somewhere safe.
 
@@ -137,7 +145,7 @@ like 1Password, LastPass, Dashlane, etc.
 
 Leave that terminal open for now.
 
-### Step 5: Request ETH
+#### Step 5: Request ETH
 
 Because Kovan and Rinkeby both use Proof-of-Authority (clique) to grant ETH, you'll need to request some to get started.
 However, unlike Kovan which requires you to bootstrap by requesting KETH from another human being,
