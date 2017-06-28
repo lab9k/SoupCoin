@@ -2,7 +2,7 @@
 
 ## See it in action
 
-Go to [this page](./SoupCoin/dist/index.html "SoupCoin") to see the app in action. You need MetaMask to use the application. Get it [here](https://metamask.io/ "MetaMask").
+Go to [this page](https://lab9k.github.io/SoupCoin/ "SoupCoin") to see the app in action. You need MetaMask to use the application. Get it [here](https://metamask.io/ "MetaMask").
 
 ## Help us out
 
