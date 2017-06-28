@@ -174,3 +174,42 @@ Woohoo! You're rich, in testnet wei :)
 
 If you found this guide useful, follow us on Twitter at @InvisibleLearn
 or join us on Slack: http://invisible-slack.herokuapp.com/
+
+
+### Coupling the rinkeby testnet to run with Embark
+
+#### Step 1. locating the blockchain.json configuration file:
+
+Clone our project and open it up in your favorite texteditor. We need to change the config file located in SoupCoin/config/blockchain.json
+
+#### Step 2. changing 'privatenet' in the configuration file:
+  ```json
+  "privatenet": {
+    "enabled": true,
+    "networkType": "custom",
+    "rpcHost": "localhost",
+    "rpcPort": 8545,
+    "rpcCorsDomain": "http://localhost:8000",
+    "datadir": "/home/wi/.rinkeby",
+    "networkId": "4",
+    "bootnodes": "enode://a24ac7c5484ef4ed0c5eb2d36620ba4e4aa13b8c84684e1b4aab0cebea2ae45cb4d375b77eab56516d34bfbd3c1a833fc51296ff084b770b94fb9028c4d25ccf@52.169.42.101:30303",
+    "account": {
+      "password": "config/rinkebynet/password"
+    }
+  }
+  ```
+  I'll go over the important changes:
+  datadir -> Use the datadir specified earlier in the guide, when you were 'installing' the rinkeby blockchain.
+  networkId -> 4 (standard for rinkeby)
+  bootnodes -> take the bootnode specified in the second command when following the guide
+  account -> I made a rinkebynet directory in config with a password file. In that password file you'll put the password you used when you made your account in the geth console.
+  
+  #### Step 3. running the blockchain via Embark:
+  
+  ```bash
+  # navigate to the SoupCoin directory in our project.
+  $ embark blockchain privatenet
+  # now open up a seperate terminal
+  $ embark run
+  ```
+  Et voila! If everything went OK you should see Geth v1.6.1 (replace with your version) in the embark console. You can now start hacking away : - ).
