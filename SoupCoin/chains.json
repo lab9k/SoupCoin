@@ -56,5 +56,51 @@
       }
     },
     "name": "development"
+  },
+  "0x83e10d335d9eb6c0e5c721fa9265c06a4cf297fefceddfd53f80042c388c78e8": {
+    "contracts": {
+      "0x13c01c6fce389658069e4d771e29e8ff0f6017226100bf52cc984cf45103a307": {
+        "name": "SoupContract",
+        "address": "0xcdb66812a8f84547666ed893233e6953edbeeff1"
+      },
+      "0x8973ca0d833151045e7c7497a5835d8607abf6fa1dc8dadd889ce30aeea6036c": {
+        "name": "Owned",
+        "address": "0x475873a9e5561034b791026120b848b6f3ba3cb9"
+      },
+      "0xcddd77a4f04c113fe86f232e4e8738772df7ba8ef1f1dbae2fe76373847291e1": {
+        "name": "SoupToken",
+        "address": "0x454ddc481291af7c33b358edc9fe2a278ac4766f"
+      }
+    },
+    "name": "development"
+  },
+  "0xcb4bf15e40b5bc54e8dc5e5f65a10407fcc9dd72c2f0fdd887fd68f94976c844": {
+    "contracts": {
+      "0x13c01c6fce389658069e4d771e29e8ff0f6017226100bf52cc984cf45103a307": {
+        "name": "SoupContract",
+        "address": "0xdf955defca76a4c9642ce5ed16d6d4760e20cd60"
+      },
+      "0x8973ca0d833151045e7c7497a5835d8607abf6fa1dc8dadd889ce30aeea6036c": {
+        "name": "Owned",
+        "address": "0xd59cdb16f0a64549746e8cf409e5ba4741d0042b"
+      },
+      "0xcddd77a4f04c113fe86f232e4e8738772df7ba8ef1f1dbae2fe76373847291e1": {
+        "name": "SoupToken",
+        "address": "0x630264f714a44af24889f167c37272161cadc413"
+      },
+      "0x806e2eb8ceb29048d3933d07f21485a01f9989999a1d483fc513b097a1cd52c7": {
+        "name": "SoupContract",
+        "address": "0xa74a43ec0f2bcb61c736f1aae991ec24389da5a2"
+      },
+      "0x5e1ea56e58f63e6d90ff3caf83559acdf9138c138cafd5f275f4f0013f689117": {
+        "name": "Owned",
+        "address": "0x505de66aecf95dc57b78f1cbe6514f8cd73b7c77"
+      },
+      "0x9f44b4161a29534dfee02f8546692ed00377b3466dc75973da033215b0e3b50d": {
+        "name": "SoupToken",
+        "address": "0x3f3fd4ba577d13720e6835d15fe6f0cedb320bbf"
+      }
+    },
+    "name": "development"
   }
 }

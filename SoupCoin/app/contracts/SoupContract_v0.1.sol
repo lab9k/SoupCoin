@@ -82,13 +82,4 @@ contract SoupContract is Owned {
 	function burnFrom(address _from, uint256 _value) Owner returns (bool success){
         return soupToken.burnFrom(_from, _value);
     }
-
-	function addNewAdmin(address newAdmin) onlyAdmin(msg.sender) {
-		addAdmin(newAdmin);
-	}
-
-	function removeAdminFromContract(address admin) onlyAdmin(msg.sender){
-		removeAdmin(admin);
-	}
-
 }
