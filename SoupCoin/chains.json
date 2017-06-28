@@ -39,5 +39,22 @@
       }
     },
     "name": "development"
+  },
+  "0x8afd647a231ddb2b05b92361ff32e9ccff76e67cdf7970bb10bbf62eca1068b2": {
+    "contracts": {
+      "0x13c01c6fce389658069e4d771e29e8ff0f6017226100bf52cc984cf45103a307": {
+        "name": "SoupContract",
+        "address": "0xa3bafa81dbb2a913f3220993d55920d751a67fb3"
+      },
+      "0x8973ca0d833151045e7c7497a5835d8607abf6fa1dc8dadd889ce30aeea6036c": {
+        "name": "Owned",
+        "address": "0x6ab8f317d77fd618a70153d9f498140f6f9b115b"
+      },
+      "0xcddd77a4f04c113fe86f232e4e8738772df7ba8ef1f1dbae2fe76373847291e1": {
+        "name": "SoupToken",
+        "address": "0x05513db23182c4ecbb0f27793014bfa50f59fe18"
+      }
+    },
+    "name": "development"
   }
 }
