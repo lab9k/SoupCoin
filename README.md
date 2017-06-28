@@ -199,10 +199,10 @@ Clone our project and open it up in your favorite texteditor. We need to change 
   }
   ```
   I'll go over the important changes:
-  datadir -> Use the datadir specified earlier in the guide, when you were 'installing' the rinkeby blockchain.
-  networkId -> 4 (standard for rinkeby)
-  bootnodes -> take the bootnode specified in the second command when following the guide
-  account -> I made a rinkebynet directory in config with a password file. In that password file you'll put the password you used when you made your account in the geth console.
+  * datadir -> Use the datadir specified earlier in the guide, when you were 'installing' the rinkeby blockchain.
+  * networkId -> 4 (standard for rinkeby)
+  * bootnodes -> take the bootnode specified in the second command when following the guide
+  * account -> I made a rinkebynet directory in config with a password file. In that password file you'll put the password you used when you made your account in the geth console.
   
   #### Step 3. running the blockchain via Embark:
   
