@@ -102,5 +102,56 @@
       }
     },
     "name": "development"
+  },
+  "0x70e95a07fd38da8a80711b000dfc4edafb0dba9fd80063d871bdbc3bdd9bb4b8": {
+    "contracts": {
+      "0x806e2eb8ceb29048d3933d07f21485a01f9989999a1d483fc513b097a1cd52c7": {
+        "name": "SoupContract",
+        "address": "0xc989070f02d2f83d99a62d9431b94d6ad17d56c7"
+      },
+      "0x5e1ea56e58f63e6d90ff3caf83559acdf9138c138cafd5f275f4f0013f689117": {
+        "name": "Owned",
+        "address": "0xed7bfa51f1552f707651db220a89a665f21296d4"
+      },
+      "0x9f44b4161a29534dfee02f8546692ed00377b3466dc75973da033215b0e3b50d": {
+        "name": "SoupToken",
+        "address": "0xfa918da0c2cd7bf0f7884e5453b3db4928dcbc86"
+      }
+    },
+    "name": "development"
+  },
+  "0x597ef742f9e44514ee6c75c669d0519c20248baeebea57ff123e1c1e0bf90368": {
+    "contracts": {
+      "0x806e2eb8ceb29048d3933d07f21485a01f9989999a1d483fc513b097a1cd52c7": {
+        "name": "SoupContract",
+        "address": "0xb1f03926783a9b538cc56a2fe30275a5d37bace2"
+      },
+      "0x5e1ea56e58f63e6d90ff3caf83559acdf9138c138cafd5f275f4f0013f689117": {
+        "name": "Owned",
+        "address": "0xfedfb401107cc3a4da99a492d844044211dab280"
+      },
+      "0x9f44b4161a29534dfee02f8546692ed00377b3466dc75973da033215b0e3b50d": {
+        "name": "SoupToken",
+        "address": "0x695ef556c4d053aac828800fa04d763ff87fe956"
+      }
+    },
+    "name": "development"
+  },
+  "0xdd7e6bf94aae62a663fe397f99bdb8bb96b10803c31d8f86735370ea4788f3d6": {
+    "contracts": {
+      "0x806e2eb8ceb29048d3933d07f21485a01f9989999a1d483fc513b097a1cd52c7": {
+        "name": "SoupContract",
+        "address": "0xb1f03926783a9b538cc56a2fe30275a5d37bace2"
+      },
+      "0x5e1ea56e58f63e6d90ff3caf83559acdf9138c138cafd5f275f4f0013f689117": {
+        "name": "Owned",
+        "address": "0xfedfb401107cc3a4da99a492d844044211dab280"
+      },
+      "0x9f44b4161a29534dfee02f8546692ed00377b3466dc75973da033215b0e3b50d": {
+        "name": "SoupToken",
+        "address": "0x695ef556c4d053aac828800fa04d763ff87fe956"
+      }
+    },
+    "name": "development"
   }
 }
