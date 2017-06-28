@@ -20,12 +20,10 @@ This will setup your environment to test your contracts on a private local testn
 
         $ npm install -g --production windows-build-tools
 
-1. install embark-framework
+1. install the embark framework
 
-        $ npm install -g embark
-        # We need embark version 2.4.3, at the time of writing, the production version is 2.4.2, so to correctly install embark, usethe following command
-        $ npm install -g git+https://github.com/iurimatias/embark-framework.git#develop
-
+        # We need embark version 2.5 (time of writing: 28/06/17)
+        $ sudo npm install -g embark@2.5
         # If you plan to use the simulator instead of a real ethereum node.
         $ npm -g install ethereumjs-testrpc
 
