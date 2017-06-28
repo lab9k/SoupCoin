@@ -153,5 +153,34 @@
       }
     },
     "name": "development"
+  },
+  "0x98063c2636d44504eb7db4971d49e9a15e6506168a2baee2e12c90cf7a0d9dde": {
+    "contracts": {
+      "0xd73d836b4f0241f7331422ab2c0684951a4d32955615ef88597f96ac9679585d": {
+        "name": "Owned",
+        "address": "0x0cfc1fb0722b5f5c072ceb30af5da56af02a4a09"
+      },
+      "0xa7fc8bc875ec5dc8b127d6032ef314defcce6bbf3d02c901dc6eba0ebcfe0766": {
+        "name": "SoupToken",
+        "address": "0x71aab2d6199414ab985ebfd6c6bc008a93c314c1"
+      },
+      "0x12ae01ea0d10fc1071b4fc34090a8be85fb21337042d19b740011e7e5cd8a699": {
+        "name": "Owned",
+        "address": "0x69b8cd16f003b814c7e4abfbc90ed568c2dd5f11"
+      },
+      "0x5d549d856aa301321db4dc4c78cd4f4d353c38e6a140acb2e69c9ca4a8866672": {
+        "name": "SoupToken",
+        "address": "0x3ab3479c2697eb73a7201805b99ebd940b3a23be"
+      },
+      "0xfd0bfad1bee9d889b594c3323d6a1582c361a46cddb4f2bbde55a8ff89e1a48d": {
+        "name": "Owned",
+        "address": "0x8a1db7c6146a4318031e32ca0af52e5854038a2c"
+      },
+      "0xca198c6de851365164d2d998e67625697651335517c0b4c213fdb4f59ddf4300": {
+        "name": "SoupToken",
+        "address": "0x63bf32e44b9fa0eaa3f845d2cd48d06efcc319f0"
+      }
+    },
+    "name": "development"
   }
 }

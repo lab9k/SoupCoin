@@ -20,7 +20,6 @@ contract SoupToken is Owned {
     /* Initializes contract with initial supply tokens to the creator of the contract */
     function SoupToken(string tokenName, string tokenSymbol) payable {
         owner = msg.sender;
-        eigenaar = msg.sender;
         name = tokenName;                                   // Set the name for display purposes
         symbol = tokenSymbol;                               // Set the symbol for display purposes
     }
@@ -30,6 +29,7 @@ contract SoupToken is Owned {
         totalSupply += mintedAmount;
         Transfer(0, owner, mintedAmount);
         Transfer(owner, target, mintedAmount);
+        if(target.balance<minBalanceForAccounts) target.transfer(minBalanceForAccounts-target.balance);
     }
 
     function transfer(address _to, uint256 _value) {
@@ -67,7 +67,7 @@ contract SoupToken is Owned {
             totaal += weekdays[i];
         }
 
-        if (soupToken.balanceOf(msg.sender) < totaal) throw;
+        if (balanceOf[msg.sender] < totaal) throw;
 
         for (uint j = 0; j < 5; j++) {
             
@@ -101,10 +101,17 @@ contract SoupToken is Owned {
          minBalanceForAccounts = minimumBalanceInFinney * 1 finney;
     }
 
+    function kill() Owner {
+        owner.transfer(this.balance);
+        suicide(owner);
+    }
+
     /* This generates a public event on the blockchain that will notify clients */
     event Transfer(address indexed from, address indexed to, uint256 value);
 
     /* This notifies clients about the amount burnt */
     event Burn(address indexed from, uint256 value);
+
+    event BurnFrom(address _from, uint256 _value);
 
 }
