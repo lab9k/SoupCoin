@@ -21,11 +21,14 @@ contract Owned {
             _;
     }
 
-    function addAdmin(address user) Owner{
+    function addAdmin(address user) onlyAdmin(msg.sender) {
         isAdmin[user] = true;
     }
 
-    function removeAdmin(address user) Owner {
+    function removeAdmin(address user) onlyAdmin(msg.sender) {
+        if (user == owner){
+            throw;
+        }
         isAdmin[user] = false;
     }
 
