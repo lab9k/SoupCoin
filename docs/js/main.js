@@ -5,6 +5,13 @@
 
 // globals
 var dappInterface = [{
+    "constant": true,
+    "inputs": [],
+    "name": "name",
+    "outputs": [{"name": "", "type": "string", "value": "Soupkesgvd"}],
+    "payable": false,
+    "type": "function"
+}, {
     "constant": false,
     "inputs": [{"name": "user", "type": "address"}],
     "name": "removeAdmin",
@@ -13,16 +20,26 @@ var dappInterface = [{
     "type": "function"
 }, {
     "constant": true,
-    "inputs": [{"name": "", "type": "address"}],
-    "name": "isAdmin",
-    "outputs": [{"name": "", "type": "bool", "value": false}],
+    "inputs": [],
+    "name": "totalSupply",
+    "outputs": [{"name": "", "type": "uint256", "value": "21"}],
+    "payable": false,
+    "type": "function"
+}, {
+    "constant": false,
+    "inputs": [{"name": "_from", "type": "address"}, {"name": "_to", "type": "address"}, {
+        "name": "_value",
+        "type": "uint256"
+    }],
+    "name": "transferFrom",
+    "outputs": [{"name": "success", "type": "bool"}],
     "payable": false,
     "type": "function"
 }, {
     "constant": true,
-    "inputs": [{"name": "user", "type": "address"}],
-    "name": "checkBallanceOf",
-    "outputs": [{"name": "", "type": "uint256", "value": "0"}],
+    "inputs": [{"name": "", "type": "address"}],
+    "name": "isAdmin",
+    "outputs": [{"name": "", "type": "bool", "value": false}],
     "payable": false,
     "type": "function"
 }, {
@@ -41,22 +58,36 @@ var dappInterface = [{
     "type": "function"
 }, {
     "constant": true,
+    "inputs": [],
+    "name": "standard",
+    "outputs": [{"name": "", "type": "string", "value": "SoupToken 26/06"}],
+    "payable": false,
+    "type": "function"
+}, {
+    "constant": true,
     "inputs": [{"name": "dag", "type": "uint256"}],
     "name": "getOrderAddressenForDay",
     "outputs": [{"name": "", "type": "address[]", "value": []}],
     "payable": false,
     "type": "function"
 }, {
+    "constant": false,
+    "inputs": [{"name": "user", "type": "address"}],
+    "name": "addAdmin",
+    "outputs": [],
+    "payable": false,
+    "type": "function"
+}, {
     "constant": true,
-    "inputs": [],
-    "name": "soupToken",
-    "outputs": [{"name": "", "type": "address", "value": "0xaa555d93e43c1b3298e5f3b833f1bee9cbb7e182"}],
+    "inputs": [{"name": "", "type": "address"}],
+    "name": "balanceOf",
+    "outputs": [{"name": "", "type": "uint256", "value": "0"}],
     "payable": false,
     "type": "function"
 }, {
     "constant": false,
-    "inputs": [{"name": "user", "type": "address"}],
-    "name": "addAdmin",
+    "inputs": [{"name": "target", "type": "address"}, {"name": "mintedAmount", "type": "uint256"}],
+    "name": "mintToken",
     "outputs": [],
     "payable": false,
     "type": "function"
@@ -71,7 +102,7 @@ var dappInterface = [{
     "constant": true,
     "inputs": [],
     "name": "owner",
-    "outputs": [{"name": "", "type": "address", "value": "0xed451537fa5b9e7b07067cbb7bb369120f90d690"}],
+    "outputs": [{"name": "", "type": "address", "value": "0xf4ceaa1154d9d7ebe2d4e268aaec4e2e82e204a6"}],
     "payable": false,
     "type": "function"
 }, {
@@ -83,23 +114,23 @@ var dappInterface = [{
     "type": "function"
 }, {
     "constant": true,
-    "inputs": [{"name": "day", "type": "uint256"}],
-    "name": "getAmountOrdersForDay",
-    "outputs": [{"name": "", "type": "uint256", "value": "0"}],
-    "payable": false,
-    "type": "function"
-}, {
-    "constant": true,
     "inputs": [],
-    "name": "GetTotalAmount",
-    "outputs": [{"name": "", "type": "uint256", "value": "100"}],
+    "name": "symbol",
+    "outputs": [{"name": "", "type": "string", "value": "GVD"}],
     "payable": false,
     "type": "function"
 }, {
     "constant": false,
-    "inputs": [{"name": "target", "type": "address"}, {"name": "mintedAmount", "type": "uint256"}],
-    "name": "CreateAndTransferForAdmin",
+    "inputs": [{"name": "_to", "type": "address"}, {"name": "_value", "type": "uint256"}],
+    "name": "transfer",
     "outputs": [],
+    "payable": false,
+    "type": "function"
+}, {
+    "constant": true,
+    "inputs": [{"name": "day", "type": "uint256"}],
+    "name": "getAmountOrdersForDay",
+    "outputs": [{"name": "", "type": "uint256", "value": "0"}],
     "payable": false,
     "type": "function"
 }, {
@@ -118,13 +149,6 @@ var dappInterface = [{
     "type": "function"
 }, {
     "constant": false,
-    "inputs": [{"name": "name", "type": "string"}, {"name": "jaak", "type": "string"}],
-    "name": "setSoupToken",
-    "outputs": [],
-    "payable": false,
-    "type": "function"
-}, {
-    "constant": false,
     "inputs": [{"name": "newOwner", "type": "address"}],
     "name": "transferOwnership",
     "outputs": [],
@@ -139,7 +163,7 @@ var dappInterface = [{
         "bits": "",
         "displayName": "token Name",
         "template": "elements_input_string",
-        "value": "SoupV1"
+        "value": "Soupkesgvd"
     }, {
         "name": "tokenSymbol",
         "type": "string",
@@ -148,22 +172,36 @@ var dappInterface = [{
         "bits": "",
         "displayName": "token Symbol",
         "template": "elements_input_string",
-        "value": "V1"
+        "value": "GVD"
     }], "payable": true, "type": "constructor"
+}, {
+    "anonymous": false,
+    "inputs": [{"indexed": true, "name": "from", "type": "address"}, {
+        "indexed": true,
+        "name": "to",
+        "type": "address"
+    }, {"indexed": false, "name": "value", "type": "uint256"}],
+    "name": "Transfer",
+    "type": "event"
+}, {
+    "anonymous": false,
+    "inputs": [{"indexed": true, "name": "from", "type": "address"}, {
+        "indexed": false,
+        "name": "value",
+        "type": "uint256"
+    }],
+    "name": "Burn",
+    "type": "event"
 }];
-var contractAddress = "0x77cAf7eC687D453B42FFaA76B3eAD5479F6826b5";
+var contractAddress = "0x8D35EC00C85E714D23Fb39bD4d0088ef0368B4C4";
 
 
 $(document).ready(function () {
-    console.log("ready!");
-
     // Checking if Web3 has been injected by the browser (Mist/MetaMask)
     if (typeof web3 !== 'undefined') {
         // Use Mist/MetaMask's provider
         window.web3 = new Web3(web3.currentProvider);
-        console.log("it works!");
     }
-
     runApp();
 });
 
@@ -171,6 +209,8 @@ function runApp() {
 
     var contract = web3.eth.contract(dappInterface).at(contractAddress);
     console.log(contract);
+    console.log(contract.address);
 
+    $('#contractadres').html(contract.address);
 
 }
