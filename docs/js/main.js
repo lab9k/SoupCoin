@@ -198,19 +198,31 @@ var contractAddress = "0x8D35EC00C85E714D23Fb39bD4d0088ef0368B4C4";
 
 $(document).ready(function () {
     // Checking if Web3 has been injected by the browser (Mist/MetaMask)
-    if (typeof web3 !== 'undefined') {
+    var pass = true;
+    while (typeof web3 === 'undefined') {
         // Use Mist/MetaMask's provider
-        window.web3 = new Web3(web3.currentProvider);
+        if (pass) {
+            window.web3 = new Web3(web3.currentProvider);
+            pass = false;
+        }
+        setTimeout(function () {
+            console.log('Web 3 has not been initialized, timing out for 1 sec');
+        }, 1000);
     }
     runApp();
 });
 
 function runApp() {
-
-    var contract = web3.eth.contract(dappInterface).at(contractAddress);
-    console.log(contract);
-    console.log(contract.address);
-
-    $('#contractadres').html(contract.address);
+    var soupContract = web3.eth.contract(dappInterface);
+    var contractInstance = soupContract.at(contractAddress);
+    $('#contractadres').append(contractInstance.address);
+    $('#contractnaam').append(soupContract.abi[0].outputs[0].value);
+    console.log(soupContract);
+    console.log(contractInstance);
+    console.log(contractInstance.name.request(function (e) {
+        console.log(e);
+    }, function (e) {
+        console.log(e);
+    }))
 
 }
