@@ -226,6 +226,7 @@ const contractEvents = {
         this.transferTokenInit();
         this.addAdminInit();
         this.removeAdminInit();
+        this.transferOwnershipInit();
     },
     basicInfoInit: function () {
         $('#contractadres').append(this.contractInstance.address);
@@ -373,6 +374,29 @@ const contractEvents = {
                     .addClass("red");
             } else {
                 $('.removeAdminResult').html(`<a href="https://rinkeby.etherscan.io/tx/${value}" target="_blank">${value}</a>`)
+                    .removeClass("red")
+                    .removeClass("green")
+                    .addClass("green");
+            }
+        });
+    },
+    transferOwnershipInit: function () {
+        $('#transferOwnershipBtn').on('click', function () {
+            let address = $('#transferOwnership').val();
+            contractEvents.transferOwnership(address);
+        });
+    },
+    transferOwnership: function (address) {
+        console.log(`address: ${address} and type: ${typeof address}`);
+        this.contractInstance.transferOwnership(address, function (error, value) {
+            console.log(error, value);
+            if (error) {
+                $('.transferOwnershipResult').html(`<p>Something went wrong!: ${error}</p>`)
+                    .removeClass("red")
+                    .removeClass("green")
+                    .addClass("red");
+            } else {
+                $('.transferOwnershipResult').html(`<a href="https://rinkeby.etherscan.io/tx/${value}" target="_blank">${value}</a>`)
                     .removeClass("red")
                     .removeClass("green")
                     .addClass("green");
