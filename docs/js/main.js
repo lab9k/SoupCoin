@@ -239,6 +239,10 @@ const contractEvents = {
         this.isAdminInit();
         this.checkBalanceInit();
         this.mintTokenInit();
+        this.transferTokenInit();
+        this.addAdminInit();
+        this.removeAdminInit();
+        this.transferOwnershipInit();
         this.orderSoupForDaysInit();
     },
     basicInfoInit: function () {
@@ -316,7 +320,100 @@ const contractEvents = {
                     .removeClass("green")
                     .addClass("red");
             } else {
-                $('.mintTokenResult').html(`<a href="https://rinkeby.etherscan.io/tx/${transaction}">${transaction}</a>`)
+                $('.mintTokenResult').html(`<a href="https://rinkeby.etherscan.io/tx/${transaction}" target="_blank">${transaction}</a>`)
+                    .removeClass("red")
+                    .removeClass("green")
+                    .addClass("green");
+            }
+        })
+    },
+    transferTokenInit: function () {
+        $('#transferTokenBtn').on('click', function (event) {
+            let amount = Number.parseInt($('#transferTokenAmount').val());
+            let address = $('#transferTokenAdress').val();
+            contractEvents.transferTokenTransaction(address, amount);
+        });
+    },
+    transferTokenTransaction(address, amount){
+        console.log(`address: ${address} and type: ${typeof address}\namount: ${amount} and type: ${typeof amount}`);
+        this.contractInstance.transfer(address, amount, function (error, transaction) {
+            console.log(error, transaction);
+            if (error) {
+                $('.transferTokenResult').html(`<p>Something went wrong: ${error}</p>`)
+                    .removeClass("red")
+                    .removeClass("green")
+                    .addClass("red");
+            } else {
+                $('.transferTokenResult').html(`<a href="https://rinkeby.etherscan.io/tx/${transaction}" target="_blank">${transaction}</a>`)
+                    .removeClass("red")
+                    .removeClass("green")
+                    .addClass("green");
+            }
+        });
+    },
+    addAdminInit: function () {
+        $('#addAdminBtn').on('click', function (event) {
+            let address = $('#addAdmin').val();
+            contractEvents.addAdmin(address);
+        });
+    },
+    addAdmin: function (address) {
+        console.log(`address: ${address} and type: ${typeof address}`);
+        this.contractInstance.addAdmin(address, function (error, value) {
+            console.log(error, value);
+            if (error) {
+                $('.addAdminResult').html(`<p>Something went wrong!: ${error}</p>`)
+                    .removeClass("red")
+                    .removeClass("green")
+                    .addClass("red");
+            } else {
+                $('.addAdminResult').html(`<a href="https://rinkeby.etherscan.io/tx/${value}" target="_blank">${value}</a>`)
+                    .removeClass("red")
+                    .removeClass("green")
+                    .addClass("green");
+            }
+        });
+    },
+    removeAdminInit: function () {
+        $('#removeAdminBtn').on('click', function () {
+            let address = $('#removeAdmin').val();
+            contractEvents.removeAdmin(address);
+        });
+    },
+    removeAdmin: function (address) {
+        console.log(`address: ${address} and type: ${typeof address}`);
+        this.contractInstance.removeAdmin(address, function (error, value) {
+            console.log(error, value);
+            if (error) {
+                $('.removeAdminResult').html(`<p>Something went wrong!: ${error}</p>`)
+                    .removeClass("red")
+                    .removeClass("green")
+                    .addClass("red");
+            } else {
+                $('.removeAdminResult').html(`<a href="https://rinkeby.etherscan.io/tx/${value}" target="_blank">${value}</a>`)
+                    .removeClass("red")
+                    .removeClass("green")
+                    .addClass("green");
+            }
+        });
+    },
+    transferOwnershipInit: function () {
+        $('#transferOwnershipBtn').on('click', function () {
+            let address = $('#transferOwnership').val();
+            contractEvents.transferOwnership(address);
+        });
+    },
+    transferOwnership: function (address) {
+        console.log(`address: ${address} and type: ${typeof address}`);
+        this.contractInstance.transferOwnership(address, function (error, value) {
+            console.log(error, value);
+            if (error) {
+                $('.transferOwnershipResult').html(`<p>Something went wrong!: ${error}</p>`)
+                    .removeClass("red")
+                    .removeClass("green")
+                    .addClass("red");
+            } else {
+                $('.transferOwnershipResult').html(`<a href="https://rinkeby.etherscan.io/tx/${value}" target="_blank">${value}</a>`)
                     .removeClass("red")
                     .removeClass("green")
                     .addClass("green");
@@ -345,6 +442,8 @@ const contractEvents = {
             }
             return false;
         }
+        });
+    }
 
         for (var i = 0; i < 5; i++) {
 

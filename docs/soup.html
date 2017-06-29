@@ -5,8 +5,8 @@
     <title></title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.css"/>
+    <link href="css/style.css" rel="stylesheet">
 </head>
 
 <body>
@@ -29,32 +29,103 @@
     <p id="contractadres"><b>Address: </b></p>
     <p id="contractSupply"><b>Total supply: </b></p>
     <p id="contractOwner"><b>Owner: </b></p>
-    <div class="ui two column grid">
-        <div class="column">
-            <h3>IsAdmin</h3>
-            <div class="ui form">
-                <label for="isAdmin">Address:</label>
-                <input type="text" id="isAdmin">
-                <div class="ui message isAdminResult"></div>
+    <div class="ui two column internally celled grid">
+        <div class="row">
+            <div class="column">
+                <h3>IsAdmin</h3>
+                <div class="ui form">
+                    <label for="isAdmin">Address:</label>
+                    <input type="text" id="isAdmin">
+                    <div class="ui message isAdminResult"></div>
+                </div>
+            </div>
+            <div class="column">
+                <h3>checkBalance</h3>
+                <div class="ui form">
+                    <label for="checkBalance">Address:</label>
+                    <input type="text" id="checkBalance">
+                    <div class="ui message checkBalanceResult"></div>
+                </div>
             </div>
         </div>
-        <div class="column">
-            <h3>checkBalance</h3>
-            <div class="ui form">
-                <label for="checkBalance">Address:</label>
-                <input type="text" id="checkBalance">
-                <div class="ui message checkBalanceResult"></div>
+        <div class="row">
+            <div class="column">
+                <h3>Mint token</h3>
+                <div class="ui form">
+                    <label for="mintTokenAdress">Address:</label>
+                    <input type="text" id="mintTokenAdress">
+                    <label for="mintTokenAmount">Amount:</label>
+                    <input type="number" id="mintTokenAmount">
+                    <div class="ui animated fade orange button" id="mintTokenBtn" tabindex="0">
+                        <div class="visible content">Mint</div>
+                        <div class="hidden content">
+                            <i class="reddit icon"></i>
+                        </div>
+                    </div>
+                    <div class="ui message mintTokenResult"></div>
+                </div>
+            </div>
+            <div class="column">
+                <h3>Transfer Tokens</h3>
+                <div class="ui form">
+                    <label for="transferTokenAdress">Address:</label>
+                    <input type="text" id="transferTokenAdress">
+                    <label for="transferTokenAmount">Amount:</label>
+                    <input type="number" id="transferTokenAmount">
+                    <div class="ui animated fade red button" id="transferTokenBtn" tabindex="0">
+                        <div class="visible content">Transfer</div>
+                        <div class="hidden content">
+                            <i class="cubes icon"></i>
+                        </div>
+                    </div>
+                    <div class="ui message transferTokenResult"></div>
+                </div>
             </div>
         </div>
-        <div class="column">
-            <h3>Mint token</h3>
-            <div class="ui form">
-                <label for="mintTokenAdress">Address:</label>
-                <input type="text" id="mintTokenAdress">
-                <label for="mintTokenAmount">Amount:</label>
-                <input type="number" id="mintTokenAmount">
-                <button id="mintTokenBtn" class="ui button blue"><i class="cubes icon"></i>Mint</button>
-                <div class="ui message mintTokenResult"></div>
+        <div class="row">
+            <div class="column">
+                <div class="ui medium header">Add Admin</div>
+                <div class="ui form">
+                    <label for="addAdmin">address:</label>
+                    <input type="text" id="addAdmin">
+                    <div class="ui animated fade teal button" id="addAdminBtn" tabindex="0">
+                        <div class="visible content">Add Admin</div>
+                        <div class="hidden content">
+                            <i class="cubes icon"></i>
+                        </div>
+                    </div>
+                    <div class="ui message addAdminResult"></div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="ui medium header">Remove Admin</div>
+                <div class="ui form">
+                    <label for="removeAdmin">address: </label>
+                    <input type="text" id="removeAdmin">
+                    <div class="ui animated fade pink button" id="removeAdminBtn" tabindex="0">
+                        <div class="visible content">Remove Admin</div>
+                        <div class="hidden content">
+                            <i class="cubes icon"></i>
+                        </div>
+                    </div>
+                    <div class="ui message removeAdminResult"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="column">
+                <div class="ui medium header">Transfer Ownership</div>
+                <div class="ui form">
+                    <label for="transferOwnership">address:</label>
+                    <input type="text" id="transferOwnership">
+                    <div class="ui animated fade yellow button" id="transferOwnershipBtn" tabindex="0">
+                        <div class="visible content">Transfer Ownership</div>
+                        <div class="hidden content">
+                            <i class="cube icon"></i>
+                        </div>
+                    </div>
+                    <div class="ui message transferOwnershipResult"></div>
+                </div>
             </div>
         </div>
         <div class="column">
