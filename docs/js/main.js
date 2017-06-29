@@ -212,6 +212,22 @@ const dappInterface = [{
 const contractAddress = "0xAE827c9C4c15eD3098B30b72d4F63C6F2F9811Ec";
 
 
+$(document).ready(function () {
+    // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+    let pass = true;
+    while (typeof web3 === 'undefined') {
+        // Use Mist/MetaMask's provider
+        if (pass) {
+            window.web3 = new Web3(web3.currentProvider);
+            pass = false;
+        }
+        setTimeout(function () {
+            console.log('Web 3 has not been initialized, timing out for 1 sec');
+        }, 1000);
+    }
+    contractEvents.init();
+});
+
 const contractEvents = {
     init: function () {
         this.soupContract = web3.eth.contract(dappInterface);
@@ -223,6 +239,7 @@ const contractEvents = {
         this.isAdminInit();
         this.checkBalanceInit();
         this.mintTokenInit();
+        this.orderSoupForDaysInit();
     },
     basicInfoInit: function () {
         $('#contractadres').append(this.contractInstance.address);
@@ -305,22 +322,81 @@ const contractEvents = {
                     .addClass("green");
             }
         })
-    }
+    },
 
-};
-$(document).ready(function () {
-    // Checking if Web3 has been injected by the browser (Mist/MetaMask)
-    let pass = true;
-    while (typeof web3 === 'undefined') {
-        // Use Mist/MetaMask's provider
-        if (pass) {
-            window.web3 = new Web3(web3.currentProvider);
-            pass = false;
+    orderSoupForDaysInit: function () {
+
+        let dagen = {};
+        dagen[0] = "Maandag";
+        dagen[1] = "Dinsdag";
+        dagen[2] = "Woensdag";
+        dagen[3] = "Donderdag";
+        dagen[4] = "Vrijdag";
+
+        let datum = new Date();
+        $('#dayLabel').append(datum);
+        let huidigeDag = datum.getDay();
+
+        function checkIfOrdered(arr) {
+            for (var i = 0; i < arr.length; i++) {
+                if (web3.eth.accounts == arr[i]) {
+                    return true;
+                }
+            }
+            return false;
         }
-        setTimeout(function () {
-            console.log('Web 3 has not been initialized, timing out for 1 sec');
-        }, 1000);
+
+        for (var i = 0; i < 5; i++) {
+
+            // create & append elements to DOM
+            var checkboxdiv = $(document.createElement("div"));
+            var checkboxinput = $(document.createElement("input"));
+            $(checkboxinput).attr("type", "checkbox");
+            $(checkboxdiv).append(checkboxinput);
+            $(checkboxdiv).addClass("ui");
+            $(checkboxdiv).addClass("checkbox");
+            var label = $(document.createElement("label"));
+            label.html((dagen[i]));
+            $(checkboxdiv).append(label);
+            $(".dagenCheckboxGroup").append(checkboxdiv);
+            $(".dagenCheckboxGroup").append("<br />");
+
+            //check if user already ordered, if so check the checkbox.
+            contractEvents.contractInstance.getOrderAddressenForDay(i, function (error, success) {
+                if (checkIfOrdered(success)) {
+                    $(checkboxdiv).addClass("checked");
+                    $(checkboxinput).attr("checked", "");
+                }
+            });
+
+            // disable the checkbox if day has already passed, user cant change his mind anymore.
+
+            if (i < huidigeDag) {
+                $(checkboxdiv).addClass("disabled");
+                $(checkboxinput).attr("disabled", "disabled");
+
+            }
+
+            function composeOrderArray(){
+               $(".dagenCheckboxGroup").children().each(function (index, value) {
+                   if($(value).hasClass("checkbox")){
+                       console.log(value);
+                   }
+               });
+
+            }
+            // handle click on button
+            $("#bevestigOrderBtn").on("click",function (event) {
+                console.log("looping start");
+
+                composeOrderArray();
+                var orderArray = {};
+                contractEvents.orderSoupForDaysTransaction(orderArray);
+            })
+        }
+    },
+
+    orderSoupForDaysTransaction: function (array) {
+        // put orders in blockchain.
     }
-    //runApp();
-    contractEvents.init();
-});
+};
