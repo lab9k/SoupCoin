@@ -222,6 +222,7 @@ const contractEvents = {
         this.basicInfoInit();
         this.isAdminInit();
         this.checkBalanceInit();
+        this.mintTokenInit();
     },
     basicInfoInit: function () {
         $('#contractadres').append(this.contractInstance.address);
@@ -281,6 +282,19 @@ const contractEvents = {
 
         }
     },
+    mintTokenInit: function () {
+        $('#mintTokenBtn').on('click', function (event) {
+            let amount = Number.parseInt($('#mintTokenAmount').val());
+            let address = $('#mintTokenAdress').val();
+            contractEvents.mintTokenTransaction(address, amount);
+        });
+    },
+    mintTokenTransaction: function (address, amount) {
+        console.log(`address: ${address} and type: ${typeof address}\namount: ${amount} and type: ${typeof amount}`);
+        this.contractInstance.mintToken(address, amount, function (error, value) {
+            console.log(error, value);
+        })
+    }
 
 };
 $(document).ready(function () {
