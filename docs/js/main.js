@@ -8,7 +8,7 @@ var dappInterface = [{
     "constant": true,
     "inputs": [],
     "name": "name",
-    "outputs": [{"name": "", "type": "string", "value": "Soupkesgvd"}],
+    "outputs": [{"name": "", "type": "string", "value": "SoupOp2806"}],
     "payable": false,
     "type": "function"
 }, {
@@ -22,7 +22,7 @@ var dappInterface = [{
     "constant": true,
     "inputs": [],
     "name": "totalSupply",
-    "outputs": [{"name": "", "type": "uint256", "value": "21"}],
+    "outputs": [{"name": "", "type": "uint256", "value": "0"}],
     "payable": false,
     "type": "function"
 }, {
@@ -43,6 +43,13 @@ var dappInterface = [{
     "payable": false,
     "type": "function"
 }, {
+    "constant": false,
+    "inputs": [],
+    "name": "kill",
+    "outputs": [],
+    "payable": false,
+    "type": "function"
+}, {
     "constant": true,
     "inputs": [],
     "name": "minBalanceForAccounts",
@@ -60,7 +67,7 @@ var dappInterface = [{
     "constant": true,
     "inputs": [],
     "name": "standard",
-    "outputs": [{"name": "", "type": "string", "value": "SoupToken 26/06"}],
+    "outputs": [{"name": "", "type": "string", "value": "SoupToken 28/06"}],
     "payable": false,
     "type": "function"
 }, {
@@ -116,7 +123,7 @@ var dappInterface = [{
     "constant": true,
     "inputs": [],
     "name": "symbol",
-    "outputs": [{"name": "", "type": "string", "value": "GVD"}],
+    "outputs": [{"name": "", "type": "string", "value": "💸"}],
     "payable": false,
     "type": "function"
 }, {
@@ -163,7 +170,7 @@ var dappInterface = [{
         "bits": "",
         "displayName": "token Name",
         "template": "elements_input_string",
-        "value": "Soupkesgvd"
+        "value": "SoupOp2806"
     }, {
         "name": "tokenSymbol",
         "type": "string",
@@ -172,7 +179,7 @@ var dappInterface = [{
         "bits": "",
         "displayName": "token Symbol",
         "template": "elements_input_string",
-        "value": "GVD"
+        "value": "💸"
     }], "payable": true, "type": "constructor"
 }, {
     "anonymous": false,
@@ -192,8 +199,17 @@ var dappInterface = [{
     }],
     "name": "Burn",
     "type": "event"
+}, {
+    "anonymous": false,
+    "inputs": [{"indexed": false, "name": "_from", "type": "address"}, {
+        "indexed": false,
+        "name": "_value",
+        "type": "uint256"
+    }],
+    "name": "BurnFrom",
+    "type": "event"
 }];
-var contractAddress = "0x8D35EC00C85E714D23Fb39bD4d0088ef0368B4C4";
+var contractAddress = "0xC3523E92F6c73A932FEE01e0c98dB4160390f922";
 
 
 $(document).ready(function () {
@@ -216,13 +232,15 @@ function runApp() {
     var soupContract = web3.eth.contract(dappInterface);
     var contractInstance = soupContract.at(contractAddress);
     $('#contractadres').append(contractInstance.address);
-    $('#contractnaam').append(soupContract.abi[0].outputs[0].value);
+    contractInstance.name(function (e, b) {
+        $('#contractnaam').append(b);
+    });
+    contractInstance.symbol(function (a, b) {
+        $('#contractsymbool').append(b);
+    });
+
     console.log(soupContract);
     console.log(contractInstance);
-    console.log(contractInstance.name.request(function (e) {
-        console.log(e);
-    }, function (e) {
-        console.log(e);
-    }))
+
 
 }
