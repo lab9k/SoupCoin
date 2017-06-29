@@ -346,9 +346,73 @@ var dappInterface = [{
 var contractAddress = "0xC3523E92F6c73A932FEE01e0c98dB4160390f922";
 
 
+const contractEvents = {
+    init: function () {
+        this.soupContract = web3.eth.contract(dappInterface);
+        this.contractInstance = this.soupContract.at(contractAddress);
+        console.log(this.soupContract);
+        console.log(this.contractInstance);
+
+        this.basicInfoInit();
+        this.isAdminInit();
+        this.checkBalanceInit();
+    },
+    basicInfoInit: function () {
+        $('#contractadres').append(this.contractInstance.address);
+        this.contractInstance.name(function (error, value) {
+            $('#contractnaam').append(value);
+        });
+        this.contractInstance.symbol(function (error, value) {
+            $('#contractsymbool').append(value);
+        });
+    },
+    isAdminInit: function () {
+        let account = web3.eth.accounts;
+        $('#isAdmin').on('change keydown paste input', function () {
+            contractEvents.isAdminChangeEvent()
+        }).val(`${account}`);
+        this.isAdminChangeEvent();
+    },
+    isAdminChangeEvent: function () {
+        let tekst = $('#isAdmin').val();
+
+        if (web3.isAddress(tekst)) {
+            this.contractInstance.isAdmin(tekst, (e, b) => {
+                $('.isAdminResult').html(`<b>${b}</b>`)
+                    .removeClass("red")
+                    .removeClass("green")
+                    .addClass(b ? "green" : "red");
+            });
+        } else {
+            $('.isAdminResult').html(`<b>Wrong address</b>`)
+                .removeClass("green")
+                .removeClass("red")
+                .addClass("red");
+        }
+    },
+    checkBalanceInit: function () {
+        let account = web3.eth.accounts;
+        $('#checkBalance').on('change keydown paste input', function () {
+            contractEvents.checkBalanceChangeEvent();
+        }).val(`${account}`);
+        this.checkBalanceChangeEvent();
+    },
+    checkBalanceChangeEvent: function () {
+        let account = $('#checkBalance').val();
+        if (web3.isAddress(account)) {
+            this.contractInstance.balanceOf(account, (error, result) => {
+                $('.checkBalanceResult').html(`<b>${result}</b>`)
+
+            })
+        } else {
+            $('#checkBalance').html(`<b>Wrong address</b>`)
+
+        }
+    }
+};
 $(document).ready(function () {
     // Checking if Web3 has been injected by the browser (Mist/MetaMask)
-    var pass = true;
+    let pass = true;
     while (typeof web3 === 'undefined') {
         // Use Mist/MetaMask's provider
         if (pass) {
@@ -362,49 +426,3 @@ $(document).ready(function () {
     //runApp();
     contractEvents.init();
 });
-
-
-var contractEvents = {
-    init: function () {
-        this.soupContract = web3.eth.contract(dappInterface);
-        this.contractInstance = this.soupContract.at(contractAddress);
-        $('#contractadres').append(this.contractInstance.address);
-        this.contractInstance.name(function (error, value) {
-            $('#contractnaam').append(value);
-        });
-        this.contractInstance.symbol(function (error, value) {
-            $('#contractsymbool').append(value);
-        });
-
-        console.log(this.soupContract);
-        console.log(this.contractInstance);
-        this.isAdminInit();
-    },
-    isAdminInit: function () {
-        $('#isAdmin').on('change keydown paste input', function (event) {
-            this.isAdminChange()
-        });
-        var account = web3.eth.accounts;
-        $('#isAdmin').val(`${account}`);
-        this.isAdminChange();
-    },
-    isAdminChange: function () {
-        var tekst = $('#isAdmin').val();
-
-        if (web3.isAddress(tekst)) {
-            this.contractInstance.isAdmin(tekst, function (e, b) {
-                $('.isAdminResult').html(`<b>${b}</b>`);
-                $('.isAdminResult').removeClass("red");
-                $('.isAdminResult').removeClass("green");
-                $('.isAdminResult').addClass(b ? "green" : "red");
-            });
-        } else {
-            $('.isAdminResult').html(`<b>Wrong address</b>`);
-            $('.isAdminResult').removeClass("green");
-            $('.isAdminResult').removeClass("red");
-            $('.isAdminResult').addClass("red");
-        }
-
-    }
-
-};
