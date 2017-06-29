@@ -1,3 +1,25 @@
+- [SoupCoin](#soupcoin)
+  * [See it in action](#see-it-in-action)
+  * [Help us out](#help-us-out)
+    + [Initial testing environment](#initial-testing-environment)
+      - [Windows](#windows)
+      - [Linux](#linux)
+      - [OSX](#osx)
+    + [Live testnet environment](#live-testnet-environment)
+      - [Step 1: Download Geth](#step-1--download-geth)
+      - [Step 2: Download genesis block](#step-2--download-genesis-block)
+      - [Step 3: Initialize](#step-3--initialize)
+      - [Step 4: Create an account](#step-4--create-an-account)
+      - [Step 5: Request ETH](#step-5--request-eth)
+    + [Coupling the rinkeby testnet to run with Embark](#coupling-the-rinkeby-testnet-to-run-with-embark)
+      - [Step 1. locating the blockchain.json configuration file:](#step-1-locating-the-blockchainjson-configuration-file-)
+      - [Step 2. changing 'privatenet' in the configuration file:](#step-2-changing--privatenet--in-the-configuration-file-)
+      - [Step 3. running the blockchain via Embark:](#step-3-running-the-blockchain-via-embark-)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
+
+
 # SoupCoin
 
 ## See it in action
