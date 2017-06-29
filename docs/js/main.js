@@ -300,7 +300,7 @@ const contractEvents = {
                     .removeClass("green")
                     .addClass("red");
             } else {
-                $('.mintTokenResult').html(`<a href="https://rinkeby.etherscan.io/tx/${transaction}">${transaction}</a>`)
+                $('.mintTokenResult').html(`<a href="https://rinkeby.etherscan.io/tx/${transaction}" target="_blank">${transaction}</a>`)
                     .removeClass("red")
                     .removeClass("green")
                     .addClass("green");
@@ -324,7 +324,7 @@ const contractEvents = {
                     .removeClass("green")
                     .addClass("red");
             } else {
-                $('.transferTokenResult').html(`<a href="https://rinkeby.etherscan.io/tx/${transaction}">${transaction}</a>`)
+                $('.transferTokenResult').html(`<a href="https://rinkeby.etherscan.io/tx/${transaction}" target="_blank">${transaction}</a>`)
                     .removeClass("red")
                     .removeClass("green")
                     .addClass("green");
