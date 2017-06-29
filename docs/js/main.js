@@ -224,6 +224,7 @@ const contractEvents = {
         this.checkBalanceInit();
         this.mintTokenInit();
         this.transferTokenInit();
+        this.addAdminInit();
     },
     basicInfoInit: function () {
         $('#contractadres').append(this.contractInstance.address);
@@ -325,6 +326,29 @@ const contractEvents = {
                     .addClass("red");
             } else {
                 $('.transferTokenResult').html(`<a href="https://rinkeby.etherscan.io/tx/${transaction}" target="_blank">${transaction}</a>`)
+                    .removeClass("red")
+                    .removeClass("green")
+                    .addClass("green");
+            }
+        });
+    },
+    addAdminInit: function () {
+        $('#addAdminBtn').on('click', function (event) {
+            let address = $('#addAdmin').val();
+            contractEvents.addAdmin(address);
+        });
+    },
+    addAdmin: function (address) {
+        console.log(`address: ${address} and type: ${typeof address}`);
+        this.contractInstance.addAdmin(address, function (error, value) {
+            console.log(error, value);
+            if (error) {
+                $('.addAdminResult').html(`<p>Something went wrong!: ${error}</p>`)
+                    .removeClass("red")
+                    .removeClass("green")
+                    .addClass("red");
+            } else {
+                $('.addAdminResult').html(`<a href="https://rinkeby.etherscan.io/tx/${transaction}" target="_blank">${transaction}</a>`)
                     .removeClass("red")
                     .removeClass("green")
                     .addClass("green");
