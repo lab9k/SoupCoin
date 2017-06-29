@@ -56,7 +56,7 @@
                     <input type="text" id="mintTokenAdress">
                     <label for="mintTokenAmount">Amount:</label>
                     <input type="number" id="mintTokenAmount">
-                    <div class="ui animated fade blue button" id="mintTokenBtn" tabindex="0">
+                    <div class="ui animated fade orange button" id="mintTokenBtn" tabindex="0">
                         <div class="visible content">Mint</div>
                         <div class="hidden content">
                             <i class="reddit icon"></i>
@@ -72,7 +72,7 @@
                     <input type="text" id="transferTokenAdress">
                     <label for="transferTokenAmount">Amount:</label>
                     <input type="number" id="transferTokenAmount">
-                    <div class="ui animated fade blue button" id="transferTokenBtn" tabindex="0">
+                    <div class="ui animated fade red button" id="transferTokenBtn" tabindex="0">
                         <div class="visible content">Transfer</div>
                         <div class="hidden content">
                             <i class="cubes icon"></i>
@@ -86,15 +86,29 @@
             <div class="column">
                 <div class="ui medium header">Add Admin</div>
                 <div class="ui form">
-                    <label for="addAdmin"></label>
+                    <label for="addAdmin">address:</label>
                     <input type="text" id="addAdmin">
-                    <div class="ui animated fade blue button" id="addAdminBtn" tabindex="0">
+                    <div class="ui animated fade teal button" id="addAdminBtn" tabindex="0">
                         <div class="visible content">Add Admin</div>
                         <div class="hidden content">
                             <i class="cubes icon"></i>
                         </div>
                     </div>
                     <div class="ui message addAdminResult"></div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="ui medium header">Remove Admin</div>
+                <div class="ui form">
+                    <label for="removeAdmin">address: </label>
+                    <input type="text" id="removeAdmin">
+                    <div class="ui animated fade pink button" id="removeAdminBtn" tabindex="0">
+                        <div class="visible content">Remove Admin</div>
+                        <div class="hidden content">
+                            <i class="cubes icon"></i>
+                        </div>
+                    </div>
+                    <div class="ui message removeAdminResult"></div>
                 </div>
             </div>
         </div>

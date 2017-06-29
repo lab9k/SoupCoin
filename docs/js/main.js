@@ -225,6 +225,7 @@ const contractEvents = {
         this.mintTokenInit();
         this.transferTokenInit();
         this.addAdminInit();
+        this.removeAdminInit();
     },
     basicInfoInit: function () {
         $('#contractadres').append(this.contractInstance.address);
@@ -348,7 +349,30 @@ const contractEvents = {
                     .removeClass("green")
                     .addClass("red");
             } else {
-                $('.addAdminResult').html(`<a href="https://rinkeby.etherscan.io/tx/${transaction}" target="_blank">${transaction}</a>`)
+                $('.addAdminResult').html(`<a href="https://rinkeby.etherscan.io/tx/${value}" target="_blank">${value}</a>`)
+                    .removeClass("red")
+                    .removeClass("green")
+                    .addClass("green");
+            }
+        });
+    },
+    removeAdminInit: function () {
+        $('#removeAdminBtn').on('click', function () {
+            let address = $('#removeAdmin').val();
+            contractEvents.removeAdmin(address);
+        });
+    },
+    removeAdmin: function (address) {
+        console.log(`address: ${address} and type: ${typeof address}`);
+        this.contractInstance.removeAdmin(address, function (error, value) {
+            console.log(error, value);
+            if (error) {
+                $('.removeAdminResult').html(`<p>Something went wrong!: ${error}</p>`)
+                    .removeClass("red")
+                    .removeClass("green")
+                    .addClass("red");
+            } else {
+                $('.removeAdminResult').html(`<a href="https://rinkeby.etherscan.io/tx/${value}" target="_blank">${value}</a>`)
                     .removeClass("red")
                     .removeClass("green")
                     .addClass("green");
