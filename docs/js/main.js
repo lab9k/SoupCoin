@@ -8,19 +8,12 @@ var dappInterface = [{
     "constant": true,
     "inputs": [],
     "name": "name",
-    "outputs": [{
-        "name": "",
-        "type": "string",
-        "value": "SoupOp2806"
-    }],
+    "outputs": [{"name": "", "type": "string", "value": "SoupCoin 29/06"}],
     "payable": false,
     "type": "function"
 }, {
     "constant": false,
-    "inputs": [{
-        "name": "user",
-        "type": "address"
-    }],
+    "inputs": [{"name": "user", "type": "address"}],
     "name": "removeAdmin",
     "outputs": [],
     "payable": false,
@@ -29,44 +22,24 @@ var dappInterface = [{
     "constant": true,
     "inputs": [],
     "name": "totalSupply",
-    "outputs": [{
-        "name": "",
-        "type": "uint256",
-        "value": "0"
-    }],
+    "outputs": [{"name": "", "type": "uint256", "value": "0"}],
     "payable": false,
     "type": "function"
 }, {
     "constant": false,
-    "inputs": [{
-        "name": "_from",
-        "type": "address"
-    }, {
-        "name": "_to",
-        "type": "address"
-    }, {
+    "inputs": [{"name": "_from", "type": "address"}, {"name": "_to", "type": "address"}, {
         "name": "_value",
         "type": "uint256"
     }],
     "name": "transferFrom",
-    "outputs": [{
-        "name": "success",
-        "type": "bool"
-    }],
+    "outputs": [{"name": "success", "type": "bool"}],
     "payable": false,
     "type": "function"
 }, {
     "constant": true,
-    "inputs": [{
-        "name": "",
-        "type": "address"
-    }],
+    "inputs": [{"name": "", "type": "address"}],
     "name": "isAdmin",
-    "outputs": [{
-        "name": "",
-        "type": "bool",
-        "value": false
-    }],
+    "outputs": [{"name": "", "type": "bool", "value": false}],
     "payable": false,
     "type": "function"
 }, {
@@ -80,199 +53,110 @@ var dappInterface = [{
     "constant": true,
     "inputs": [],
     "name": "minBalanceForAccounts",
-    "outputs": [{
-        "name": "",
-        "type": "uint256",
-        "value": "5000000000000000"
-    }],
+    "outputs": [{"name": "", "type": "uint256", "value": "5000000000000000"}],
     "payable": false,
     "type": "function"
 }, {
     "constant": false,
-    "inputs": [{
-        "name": "weekdays",
-        "type": "uint256[]"
-    }],
+    "inputs": [{"name": "weekdays", "type": "uint256[]"}],
     "name": "orderForDays",
-    "outputs": [{
-        "name": "",
-        "type": "bool"
-    }],
+    "outputs": [{"name": "", "type": "bool"}],
     "payable": false,
     "type": "function"
 }, {
     "constant": true,
     "inputs": [],
     "name": "standard",
-    "outputs": [{
-        "name": "",
-        "type": "string",
-        "value": "SoupToken 28/06"
-    }],
+    "outputs": [{"name": "", "type": "string", "value": "SoupToken 26/06"}],
     "payable": false,
     "type": "function"
 }, {
     "constant": true,
-    "inputs": [{
-        "name": "dag",
-        "type": "uint256"
-    }],
+    "inputs": [{"name": "dag", "type": "uint256"}],
     "name": "getOrderAddressenForDay",
-    "outputs": [{
-        "name": "",
-        "type": "address[]",
-        "value": []
-    }],
+    "outputs": [{"name": "", "type": "address[]", "value": []}],
     "payable": false,
     "type": "function"
 }, {
     "constant": false,
-    "inputs": [{
-        "name": "user",
-        "type": "address"
-    }],
+    "inputs": [{"name": "user", "type": "address"}],
     "name": "addAdmin",
     "outputs": [],
     "payable": false,
     "type": "function"
 }, {
     "constant": true,
-    "inputs": [{
-        "name": "",
-        "type": "address"
-    }],
+    "inputs": [{"name": "", "type": "address"}],
     "name": "balanceOf",
-    "outputs": [{
-        "name": "",
-        "type": "uint256",
-        "value": "0"
-    }],
+    "outputs": [{"name": "", "type": "uint256", "value": "0"}],
     "payable": false,
     "type": "function"
 }, {
     "constant": false,
-    "inputs": [{
-        "name": "target",
-        "type": "address"
-    }, {
-        "name": "mintedAmount",
-        "type": "uint256"
-    }],
+    "inputs": [{"name": "target", "type": "address"}, {"name": "mintedAmount", "type": "uint256"}],
     "name": "mintToken",
     "outputs": [],
-    "payable": false,
+    "payable": true,
     "type": "function"
 }, {
     "constant": false,
-    "inputs": [{
-        "name": "_from",
-        "type": "address"
-    }, {
-        "name": "_value",
-        "type": "uint256"
-    }],
+    "inputs": [{"name": "_from", "type": "address"}, {"name": "_value", "type": "uint256"}],
     "name": "burnFrom",
-    "outputs": [{
-        "name": "success",
-        "type": "bool"
-    }],
+    "outputs": [{"name": "success", "type": "bool"}],
     "payable": false,
     "type": "function"
 }, {
     "constant": true,
     "inputs": [],
     "name": "owner",
-    "outputs": [{
-        "name": "",
-        "type": "address",
-        "value": "0xf4ceaa1154d9d7ebe2d4e268aaec4e2e82e204a6"
-    }],
+    "outputs": [{"name": "", "type": "address", "value": "0xed451537fa5b9e7b07067cbb7bb369120f90d690"}],
     "payable": false,
     "type": "function"
 }, {
     "constant": false,
-    "inputs": [{
-        "name": "day",
-        "type": "uint256"
-    }],
+    "inputs": [{"name": "day", "type": "uint256"}],
     "name": "burnSoupTokensForDay",
-    "outputs": [{
-        "name": "",
-        "type": "bool"
-    }],
+    "outputs": [{"name": "", "type": "bool"}],
     "payable": false,
     "type": "function"
 }, {
     "constant": true,
     "inputs": [],
     "name": "symbol",
-    "outputs": [{
-        "name": "",
-        "type": "string",
-        "value": "💸"
-    }],
+    "outputs": [{"name": "", "type": "string", "value": "🍏"}],
     "payable": false,
     "type": "function"
 }, {
     "constant": false,
-    "inputs": [{
-        "name": "_to",
-        "type": "address"
-    }, {
-        "name": "_value",
-        "type": "uint256"
-    }],
+    "inputs": [{"name": "_to", "type": "address"}, {"name": "_value", "type": "uint256"}],
     "name": "transfer",
     "outputs": [],
     "payable": false,
     "type": "function"
 }, {
     "constant": true,
-    "inputs": [{
-        "name": "day",
-        "type": "uint256"
-    }],
+    "inputs": [{"name": "day", "type": "uint256"}],
     "name": "getAmountOrdersForDay",
-    "outputs": [{
-        "name": "",
-        "type": "uint256",
-        "value": "0"
-    }],
+    "outputs": [{"name": "", "type": "uint256", "value": "0"}],
     "payable": false,
     "type": "function"
 }, {
     "constant": false,
-    "inputs": [{
-        "name": "minimumBalanceInFinney",
-        "type": "uint256"
-    }],
+    "inputs": [{"name": "minimumBalanceInFinney", "type": "uint256"}],
     "name": "setMinBalance",
     "outputs": [],
     "payable": false,
     "type": "function"
 }, {
     "constant": true,
-    "inputs": [{
-        "name": "",
-        "type": "uint256"
-    }, {
-        "name": "",
-        "type": "uint256"
-    }],
+    "inputs": [{"name": "", "type": "uint256"}, {"name": "", "type": "uint256"}],
     "name": "ordersFor",
-    "outputs": [{
-        "name": "",
-        "type": "address",
-        "value": "0x"
-    }],
+    "outputs": [{"name": "", "type": "address", "value": "0x"}],
     "payable": false,
     "type": "function"
 }, {
     "constant": false,
-    "inputs": [{
-        "name": "newOwner",
-        "type": "address"
-    }],
+    "inputs": [{"name": "newOwner", "type": "address"}],
     "name": "transferOwnership",
     "outputs": [],
     "payable": false,
@@ -286,7 +170,7 @@ var dappInterface = [{
         "bits": "",
         "displayName": "token Name",
         "template": "elements_input_string",
-        "value": "SoupOp2806"
+        "value": "SoupCoin 29/06"
     }, {
         "name": "tokenSymbol",
         "type": "string",
@@ -295,34 +179,20 @@ var dappInterface = [{
         "bits": "",
         "displayName": "token Symbol",
         "template": "elements_input_string",
-        "value": "💸"
-    }],
-    "payable": true,
-    "type": "constructor"
+        "value": "🍏"
+    }], "payable": true, "type": "constructor"
 }, {
     "anonymous": false,
-    "inputs": [{
-        "indexed": true,
-        "name": "from",
-        "type": "address"
-    }, {
+    "inputs": [{"indexed": true, "name": "from", "type": "address"}, {
         "indexed": true,
         "name": "to",
         "type": "address"
-    }, {
-        "indexed": false,
-        "name": "value",
-        "type": "uint256"
-    }],
+    }, {"indexed": false, "name": "value", "type": "uint256"}],
     "name": "Transfer",
     "type": "event"
 }, {
     "anonymous": false,
-    "inputs": [{
-        "indexed": true,
-        "name": "from",
-        "type": "address"
-    }, {
+    "inputs": [{"indexed": true, "name": "from", "type": "address"}, {
         "indexed": false,
         "name": "value",
         "type": "uint256"
@@ -331,11 +201,7 @@ var dappInterface = [{
     "type": "event"
 }, {
     "anonymous": false,
-    "inputs": [{
-        "indexed": false,
-        "name": "_from",
-        "type": "address"
-    }, {
+    "inputs": [{"indexed": false, "name": "_from", "type": "address"}, {
         "indexed": false,
         "name": "_value",
         "type": "uint256"
@@ -343,7 +209,7 @@ var dappInterface = [{
     "name": "BurnFrom",
     "type": "event"
 }];
-var contractAddress = "0xC3523E92F6c73A932FEE01e0c98dB4160390f922";
+const contractAddress = "0xAE827c9C4c15eD3098B30b72d4F63C6F2F9811Ec";
 
 
 const contractEvents = {
@@ -403,7 +269,7 @@ const contractEvents = {
             this.contractInstance.balanceOf(account, (error, result) => {
                 $('.checkBalanceResult').html(`<b>${result}</b>`)
 
-            })
+            });
         } else {
             $('#checkBalance').html(`<b>Wrong address</b>`)
 
