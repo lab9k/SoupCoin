@@ -291,19 +291,36 @@ const contractEvents = {
     },
     mintTokenTransaction: function (address, amount) {
         console.log(`address: ${address} and type: ${typeof address}\namount: ${amount} and type: ${typeof amount}`);
-        this.contractInstance.mintToken(address, amount, function (error, value) {
-            console.log(error, value);
+        this.contractInstance.mintToken(address, amount, function (error, transaction) {
+            console.log(error, transaction);
+            if (error) {
+                $('.mintTokenResult').html(`<p>Something went wrong: ${error}</p>`)
+                    .removeClass("red")
+                    .removeClass("green")
+                    .addClass("red");
+            } else {
+                $('.mintTokenResult').html(`<a href="https://rinkeby.etherscan.io/tx/${transaction}">${transaction}</a>`)
+                    .removeClass("red")
+                    .removeClass("green")
+                    .addClass("green");
+            }
         })
     }
 
 };
-
-// nodig indien web3 later pas load
-window.addEventListener('load', function () {
-    if (typeof web3 !== 'undefined') {
-        window.web3 = new Web3(web3.currentProvider);
-    } else {
-        console.log('No web3? You should consider trying MetaMask!')
+$(document).ready(function () {
+    // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+    let pass = true;
+    while (typeof web3 === 'undefined') {
+        // Use Mist/MetaMask's provider
+        if (pass) {
+            window.web3 = new Web3(web3.currentProvider);
+            pass = false;
+        }
+        setTimeout(function () {
+            console.log('Web 3 has not been initialized, timing out for 1 sec');
+        }, 1000);
     }
+    //runApp();
     contractEvents.init();
 });
