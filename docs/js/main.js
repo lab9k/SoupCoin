@@ -231,6 +231,10 @@ const contractEvents = {
         this.contractInstance.symbol(function (error, value) {
             $('#contractsymbool').append(value);
         });
+        this.contractInstance.totalSupply(function (error, value) {
+            console.log(error, value);
+            $('#contractSupply').append(Number.parseInt(value));
+        });
     },
     isAdminInit: function () {
         let account = web3.eth.accounts;
@@ -274,7 +278,8 @@ const contractEvents = {
             $('.checkBalanceResult').html(`<b>Wrong address</b>`)
 
         }
-    }
+    },
+
 };
 $(document).ready(function () {
     // Checking if Web3 has been injected by the browser (Mist/MetaMask)
