@@ -232,8 +232,10 @@ const contractEvents = {
             $('#contractsymbool').append(value);
         });
         this.contractInstance.totalSupply(function (error, value) {
-            console.log(error, value);
             $('#contractSupply').append(Number.parseInt(value));
+        });
+        this.contractInstance.owner(function (error, value) {
+            $('#contractOwner').append(value);
         });
     },
     isAdminInit: function () {
