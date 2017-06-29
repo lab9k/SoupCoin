@@ -271,7 +271,7 @@ const contractEvents = {
 
             });
         } else {
-            $('#checkBalance').html(`<b>Wrong address</b>`)
+            $('.checkBalanceResult').html(`<b>Wrong address</b>`)
 
         }
     }
