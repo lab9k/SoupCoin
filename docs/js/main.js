@@ -442,8 +442,7 @@ const contractEvents = {
             }
             return false;
         }
-        });
-    }
+
 
         for (var i = 0; i < 5; i++) {
 
@@ -497,5 +496,5 @@ const contractEvents = {
 
     orderSoupForDaysTransaction: function (array) {
         // put orders in blockchain.
-    }
+    },
 };
