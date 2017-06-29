@@ -1,14 +1,14 @@
-pragma solidity 0.4.11;
+pragma solidity ^0.4.11;
+
 
 contract Owned {
+
     address public owner;
     mapping (address => bool) public isAdmin;
 
     function Owned() {
-
         owner = msg.sender;
         isAdmin[msg.sender] = true;
-
     }
 
     modifier Owner {
@@ -17,8 +17,8 @@ contract Owned {
     }
 
     modifier onlyAdmin(address user) {
-        assert (isAdmin[user]);
-            _;
+        assert(isAdmin[user]);
+        _;
     }
 
     function addAdmin(address user) onlyAdmin(msg.sender) {
@@ -26,7 +26,7 @@ contract Owned {
     }
 
     function removeAdmin(address user) onlyAdmin(msg.sender) {
-        if (user == owner){
+        if (user == owner) {
             throw;
         }
         isAdmin[user] = false;
