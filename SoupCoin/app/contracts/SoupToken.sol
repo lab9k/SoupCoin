@@ -27,9 +27,7 @@ contract SoupToken is Owned {
 
     event BurnFrom(address _from, uint256 _value);
 
-    function SoupToken() payable {
-
-    }
+    event LogDepositReceived(address sender);
 
     function SoupToken(string tokenName, string tokenSymbol) payable {
         name = tokenName;
@@ -38,7 +36,9 @@ contract SoupToken is Owned {
         // Set the symbol for display purposes
     }
 
-    function() payable {}
+    function() payable {
+        LogDepositReceived(msg.sender);
+    }
 
     function mintToken(address target, uint256 mintedAmount) onlyAdmin {
         balanceOf[target] += mintedAmount;
