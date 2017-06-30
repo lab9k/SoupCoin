@@ -434,14 +434,14 @@ const contractEvents = {
             $('#dayLabel').append(datum);
             let huidigeDag = datum.getDay();
 
-            function checkIfOrdered(arr) {
-                for (let i = 0; i < arr.length; i++) {
-                    if (web3.eth.accounts === arr[i]) {
-                        return true;
-                    }
+        function checkIfOrdered(arr) {
+            for (var i = 0; i < arr.length; i++) {
+                if (web3.eth.defaultAccount === arr[i]) {
+                    return true;
                 }
-                return false;
             }
+            return false;
+        }
 
 
             for (let i = 0; i < 5; i++) {
@@ -475,28 +475,38 @@ const contractEvents = {
 
                 }
 
-                function composeOrderArray() {
-                    $(".dagenCheckboxGroup").children().each(function (index, value) {
-                        if ($(value).hasClass("checkbox")) {
-                            console.log(value);
-                        }
-                    });
 
-                }
-
-                // handle click on button
-                $("#bevestigOrderBtn").on("click", function (event) {
-                    console.log("looping start");
-                    //TODO
-                    composeOrderArray();
-                    var orderArray = {};
-                    contractEvents.orderSoupForDaysTransaction(orderArray);
-                })
+            function composeOrderArray() {
+                var arr = [];
+                $(".dagenCheckboxGroup").children().each(function (index, value) {
+                    if ($(value).hasClass("checkbox")) {
+                        $(value).children().each(function (index, value) {
+                            if ($(value).is(':checkbox')){
+                                if ($(value).is(':checked')) {
+                                    arr.splice(index, 0, 1);
+                                }
+                                else {
+                                    arr.splice(index, 0, 0);
+                                }
+                            }
+                        });
+                    }
+                });
+                return arr.reverse();
             }
-        },
 
-        orderSoupForDaysTransaction: function (array) {
-            // put orders in blockchain.
+            // handle click on button
+            $("#bevestigOrderBtn").off().on("click", function (event) {
+                contractEvents.orderSoupForDaysTransaction(composeOrderArray());
+            })
         }
-    }
-;
+    },
+
+    orderSoupForDaysTransaction: function (orders) {
+
+        contractEvents.contractInstance.orderForDays(orders,function(error,success){
+            console.log(orders);
+            contractEvents.orderSoupForDaysInit();
+        });
+    },
+};
