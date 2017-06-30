@@ -2,3 +2,19 @@
     margin-top: 10px;
 }
 
+canvas {
+    display: block;
+    width: 100%;
+}
+
+.cv,
+.title {
+    top: 0;
+    left: 0;
+}
+
+.cv {
+    position: absolute;
+    background: radial-gradient(circle, #cfe6fc, #6eb3f7);
+    z-index: 1;
+}
