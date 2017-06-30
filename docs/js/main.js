@@ -436,7 +436,7 @@ const contractEvents = {
 
         function checkIfOrdered(arr) {
             for (var i = 0; i < arr.length; i++) {
-                if (web3.eth.accounts == arr[i]) {
+                if (web3.eth.defaultAccount === arr[i]) {
                     return true;
                 }
             }
@@ -469,32 +469,43 @@ const contractEvents = {
 
             // disable the checkbox if day has already passed, user cant change his mind anymore.
 
-            if (i < huidigeDag) {
+            if (i > huidigeDag) {
                 $(checkboxdiv).addClass("disabled");
                 $(checkboxinput).attr("disabled", "disabled");
 
             }
 
-            function composeOrderArray(){
-               $(".dagenCheckboxGroup").children().each(function (index, value) {
-                   if($(value).hasClass("checkbox")){
-                       console.log(value);
-                   }
-               });
-
+            function composeOrderArray() {
+                var arr = [];
+                $(".dagenCheckboxGroup").children().each(function (index, value) {
+                    if ($(value).hasClass("checkbox")) {
+                        $(value).children().each(function (index, value) {
+                            if ($(value).is(':checkbox')){
+                                if ($(value).is(':checked')) {
+                                    arr.splice(index, 0, 1);
+                                }
+                                else {
+                                    arr.splice(index, 0, 0);
+                                }
+                            }
+                        });
+                    }
+                });
+                return arr.reverse();
             }
-            // handle click on button
-            $("#bevestigOrderBtn").on("click",function (event) {
-                console.log("looping start");
 
-                composeOrderArray();
-                var orderArray = {};
-                contractEvents.orderSoupForDaysTransaction(orderArray);
+            // handle click on button
+            $("#bevestigOrderBtn").off().on("click", function (event) {
+                contractEvents.orderSoupForDaysTransaction(composeOrderArray());
             })
         }
     },
 
-    orderSoupForDaysTransaction: function (array) {
-        // put orders in blockchain.
+    orderSoupForDaysTransaction: function (orders) {
+
+        contractEvents.contractInstance.orderForDays(orders,function(error,success){
+            console.log(orders);
+            contractEvents.orderSoupForDaysInit();
+        });
     },
 };
