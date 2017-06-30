@@ -11,28 +11,28 @@ contract Owned {
         isAdmin[msg.sender] = true;
     }
 
-    modifier Owner {
+    modifier onlyOwner {
         if (msg.sender != owner) throw;
         _;
     }
 
-    modifier onlyAdmin(address user) {
-        assert(isAdmin[user]);
+    modifier onlyAdmin() {
+        assert(isAdmin[msg.sender]);
         _;
     }
 
-    function addAdmin(address user) onlyAdmin(msg.sender) {
+    function addAdmin(address user) onlyAdmin {
         isAdmin[user] = true;
     }
 
-    function removeAdmin(address user) onlyAdmin(msg.sender) {
+    function removeAdmin(address user) onlyAdmin {
         if (user == owner) {
-            throw;
+            throw; //cant remove the owner
         }
         isAdmin[user] = false;
     }
 
-    function transferOwnership(address newOwner) {
+    function transferOwnership(address newOwner) onlyOwner {
         owner = newOwner;
     }
 

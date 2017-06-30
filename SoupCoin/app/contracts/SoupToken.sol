@@ -38,6 +38,8 @@ contract SoupToken is Owned {
         // Set the symbol for display purposes
     }
 
+    function() payable {}
+
     function mintToken(address target, uint256 mintedAmount) onlyAdmin {
         balanceOf[target] += mintedAmount;
         totalSupply += mintedAmount;
@@ -142,8 +144,9 @@ contract SoupToken is Owned {
     function burnSoupTokensForDay(uint day) onlyAdmin returns (bool success) {
 
         for (uint i = 0; i < ordersFor[day].length; i++) {
-            if(ordersFor[day][i] == 0x0){
-                continue; // workaround for addresses
+            if (ordersFor[day][i] == 0x0) {
+                continue;
+                // workaround for addresses
             }
             burnFrom(ordersFor[day][i], 1);
             delete ordersFor[day][i];
