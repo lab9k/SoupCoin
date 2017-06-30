@@ -10,5 +10,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="jquery-3.2.1" level="application" />
     <orderEntry type="library" name="semantic" level="application" />
+    <orderEntry type="library" name="simplex-noise" level="application" />
   </component>
 </module>
