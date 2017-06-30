@@ -229,210 +229,210 @@ $(document).ready(function () {
 });
 
 const contractEvents = {
-    init: function () {
-        this.soupContract = web3.eth.contract(dappInterface);
-        this.contractInstance = this.soupContract.at(contractAddress);
-        console.log(this.soupContract);
-        console.log(this.contractInstance);
+        init: function () {
+            this.soupContract = web3.eth.contract(dappInterface);
+            this.contractInstance = this.soupContract.at(contractAddress);
+            console.log(this.soupContract);
+            console.log(this.contractInstance);
 
-        this.basicInfoInit();
-        this.isAdminInit();
-        this.checkBalanceInit();
-        this.mintTokenInit();
-        this.transferTokenInit();
-        this.addAdminInit();
-        this.removeAdminInit();
-        this.transferOwnershipInit();
-        this.orderSoupForDaysInit();
-    },
-    basicInfoInit: function () {
-        $('#contractadres').append(this.contractInstance.address);
-        this.contractInstance.name(function (error, value) {
-            $('#contractnaam').append(value);
-        });
-        this.contractInstance.symbol(function (error, value) {
-            $('#contractsymbool').append(value);
-        });
-        this.contractInstance.totalSupply(function (error, value) {
-            $('#contractSupply').append(Number.parseInt(value));
-        });
-        this.contractInstance.owner(function (error, value) {
-            $('#contractOwner').append(value);
-        });
-    },
-    isAdminInit: function () {
-        let account = web3.eth.accounts;
-        $('#isAdmin').on('change keydown paste input', function () {
-            contractEvents.isAdminChangeEvent()
-        }).val(`${account}`);
-        this.isAdminChangeEvent();
-    },
-    isAdminChangeEvent: function () {
-        let tekst = $('#isAdmin').val();
-
-        if (web3.isAddress(tekst)) {
-            this.contractInstance.isAdmin(tekst, (e, b) => {
-                $('.isAdminResult').html(`<b>${b}</b>`)
-                    .removeClass("red")
-                    .removeClass("green")
-                    .addClass(b ? "green" : "red");
+            this.basicInfoInit();
+            this.isAdminInit();
+            this.checkBalanceInit();
+            this.mintTokenInit();
+            this.transferTokenInit();
+            this.addAdminInit();
+            this.removeAdminInit();
+            this.transferOwnershipInit();
+            this.orderSoupForDaysInit();
+        },
+        basicInfoInit: function () {
+            $('#contractadres').append(this.contractInstance.address);
+            this.contractInstance.name(function (error, value) {
+                $('#contractnaam').append(value);
             });
-        } else {
-            $('.isAdminResult').html(`<b>Wrong address</b>`)
-                .removeClass("green")
-                .removeClass("red")
-                .addClass("red");
-        }
-    },
-    checkBalanceInit: function () {
-        let account = web3.eth.accounts;
-        $('#checkBalance').on('change keydown paste input', function () {
-            contractEvents.checkBalanceChangeEvent();
-        }).val(`${account}`);
-        this.checkBalanceChangeEvent();
-    },
-    checkBalanceChangeEvent: function () {
-        let account = $('#checkBalance').val();
-        if (web3.isAddress(account)) {
-            this.contractInstance.balanceOf(account, (error, result) => {
-                $('.checkBalanceResult').html(`<b>${result}</b>`)
-
+            this.contractInstance.symbol(function (error, value) {
+                $('#contractsymbool').append(value);
             });
-        } else {
-            $('.checkBalanceResult').html(`<b>Wrong address</b>`)
+            this.contractInstance.totalSupply(function (error, value) {
+                $('#contractSupply').append(Number.parseInt(value));
+            });
+            this.contractInstance.owner(function (error, value) {
+                $('#contractOwner').append(value);
+            });
+        },
+        isAdminInit: function () {
+            let account = web3.eth.accounts;
+            $('#isAdmin').on('change keydown paste input', function () {
+                contractEvents.isAdminChangeEvent()
+            }).val(`${account}`);
+            this.isAdminChangeEvent();
+        },
+        isAdminChangeEvent: function () {
+            let tekst = $('#isAdmin').val();
 
-        }
-    },
-    mintTokenInit: function () {
-        $('#mintTokenBtn').on('click', function (event) {
-            let amount = Number.parseInt($('#mintTokenAmount').val());
-            let address = $('#mintTokenAdress').val();
-            contractEvents.mintTokenTransaction(address, amount);
-        });
-    },
-    mintTokenTransaction: function (address, amount) {
-        console.log(`address: ${address} and type: ${typeof address}\namount: ${amount} and type: ${typeof amount}`);
-        this.contractInstance.mintToken(address, amount, function (error, transaction) {
-            console.log(error, transaction);
-            if (error) {
-                $('.mintTokenResult').html(`<p>Something went wrong: ${error}</p>`)
-                    .removeClass("red")
-                    .removeClass("green")
-                    .addClass("red");
+            if (web3.isAddress(tekst)) {
+                this.contractInstance.isAdmin(tekst, (e, b) => {
+                    $('.isAdminResult').html(`<b>${b}</b>`)
+                        .removeClass("red")
+                        .removeClass("green")
+                        .addClass(b ? "green" : "red");
+                });
             } else {
-                $('.mintTokenResult').html(`<a href="https://rinkeby.etherscan.io/tx/${transaction}" target="_blank">${transaction}</a>`)
-                    .removeClass("red")
+                $('.isAdminResult').html(`<b>Wrong address</b>`)
                     .removeClass("green")
-                    .addClass("green");
-            }
-        })
-    },
-    transferTokenInit: function () {
-        $('#transferTokenBtn').on('click', function (event) {
-            let amount = Number.parseInt($('#transferTokenAmount').val());
-            let address = $('#transferTokenAdress').val();
-            contractEvents.transferTokenTransaction(address, amount);
-        });
-    },
-    transferTokenTransaction(address, amount){
-        console.log(`address: ${address} and type: ${typeof address}\namount: ${amount} and type: ${typeof amount}`);
-        this.contractInstance.transfer(address, amount, function (error, transaction) {
-            console.log(error, transaction);
-            if (error) {
-                $('.transferTokenResult').html(`<p>Something went wrong: ${error}</p>`)
                     .removeClass("red")
-                    .removeClass("green")
                     .addClass("red");
-            } else {
-                $('.transferTokenResult').html(`<a href="https://rinkeby.etherscan.io/tx/${transaction}" target="_blank">${transaction}</a>`)
-                    .removeClass("red")
-                    .removeClass("green")
-                    .addClass("green");
             }
-        });
-    },
-    addAdminInit: function () {
-        $('#addAdminBtn').on('click', function (event) {
-            let address = $('#addAdmin').val();
-            contractEvents.addAdmin(address);
-        });
-    },
-    addAdmin: function (address) {
-        console.log(`address: ${address} and type: ${typeof address}`);
-        this.contractInstance.addAdmin(address, function (error, value) {
-            console.log(error, value);
-            if (error) {
-                $('.addAdminResult').html(`<p>Something went wrong!: ${error}</p>`)
-                    .removeClass("red")
-                    .removeClass("green")
-                    .addClass("red");
-            } else {
-                $('.addAdminResult').html(`<a href="https://rinkeby.etherscan.io/tx/${value}" target="_blank">${value}</a>`)
-                    .removeClass("red")
-                    .removeClass("green")
-                    .addClass("green");
-            }
-        });
-    },
-    removeAdminInit: function () {
-        $('#removeAdminBtn').on('click', function () {
-            let address = $('#removeAdmin').val();
-            contractEvents.removeAdmin(address);
-        });
-    },
-    removeAdmin: function (address) {
-        console.log(`address: ${address} and type: ${typeof address}`);
-        this.contractInstance.removeAdmin(address, function (error, value) {
-            console.log(error, value);
-            if (error) {
-                $('.removeAdminResult').html(`<p>Something went wrong!: ${error}</p>`)
-                    .removeClass("red")
-                    .removeClass("green")
-                    .addClass("red");
-            } else {
-                $('.removeAdminResult').html(`<a href="https://rinkeby.etherscan.io/tx/${value}" target="_blank">${value}</a>`)
-                    .removeClass("red")
-                    .removeClass("green")
-                    .addClass("green");
-            }
-        });
-    },
-    transferOwnershipInit: function () {
-        $('#transferOwnershipBtn').on('click', function () {
-            let address = $('#transferOwnership').val();
-            contractEvents.transferOwnership(address);
-        });
-    },
-    transferOwnership: function (address) {
-        console.log(`address: ${address} and type: ${typeof address}`);
-        this.contractInstance.transferOwnership(address, function (error, value) {
-            console.log(error, value);
-            if (error) {
-                $('.transferOwnershipResult').html(`<p>Something went wrong!: ${error}</p>`)
-                    .removeClass("red")
-                    .removeClass("green")
-                    .addClass("red");
-            } else {
-                $('.transferOwnershipResult').html(`<a href="https://rinkeby.etherscan.io/tx/${value}" target="_blank">${value}</a>`)
-                    .removeClass("red")
-                    .removeClass("green")
-                    .addClass("green");
-            }
-        })
-    },
+        },
+        checkBalanceInit: function () {
+            let account = web3.eth.accounts;
+            $('#checkBalance').on('change keydown paste input', function () {
+                contractEvents.checkBalanceChangeEvent();
+            }).val(`${account}`);
+            this.checkBalanceChangeEvent();
+        },
+        checkBalanceChangeEvent: function () {
+            let account = $('#checkBalance').val();
+            if (web3.isAddress(account)) {
+                this.contractInstance.balanceOf(account, (error, result) => {
+                    $('.checkBalanceResult').html(`<b>${result}</b>`)
 
-    orderSoupForDaysInit: function () {
+                });
+            } else {
+                $('.checkBalanceResult').html(`<b>Wrong address</b>`)
 
-        let dagen = {};
-        dagen[0] = "Maandag";
-        dagen[1] = "Dinsdag";
-        dagen[2] = "Woensdag";
-        dagen[3] = "Donderdag";
-        dagen[4] = "Vrijdag";
+            }
+        },
+        mintTokenInit: function () {
+            $('#mintTokenBtn').on('click', function (event) {
+                let amount = Number.parseInt($('#mintTokenAmount').val());
+                let address = $('#mintTokenAdress').val();
+                contractEvents.mintTokenTransaction(address, amount);
+            });
+        },
+        mintTokenTransaction: function (address, amount) {
+            console.log(`address: ${address} and type: ${typeof address}\namount: ${amount} and type: ${typeof amount}`);
+            this.contractInstance.mintToken(address, amount, function (error, transaction) {
+                console.log(error, transaction);
+                if (error) {
+                    $('.mintTokenResult').html(`<p>Something went wrong: ${error}</p>`)
+                        .removeClass("red")
+                        .removeClass("green")
+                        .addClass("red");
+                } else {
+                    $('.mintTokenResult').html(`<a href="https://rinkeby.etherscan.io/tx/${transaction}" target="_blank">${transaction}</a>`)
+                        .removeClass("red")
+                        .removeClass("green")
+                        .addClass("green");
+                }
+            })
+        },
+        transferTokenInit: function () {
+            $('#transferTokenBtn').on('click', function (event) {
+                let amount = Number.parseInt($('#transferTokenAmount').val());
+                let address = $('#transferTokenAdress').val();
+                contractEvents.transferTokenTransaction(address, amount);
+            });
+        },
+        transferTokenTransaction(address, amount){
+            console.log(`address: ${address} and type: ${typeof address}\namount: ${amount} and type: ${typeof amount}`);
+            this.contractInstance.transfer(address, amount, function (error, transaction) {
+                console.log(error, transaction);
+                if (error) {
+                    $('.transferTokenResult').html(`<p>Something went wrong: ${error}</p>`)
+                        .removeClass("red")
+                        .removeClass("green")
+                        .addClass("red");
+                } else {
+                    $('.transferTokenResult').html(`<a href="https://rinkeby.etherscan.io/tx/${transaction}" target="_blank">${transaction}</a>`)
+                        .removeClass("red")
+                        .removeClass("green")
+                        .addClass("green");
+                }
+            });
+        },
+        addAdminInit: function () {
+            $('#addAdminBtn').on('click', function (event) {
+                let address = $('#addAdmin').val();
+                contractEvents.addAdmin(address);
+            });
+        },
+        addAdmin: function (address) {
+            console.log(`address: ${address} and type: ${typeof address}`);
+            this.contractInstance.addAdmin(address, function (error, value) {
+                console.log(error, value);
+                if (error) {
+                    $('.addAdminResult').html(`<p>Something went wrong!: ${error}</p>`)
+                        .removeClass("red")
+                        .removeClass("green")
+                        .addClass("red");
+                } else {
+                    $('.addAdminResult').html(`<a href="https://rinkeby.etherscan.io/tx/${value}" target="_blank">${value}</a>`)
+                        .removeClass("red")
+                        .removeClass("green")
+                        .addClass("green");
+                }
+            });
+        },
+        removeAdminInit: function () {
+            $('#removeAdminBtn').on('click', function () {
+                let address = $('#removeAdmin').val();
+                contractEvents.removeAdmin(address);
+            });
+        },
+        removeAdmin: function (address) {
+            console.log(`address: ${address} and type: ${typeof address}`);
+            this.contractInstance.removeAdmin(address, function (error, value) {
+                console.log(error, value);
+                if (error) {
+                    $('.removeAdminResult').html(`<p>Something went wrong!: ${error}</p>`)
+                        .removeClass("red")
+                        .removeClass("green")
+                        .addClass("red");
+                } else {
+                    $('.removeAdminResult').html(`<a href="https://rinkeby.etherscan.io/tx/${value}" target="_blank">${value}</a>`)
+                        .removeClass("red")
+                        .removeClass("green")
+                        .addClass("green");
+                }
+            });
+        },
+        transferOwnershipInit: function () {
+            $('#transferOwnershipBtn').on('click', function () {
+                let address = $('#transferOwnership').val();
+                contractEvents.transferOwnership(address);
+            });
+        },
+        transferOwnership: function (address) {
+            console.log(`address: ${address} and type: ${typeof address}`);
+            this.contractInstance.transferOwnership(address, function (error, value) {
+                console.log(error, value);
+                if (error) {
+                    $('.transferOwnershipResult').html(`<p>Something went wrong!: ${error}</p>`)
+                        .removeClass("red")
+                        .removeClass("green")
+                        .addClass("red");
+                } else {
+                    $('.transferOwnershipResult').html(`<a href="https://rinkeby.etherscan.io/tx/${value}" target="_blank">${value}</a>`)
+                        .removeClass("red")
+                        .removeClass("green")
+                        .addClass("green");
+                }
+            })
+        },
 
-        let datum = new Date();
-        $('#dayLabel').append(datum);
-        let huidigeDag = datum.getDay();
+        orderSoupForDaysInit: function () {
+
+            let dagen = {};
+            dagen[0] = "Maandag";
+            dagen[1] = "Dinsdag";
+            dagen[2] = "Woensdag";
+            dagen[3] = "Donderdag";
+            dagen[4] = "Vrijdag";
+
+            let datum = new Date();
+            $('#dayLabel').append(datum);
+            let huidigeDag = datum.getDay();
 
         function checkIfOrdered(arr) {
             for (var i = 0; i < arr.length; i++) {
@@ -444,36 +444,37 @@ const contractEvents = {
         }
 
 
-        for (var i = 0; i < 5; i++) {
+            for (let i = 0; i < 5; i++) {
 
-            // create & append elements to DOM
-            var checkboxdiv = $(document.createElement("div"));
-            var checkboxinput = $(document.createElement("input"));
-            $(checkboxinput).attr("type", "checkbox");
-            $(checkboxdiv).append(checkboxinput);
-            $(checkboxdiv).addClass("ui");
-            $(checkboxdiv).addClass("checkbox");
-            var label = $(document.createElement("label"));
-            label.html((dagen[i]));
-            $(checkboxdiv).append(label);
-            $(".dagenCheckboxGroup").append(checkboxdiv);
-            $(".dagenCheckboxGroup").append("<br />");
+                // create & append elements to DOM
+                var checkboxdiv = $(document.createElement("div"));
+                var checkboxinput = $(document.createElement("input"));
+                $(checkboxinput).attr("type", "checkbox");
+                $(checkboxdiv).append(checkboxinput);
+                $(checkboxdiv).addClass("ui");
+                $(checkboxdiv).addClass("checkbox");
+                var label = $(document.createElement("label"));
+                label.html((dagen[i]));
+                $(checkboxdiv).append(label);
+                $(".dagenCheckboxGroup").append(checkboxdiv)
+                    .append("<br />");
 
-            //check if user already ordered, if so check the checkbox.
-            contractEvents.contractInstance.getOrderAddressenForDay(i, function (error, success) {
-                if (checkIfOrdered(success)) {
-                    $(checkboxdiv).addClass("checked");
-                    $(checkboxinput).attr("checked", "");
+                //check if user already ordered, if so check the checkbox.
+                contractEvents.contractInstance.getOrderAddressenForDay(i, function (error, success) {
+                    if (checkIfOrdered(success)) {
+                        $(checkboxdiv).addClass("checked");
+                        $(checkboxinput).attr("checked", "");
+                    }
+                });
+
+                // disable the checkbox if day has already passed, user cant change his mind anymore.
+
+                if (i < huidigeDag) {
+                    $(checkboxdiv).addClass("disabled");
+                    $(checkboxinput).attr("disabled", "disabled");
+
                 }
-            });
 
-            // disable the checkbox if day has already passed, user cant change his mind anymore.
-
-            if (i > huidigeDag) {
-                $(checkboxdiv).addClass("disabled");
-                $(checkboxinput).attr("disabled", "disabled");
-
-            }
 
             function composeOrderArray() {
                 var arr = [];
