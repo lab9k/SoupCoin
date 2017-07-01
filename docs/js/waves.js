@@ -1,4 +1,4 @@
-var waves = {
+const waves = {
     init: function () {
         this.c = document.querySelector('canvas');
         this.ctx = this.c.getContext('2d');
@@ -6,6 +6,7 @@ var waves = {
         this.events();
         this.reset();
         this.loop();
+
     },
     reset: function () {
         this.w = window.innerWidth;
@@ -25,6 +26,11 @@ var waves = {
         this.y = this.h * 0.66;
         this.length = this.w + 10;
         this.amp = 40;
+
+        this.brokjes = [];
+        for (let i = 0; i < 10; i++) {
+            this.brokjes.push(new SoepBrok(this.c.getAttribute("height"), this.c.getAttribute("width")));
+        }
     },
     events: function () {
         window.addEventListener('resize', this.reset.bind(this));
@@ -40,9 +46,19 @@ var waves = {
         }
         this.ctx.lineTo(this.w, this.h);
         this.ctx.lineTo(0, this.h);
-        this.ctx.closePath();
-        this.ctx.fillStyle = 'hsla(210,90%,50%,0.2)';
+
+        this.ctx.fillStyle = 'hsla(34,96%,59%,0.2)';
         this.ctx.fill();
+
+        this.ctx.closePath();
+        this.ctx.beginPath();
+
+        for (let i = 0; i < this.brokjes.length; i++) {
+            this.ctx.rect(this.brokjes[i].x, this.brokjes[i].y, 15, 15);
+            this.ctx.fillStyle = '#752f16';
+            this.ctx.fill();
+        }
+        this.ctx.closePath();
     },
     loop: function () {
         requestAnimationFrame(this.loop.bind(this));
@@ -54,22 +70,30 @@ var waves = {
         this.wave();
         this.yoff += this.yinc;
         this.goff += this.ginc;
+        for (let i = 0; i < this.brokjes.length; i++) {
+            this.brokjes[i].update();
+        }
     }
 };
 
-var scrollFade = {
-    init: function () {
-        this.events();
-    },
-    events: function () {
-        window.addEventListener("scroll", this.calcop.bind(this));
-    },
-    calcop: function () {
-        $(".title").css("opacity", 1 - $(window).scrollTop() / 500);
-    }
-};
+function SoepBrok(maxY, screenwidth) {
+    this.x = Math.random() * screenwidth;
+    this.y = 0;
+    this.vy = Math.random() * 10;
+    this.maxY = maxY;
+    this.acceleration = 9.81;
+    this.maxX = screenwidth;
+    this.update = function () {
+        this.vy += this.acceleration / 60;
+        this.y += this.vy;
+        if (this.y > this.maxY) {
+            this.y = 0;
+            this.x = Math.random() * this.maxX;
+            this.vy = Math.random() * 10;
+        }
+    };
+}
 
 window.onload = function () {
     waves.init();
-    scrollFade.init();
 };

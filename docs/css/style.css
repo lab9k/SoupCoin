@@ -15,6 +15,6 @@ canvas {
 
 .cv {
     position: absolute;
-    background: radial-gradient(circle, #cfe6fc, #6eb3f7);
+    background: radial-gradient(circle, #fcdabb, #f7c386);
     z-index: 1;
 }
