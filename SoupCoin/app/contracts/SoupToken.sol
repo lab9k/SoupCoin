@@ -111,22 +111,22 @@ contract SoupToken is Owned {
         throw;
     }
 
-    function orderForDays(uint[] weekdays) returns (bool success) {
+    function orderForDays(bool[] weekdays) returns (bool success) {
 
         uint totalOrders = 0;
         for (uint i = 0; i < weekdays.length; i++) {
-            var buyYesOrNo = weekdays[i];
+            var isOrdering = weekdays[i];
             //check if the user already ordered for that day
             if (checkIfAlreadyOrderedForDay(i, msg.sender)) {
                 //if so we remove the order if the user changed his mind
-                if (buyYesOrNo == 0) {
+                if (!isOrdering) {
                     var useridx = findOrderIndexForAddress(i, msg.sender);
                     delete ordersFor[i][useridx];
                 }
                 //if he still wants to buy for the change we dont do anything
             }
             else {
-                if (buyYesOrNo == 1) {
+                if (isOrdering) {
                     //add the user to the list of purchases that day
                     ordersFor[i].push(msg.sender);
                     totalOrders++;
@@ -146,11 +146,9 @@ contract SoupToken is Owned {
         for (uint i = 0; i < ordersFor[day].length; i++) {
             if (ordersFor[day][i] == 0x0) {
                 continue;
-                // workaround for addresses
             }
             burnFrom(ordersFor[day][i], 1);
             delete ordersFor[day][i];
-            //dont forget to delete the order record
         }
         return true;
     }
