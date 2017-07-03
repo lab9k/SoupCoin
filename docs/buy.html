@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Koop SoupTokens</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.css"/>
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+</head>
+<body>
+<div class="ui attached stackable menu">
+    <div class="ui container">
+        <a class="item" href="index.html">
+            <i class="home icon"></i>
+            <p>Home</p>
+        </a>
+        <a class="item" href="soup.html">
+            <i class="grid layout icon"></i>
+            <p>SoupCoin</p>
+        </a>
+        <a href="buy.html" class="item">
+            <i class="euro icon"></i>
+            <p>Koop SoupCoins</p>
+        </a>
+    </div>
+</div>
+<div class="ui container">
+    <div class="ui segment">
+        <div class="ui form">
+            <div class="grouped fields">
+                <label>Aantal soep tokens:</label>
+                <div class="field">
+                    <div class="ui slider checkbox">
+                        <input class="value-checkbox" type="radio" name="throughput">
+                        <label>1 token</label>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui slider checkbox">
+                        <input class="value-checkbox" type="radio" name="throughput" checked>
+                        <label>5 tokens</label>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui slider checkbox">
+                        <input class="value-checkbox" type="radio" name="throughput">
+                        <label>20 tokens</label>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui slider checkbox">
+                        <input class="value-checkbox" type="radio" name="throughput">
+                        <label>100 tokens</label>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+
+        <div id="paypal-button"></div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js"></script>
+<script>
+    paypal.Button.render({
+
+        env: 'sandbox', // 'production' or 'sandbox',
+
+        client: {
+            sandbox: 'AY93dQbmqUh5hvTxdkQx5xuuUiAo7U_vqL-mceYcF7xZoPbxLMYBVVRoRHifOq4vzDhYIOJc8YK4NRYw',
+            production: 'AamB_45BDUCsngExCDyrxu_VduqgJJXB3TPEtaWXyCxoiA7rygkuLmj5eYSs4Y3HgENkZEQJXVeJU-kz'
+        },
+
+        commit: true, // Show a 'Pay Now' button
+
+        payment: function (data, actions) {
+            let checkbox = $('.value-checkbox:checked')[0];
+            let labels = $(checkbox).siblings();
+            let payAmount = Number.parseInt(labels[0].innerText);
+            console.log("%c De exacte prijs moet nog berekend worden", "color:red;font-size:24px;");
+            return actions.payment.create({
+                payment: {
+                    transactions: [
+                        {
+                            amount: {total: payAmount, currency: 'EUR'}
+                        }
+                    ]
+                }
+            });
+        },
+
+        onAuthorize: function (data, actions) {
+            return actions.payment.execute().then(function (payment) {
+
+                // The payment is complete!
+                // You can now show a confirmation message to the customer
+                console.log("completed!");
+            });
+        }
+
+    }, '#paypal-button');
+</script>
+</body>
+</html>
