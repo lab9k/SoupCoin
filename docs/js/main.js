@@ -264,6 +264,10 @@ const contractEvents = {
         this.contractInstance.owner(function (error, value) {
             $('#contractOwner').append(value);
         });
+        this.contractInstance.balanceOf(web3.eth.defaultAccount, (error, result) => {
+            $('#balansLabel').append(result.toString());
+        });
+        $('#accountLabel').append(web3.eth.defaultAccount);
     },
     isAdminInit: function () {
         let account = web3.eth.accounts;
@@ -438,15 +442,13 @@ const contractEvents = {
         let datum = new Date();
         $('#dayLabel').append(datum);
         let huidigeDag = datum.getDay();
-        if (huidigeDag > 4) {
+            if (huidigeDag > 4) {
             huidigeDag = -1;
         }
-        if (datum.getHours() <= 7) {
-            huidigeDag--;
-        }
+
         function checkIfOrdered(arr) {
-            for (var i = 0; i < arr.length; i++) {
-                if (web3.eth.defaultAccount === arr[i]) {
+            for (var j = 0; j < arr.length; j++) {
+                if (web3.eth.defaultAccount === arr[j]) {
                     return true;
                 }
             }
@@ -457,8 +459,8 @@ const contractEvents = {
         for (let i = 0; i < 5; i++) {
 
             // create & append elements to DOM
-            var checkboxdiv = $(document.createElement("div"));
-            var checkboxinput = $(document.createElement("input"));
+            let checkboxdiv = $(document.createElement("div"));
+           let checkboxinput = $(document.createElement("input"));
             $(checkboxinput).attr("type", "checkbox");
             $(checkboxdiv).append(checkboxinput);
             $(checkboxdiv).addClass("ui");
@@ -472,8 +474,6 @@ const contractEvents = {
             //check if user already ordered, if so check the checkbox.
             contractEvents.contractInstance.getOrderAddressesForDay(i, function (error, success) {
                 if (checkIfOrdered(success)) {
-                    console.log(i);
-                    console.log(success);
                     $(checkboxdiv).addClass("checked");
                     $(checkboxinput).attr("checked", "checked");
                 }
@@ -515,7 +515,6 @@ const contractEvents = {
     orderSoupForDaysTransaction: function (orders) {
 
         contractEvents.contractInstance.orderForDays(orders, function (error, success) {
-            console.log(orders);
         });
     },
 };
