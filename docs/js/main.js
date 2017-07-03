@@ -8,7 +8,7 @@ const dappInterface = [{
     "constant": true,
     "inputs": [],
     "name": "name",
-    "outputs": [{"name": "", "type": "string", "value": "SoupToken v30/06"}],
+    "outputs": [{"name": "", "type": "string", "value": "SoupCoin"}],
     "payable": false,
     "type": "function"
 }, {
@@ -39,7 +39,7 @@ const dappInterface = [{
     "constant": true,
     "inputs": [{"name": "", "type": "address"}],
     "name": "isAdmin",
-    "outputs": [{"name": "", "type": "bool", "value": false}],
+    "outputs": [{"name": "", "type": "bool", "value": true}],
     "payable": false,
     "type": "function"
 }, {
@@ -65,7 +65,7 @@ const dappInterface = [{
     "type": "function"
 }, {
     "constant": false,
-    "inputs": [{"name": "weekdays", "type": "uint256[]"}],
+    "inputs": [{"name": "weekdays", "type": "bool[]"}],
     "name": "orderForDays",
     "outputs": [{"name": "success", "type": "bool"}],
     "payable": false,
@@ -109,7 +109,7 @@ const dappInterface = [{
     "constant": true,
     "inputs": [],
     "name": "owner",
-    "outputs": [{"name": "", "type": "address", "value": "0x520866f5409df6ab7019b91ee49576305556003f"}],
+    "outputs": [{"name": "", "type": "address", "value": "0x1851180b772395fa017f926dc68e24028b1620ea"}],
     "payable": false,
     "type": "function"
 }, {
@@ -123,7 +123,7 @@ const dappInterface = [{
     "constant": true,
     "inputs": [],
     "name": "symbol",
-    "outputs": [{"name": "", "type": "string", "value": "koekjes"}],
+    "outputs": [{"name": "", "type": "string", "value": "🍜"}],
     "payable": false,
     "type": "function"
 }, {
@@ -170,7 +170,7 @@ const dappInterface = [{
         "bits": "",
         "displayName": "token Name",
         "template": "elements_input_string",
-        "value": "SoupToken v30/06"
+        "value": "SoupCoin"
     }, {
         "name": "tokenSymbol",
         "type": "string",
@@ -179,7 +179,7 @@ const dappInterface = [{
         "bits": "",
         "displayName": "token Symbol",
         "template": "elements_input_string",
-        "value": "koekjes"
+        "value": "🍜"
     }], "payable": true, "type": "constructor"
 }, {"payable": true, "type": "fallback"}, {
     "anonymous": false,
@@ -214,7 +214,7 @@ const dappInterface = [{
     "name": "LogDepositReceived",
     "type": "event"
 }];
-const contractAddress = "0x7141DB6B5A68B6e89eD0778Cc77e455d08fF88F7";
+const contractAddress = "0x3B04d2f3d98FA4850C0E9F8B1a36875bB943f798";
 
 
 $(document).ready(function () {
@@ -438,7 +438,12 @@ const contractEvents = {
         let datum = new Date();
         $('#dayLabel').append(datum);
         let huidigeDag = datum.getDay();
-
+        if (huidigeDag > 4) {
+            huidigeDag = -1;
+        }
+        if (datum.getHours() <= 7) {
+            huidigeDag--;
+        }
         function checkIfOrdered(arr) {
             for (var i = 0; i < arr.length; i++) {
                 if (web3.eth.defaultAccount === arr[i]) {
@@ -465,10 +470,12 @@ const contractEvents = {
                 .append("<br />");
 
             //check if user already ordered, if so check the checkbox.
-            contractEvents.contractInstance.getOrderAddressenForDay(i, function (error, success) {
+            contractEvents.contractInstance.getOrderAddressesForDay(i, function (error, success) {
                 if (checkIfOrdered(success)) {
+                    console.log(i);
+                    console.log(success);
                     $(checkboxdiv).addClass("checked");
-                    $(checkboxinput).attr("checked", "");
+                    $(checkboxinput).attr("checked", "checked");
                 }
             });
 
@@ -479,39 +486,36 @@ const contractEvents = {
                 $(checkboxinput).attr("disabled", "disabled");
 
             }
-
-
-            function composeOrderArray() {
-                var arr = [];
-                $(".dagenCheckboxGroup").children().each(function (index, value) {
-                    if ($(value).hasClass("checkbox")) {
-                        $(value).children().each(function (index, value) {
-                            if ($(value).is(':checkbox')) {
-                                if ($(value).is(':checked')) {
-                                    arr.splice(index, 0, 1);
-                                }
-                                else {
-                                    arr.splice(index, 0, 0);
-                                }
-                            }
-                        });
-                    }
-                });
-                return arr.reverse();
-            }
-
-            // handle click on button
-            $("#bevestigOrderBtn").off().on("click", function (event) {
-                contractEvents.orderSoupForDaysTransaction(composeOrderArray());
-            })
         }
+        function composeOrderArray() {
+            var arr = [];
+            $(".dagenCheckboxGroup").children().each(function (index, value) {
+                if ($(value).hasClass("checkbox")) {
+                    $(value).children().each(function (index, value) {
+                        if ($(value).is(':checkbox')) {
+                            if ($(value).is(':checked')) {
+                                arr.splice(index, 0, true);
+                            }
+                            else {
+                                arr.splice(index, 0, false);
+                            }
+                        }
+                    });
+                }
+            });
+            return arr.reverse();
+        }
+
+        // handle click on button
+        $("#bevestigOrderBtn").off().on("click", function (event) {
+            contractEvents.orderSoupForDaysTransaction(composeOrderArray());
+        })
     },
 
     orderSoupForDaysTransaction: function (orders) {
 
         contractEvents.contractInstance.orderForDays(orders, function (error, success) {
             console.log(orders);
-            contractEvents.orderSoupForDaysInit();
         });
     },
 };
