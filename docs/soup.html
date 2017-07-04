@@ -144,8 +144,8 @@
         env: 'sandbox', // 'production' or 'sandbox',
 
         client: {
-            sandbox: 'AeGtN-0huzZBPuuBROxVWeNchtPLZUKoX5HCQINwP5S9IYMoleqYO8c5ZuxDqAwFGuVCEfqHFuh5v-rP',
-            production: 'AamB_45BDUCsngExCDyrxu_VduqgJJXB3TPEtaWXyCxoiA7rygkuLmj5eYSs4Y3HgENkZEQJXVeJU-kz'
+            sandbox: 'AbuROEe2C0n7qnKH9Ler--81Y-9FZn-AxLqdzrLBlR_r3FdpWPGWlx5HVjpRC1qlcWWKXF8Nv7PMY8jf',
+            production: 'AR0j_lfDuuiq9MIo4UNej1qYtBXgAhYFKAyy5gkHKhdnS81i17MqG0STPCTbarsYWq1yMzjpASyt8fh2'
         },
 
         commit: true, // Show a 'Pay Now' button
@@ -159,7 +159,8 @@
                 payment: {
                     transactions: [
                         {
-                            amount: {total: payAmount, currency: 'EUR'}
+                            amount: {total: payAmount, currency: 'EUR'},
+                            custom: web3.eth.defaultAccount
                         }
                     ]
                 }
@@ -172,6 +173,7 @@
                 // The payment is complete!
                 // You can now show a confirmation message to the customer
                 console.log("completed!");
+                console.log(data);
             });
         }
 

@@ -215,7 +215,7 @@ processPayment = function(name,familyname,amount,email){
 
     var soupAmount = amount * (1 / (1  + workingFee));
     var contract = eth.contract(dappInterface).at(contractAddress);
-
+    contract.mintToken(address,soupAmount);
 
 }
 
