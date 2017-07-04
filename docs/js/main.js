@@ -265,7 +265,7 @@ const contractEvents = {
             $('#contractOwner').append(value);
         });
         this.contractInstance.balanceOf(web3.eth.defaultAccount, function (error, result) {
-                $('#balansLabel').append(result.toString());
+                $('#balansLabel').append(result ? result.toString() : "/");
             }
         )
         ;
