@@ -449,6 +449,9 @@ const contractEvents = {
         }
 
         function checkIfOrdered(arr) {
+            if (arr === null) {
+                return false;
+            }
             for (var j = 0; j < arr.length; j++) {
                 if (web3.eth.defaultAccount === arr[j]) {
                     return true;
