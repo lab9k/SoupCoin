@@ -422,7 +422,7 @@ const contractEvents = {
                     .removeClass("green")
                     .addClass("red");
             } else {
-                $('.transferOwnershipResult').html(`<a href="https://rinkeby.etherscan.io/tx/${value}" target="_blank">${value}</a>`)
+                $('.transferOwnershipResult').html(`<a href="https://etherscan.io/tx/${value}" target="_blank">${value}</a>`)
                     .removeClass("red")
                     .removeClass("green")
                     .addClass("green");
@@ -442,7 +442,7 @@ const contractEvents = {
         let datum = new Date();
         $('#dayLabel').append(datum);
         let huidigeDag = datum.getDay();
-            if (huidigeDag > 4) {
+        if (huidigeDag > 4) {
             huidigeDag = -1;
         }
 
@@ -460,7 +460,7 @@ const contractEvents = {
 
             // create & append elements to DOM
             let checkboxdiv = $(document.createElement("div"));
-           let checkboxinput = $(document.createElement("input"));
+            let checkboxinput = $(document.createElement("input"));
             $(checkboxinput).attr("type", "checkbox");
             $(checkboxdiv).append(checkboxinput);
             $(checkboxdiv).addClass("ui");
