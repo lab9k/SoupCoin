@@ -515,6 +515,17 @@ const contractEvents = {
     orderSoupForDaysTransaction: function (orders) {
 
         contractEvents.contractInstance.orderForDays(orders, function (error, success) {
+            if (error) {
+                $('.orderSoupResult').html(`<p>Something went wrong: ${error}</p>`)
+                    .removeClass("red")
+                    .removeClass("green")
+                    .addClass("red");
+            } else {
+                $('.orderSoupResult').html(`<a href="https://rinkeby.etherscan.io/tx/${success}" target="_blank">${success}</a>`)
+                    .removeClass("red")
+                    .removeClass("green")
+                    .addClass("green");
+            }
         });
     },
 };
