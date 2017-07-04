@@ -264,9 +264,11 @@ const contractEvents = {
         this.contractInstance.owner(function (error, value) {
             $('#contractOwner').append(value);
         });
-        this.contractInstance.balanceOf(web3.eth.defaultAccount, (error, result) => {
-            $('#balansLabel').append(result.toString());
-        });
+        this.contractInstance.balanceOf(web3.eth.defaultAccount, function (error, result) {
+                $('#balansLabel').append(result.toString());
+            }
+        )
+        ;
         $('#accountLabel').append(web3.eth.defaultAccount);
     },
     isAdminInit: function () {
