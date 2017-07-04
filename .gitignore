@@ -112,3 +112,5 @@ fabric.properties
 .idea/jsLibraryMappings.xml
 .idea/vagrant.xml
 SoupCoin/node_modules/
+.idea/markdown-navigator.xml
+.idea/markdown-navigator/
