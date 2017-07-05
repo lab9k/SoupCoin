@@ -18,3 +18,60 @@ canvas {
     background: radial-gradient(circle, #fcdabb, #f7c386);
     z-index: 1;
 }
+
+.loading-screen {
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+}
+
+.loader {
+    -webkit-animation: loading 2s infinite linear;
+    width: 150px;
+    height: 150px;
+    background-color: #1b6d85;
+    position: absolute;
+    top: calc(50% - 75px);
+    left: calc(50% - 75px);
+}
+
+.wait-text {
+    -webkit-animation: blinking 2s infinite ease;
+    position: absolute;
+    color: deeppink;
+    font-size: 2em;
+    left: 0;
+    right: 0;
+    top: calc(50% + 100px);
+    margin-left: auto;
+    margin-right: auto;
+    width: 600px; /* Need a specific value to work */
+}
+
+.invisible {
+    display: none;
+    visibility: hidden;
+}
+
+@-webkit-keyframes blinking {
+    0% {
+        opacity: 100;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@-webkit-keyframes loading {
+    0% {
+        -webkit-transform: rotate(0deg)
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
