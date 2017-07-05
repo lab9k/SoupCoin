@@ -267,8 +267,7 @@ const contractEvents = {
         this.contractInstance.balanceOf(web3.eth.defaultAccount, function (error, result) {
                 $('#balansLabel').append(result ? result.toString() : "/");
             }
-        )
-        ;
+        );
         $('#accountLabel').append(web3.eth.defaultAccount);
     },
     isAdminInit: function () {
@@ -452,7 +451,7 @@ const contractEvents = {
             if (arr === null) {
                 return false;
             }
-            for (var j = 0; j < arr.length; j++) {
+            for (let j = 0; j < arr.length; j++) {
                 if (web3.eth.defaultAccount === arr[j]) {
                     return true;
                 }
