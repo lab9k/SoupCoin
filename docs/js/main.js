@@ -229,7 +229,7 @@ window.addEventListener('load', function () {
 
     setTimeout(function () {
         $(".loading-screen").addClass("invisible");
-    }, 5000);
+    }, 100000);
 
     // Now you can start your app & access web3 freely:
     contractEvents.init();
