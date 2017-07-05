@@ -216,23 +216,20 @@ const dappInterface = [{
 }];
 const contractAddress = "0x19B3065F1b82f2c8f8DA8ed4577abB1E448eCEf3";
 
+window.addEventListener('load', function() {
 
-$(document).ready(function () {
     // Checking if Web3 has been injected by the browser (Mist/MetaMask)
-    let pass = true;
-    while (typeof web3 === 'undefined') {
+    if (typeof web3 !== 'undefined') {
         // Use Mist/MetaMask's provider
-        if (pass) {
-            window.web3 = new Web3(web3.currentProvider);
-            pass = false;
-        }
-        setTimeout(function () {
-            console.log('Web 3 has not been initialized, timing out for 1 sec');
-        }, 1000);
+        window.web3 = new Web3(web3.currentProvider);
+    } else {
+        console.log('No web3? You should consider trying MetaMask!');
+        // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
     }
-    contractEvents.init();
-});
 
+    // Now you can start your app & access web3 freely:
+    contractEvents.init();
+})
 const contractEvents = {
     init: function () {
         this.soupContract = web3.eth.contract(dappInterface);
@@ -266,9 +263,8 @@ const contractEvents = {
         });
         this.contractInstance.balanceOf(web3.eth.defaultAccount, function (error, result) {
                 $('#balansLabel').append(result ? result.toString() : "/");
-            }
-        )
-        ;
+        });
+
         $('#accountLabel').append(web3.eth.defaultAccount);
     },
     isAdminInit: function () {
