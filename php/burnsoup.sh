@@ -1,7 +1,9 @@
 #!/bin/bash
 
 function runTransaction {
-	geth attach --exec "loadScript(\"soupcoinburnscript.js\"); burnSoup(\"$1\")";
+    date=$($(date --date="-1 days ago" +"%u") - 1 ) ;
+    date2=$(( $date -1 )) ;
+	geth attach --exec "loadScript(\"soupcoinburnscript.js\"); burnSoup(\"$date2\")";
 }
  
 function startGeth {
