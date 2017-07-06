@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 if [ "$#" -ne 1 ] ; then
     echo "Number of arguments given: $#"
     echo "Amount of soup was not provided"
