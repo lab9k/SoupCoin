@@ -1,0 +1,31 @@
+{
+  "name": "etherscan.api.test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "compile": "tsc ./index.ts"
+  },
+  "dependencies": {
+    "eslint": "^4.1.1",
+    "etherscan-api": "^3.0.8",
+    "jquery": "^3.2.1",
+    "jsdom": "^11.1.0",
+    "node-gyp": "^3.6.2",
+    "tslint": "^5.5.0",
+    "typescript": "2.3.4",
+    "web3": "^0.19.1"
+  },
+  "eslintConfig": {
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    },
+    "rules": {
+      "semi": 2
+    }
+  }
+}
