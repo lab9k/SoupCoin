@@ -5,10 +5,8 @@ console.log(url);
 const Web3 = require('web3');
 const web3 = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io/zdscCHcH4o3fKBkwl8fH'));
 const version = web3.version.api;
-const lightwallet = require('eth-lightwallet');
-const keystore = lightwallet.keystore;
-const signing = lightwallet.signing;
-const fs = require('fs');
+const Tx = require('ethereumjs-tx');
+
 
 const getJSON = function (url, callback) {
     let xhr = new XMLHttpRequest();
@@ -33,8 +31,22 @@ getJSON(url, function (err, data) {
         const myContract = web3.eth.contract(jsonResult);
         const myContractInstance = myContract.at("0x5ec718aB8c21fEc6948a157dE3A92543E7FCe7b4");
 
-        let jsonKeystore = JSON.parse(fs.readFileSync('UTC--2017-07-03T10-01-33.485946316Z--1851180b772395fa017f926dc68e24028b1620ea', 'utf8'));
-        console.log(jsonKeystore);
-        keystore.deserialize(jsonKeystore);
+        //TODO fill in private key (get from ignored file)
+        const privateKey = new Buffer('< private Key here >', 'hex');
+
+        let rawTx = {
+            nonce: '0x00',
+            gasPrice: '0x09184e72a000',
+            gasLimit: '0x2710',
+            to: '0x0000000000000000000000000000000000000000',
+            value: '0x00',
+            data: '0x7f7465737432000000000000000000000000000000000000000000000000000000600057'
+        }
+
+        let tx = new Tx(rawTx);
+        tx.sign(privateKey)
+
+        let serializedTx = tx.serialize();
+        console.log(serializedTx.toString('hex'));
     }
 });
