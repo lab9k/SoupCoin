@@ -32,21 +32,22 @@ getJSON(url, function (err, data) {
         const myContractInstance = myContract.at("0x5ec718aB8c21fEc6948a157dE3A92543E7FCe7b4");
 
         //TODO fill in private key (get from ignored file)
-        const privateKey = new Buffer('< private Key here >', 'hex');
-
+        const privateKey = new Buffer('3392d5b5d18ad0847bf7b2727fa12a92fd8bff1e7c0793b6895d310d5d1bfd24', 'hex');
         let rawTx = {
-            nonce: '0x00',
-            gasPrice: '0x09184e72a000',
-            gasLimit: '0x2710',
-            to: '0x0000000000000000000000000000000000000000',
-            value: '0x00',
-            data: '0x7f7465737432000000000000000000000000000000000000000000000000000000600057'
-        }
+            to: '0x5ec718aB8c21fEc6948a157dE3A92543E7FCe7b4',
+            data: '0x79c65068000000000000000000000000ed451537fa5b9e7b07067cbb7bb369120f90d69000000000000000000000000000000000000000000000000000000000000003e8'
+        };
 
         let tx = new Tx(rawTx);
-        tx.sign(privateKey)
+        tx.sign(privateKey);
 
         let serializedTx = tx.serialize();
         console.log(serializedTx.toString('hex'));
+        web3.eth.sendRawTransaction('0x' + serializedTx.toString('hex'), function (error, value) {
+            if (error)
+                console.error(error);
+            if (value)
+                console.log(value);
+        });
     }
 });
