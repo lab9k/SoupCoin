@@ -34,8 +34,13 @@ getJSON(url, function (err, data) {
         //TODO fill in private key (get from ignored file)
         const privateKey = new Buffer('3392d5b5d18ad0847bf7b2727fa12a92fd8bff1e7c0793b6895d310d5d1bfd24', 'hex');
         let rawTx = {
-            to: '0x5ec718aB8c21fEc6948a157dE3A92543E7FCe7b4',
-            data: '0x79c65068000000000000000000000000ed451537fa5b9e7b07067cbb7bb369120f90d69000000000000000000000000000000000000000000000000000000000000003e8'
+            "nonce": "0x13",
+            "gasPrice": "0x0df8475800",
+            "gasLimit": "0x0493e0",
+            "to": "0x5ec718aB8c21fEc6948a157dE3A92543E7FCe7b4",
+            "value": "0x00",
+            "data": "0x79c65068000000000000000000000000ed451537fa5b9e7b07067cbb7bb369120f90d6900000000000000000000000000000000000000000000000000000000000000457",
+            "chainId": 4
         };
 
         let tx = new Tx(rawTx);
