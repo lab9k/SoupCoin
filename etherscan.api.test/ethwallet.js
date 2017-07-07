@@ -10,7 +10,12 @@ $.getJSON(`https://api.etherscan.io/api?module=contract&action=getabi&address=${
     if (contractABI !== '') {
         const MyContract = web3.eth.contract(contractABI);
         const myContractInstance = MyContract.at(contractAddress);
-        console.log(myContractInstance);
+        console.log("contractInstance: ", myContractInstance);
+
+        myContractInstance.owner(function (error, owner) {
+            console.log("owner error: ", error);
+            console.log("owner value: ", owner);
+        });
     } else {
         console.log("Error");
     }
