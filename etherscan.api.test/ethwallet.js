@@ -15,9 +15,15 @@ $.getJSON(`https://api.etherscan.io/api?module=contract&action=getabi&address=${
         myContractInstance.owner(function (error, owner) {
             console.log("owner error: ", error);
             console.log("owner value: ", owner);
+            console.log("\n");
+        });
+
+        myContractInstance.symbol(function (error, symbol) {
+            console.log("symbol error: ", error);
+            console.log("symbol value: ", symbol);
+            console.log("\n");
         });
     } else {
         console.log("Error");
     }
-
 });
