@@ -16,6 +16,32 @@ const rawTransaction = {
             let jsonResult = JSON.parse(json);
             this.contract = web3.eth.contract(jsonResult);
             this.contractInstance = this.contract.at(config.contractAddress);
+
+            const privateKey = new Buffer('3392d5b5d18ad0847bf7b2727fa12a92fd8bff1e7c0793b6895d310d5d1bfd24', 'hex');
+            let rawTx = {
+                "nonce": this.getNonce(),
+                "gasPrice": this.getGasPrice(),
+                "gasLimit": this.getGasLimit(),
+                "to": config.contractAddress,
+                "value": this.getValue(),
+                "data": this.getData(),
+                "chainId": config.chainId
+            };
+            const Tx = require('ethereumjs-tx');
+
+            let tx = new Tx(rawTx);
+            tx.sign(privateKey);
+
+            let serializedTx = tx.serialize();
+            console.log("serialized transaction: ", serializedTx.toString('hex'));
+            web3.eth.sendRawTransaction('0x' + serializedTx.toString('hex'), function (error, value) {
+                if (error) {
+                    console.err(error);
+                }
+                if (value) {
+                    console.log(value);
+                }
+            });
         }
 
     },
@@ -32,9 +58,6 @@ const rawTransaction = {
 
     },
     getData: function () {
-
-    },
-    getChainId: function () {
 
     },
     buildTransaction: function (url) {
