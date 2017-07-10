@@ -166,8 +166,6 @@ contract SoupToken is Owned {
     }
 
     function kill() onlyOwner {
-        suicide(owner);
+        selfdestruct(owner);
     }
-
-
 }

@@ -17,7 +17,7 @@ const rawTransaction = {
             this.contract = web3.eth.contract(jsonResult);
             this.contractInstance = this.contract.at(config.contractAddress);
 
-            const privateKey = new Buffer('3392d5b5d18ad0847bf7b2727fa12a92fd8bff1e7c0793b6895d310d5d1bfd24', 'hex');
+            const privateKey = new Buffer(config.privateKey, 'hex');
             let rawTx = {
                 "nonce": this.getNonce(),
                 "gasPrice": this.getGasPrice(),
@@ -46,7 +46,7 @@ const rawTransaction = {
 
     },
     getNonce: function () {
-
+       
     },
     getGasPrice: function () {
 
