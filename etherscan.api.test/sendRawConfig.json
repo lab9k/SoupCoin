@@ -1,6 +1,6 @@
 {
   "rinkeby": {
-    "contractAddress": "0x19b3065f1b82f2c8f8da8ed4577abb1e448ecef3",
+    "contractAddress": "0x5ec718aB8c21fEc6948a157dE3A92543E7FCe7b4",
     "apiKey": "JTI5CD7MSAIHYI53FXFXW7B9JXVJ15E36H",
     "apiBaseUrl": "https://rinkeby.etherscan.io/api?",
     "httpProvider": "https://rinkeby.infura.io/zdscCHcH4o3fKBkwl8fH"
