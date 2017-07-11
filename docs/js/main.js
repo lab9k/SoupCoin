@@ -214,7 +214,7 @@ const dappInterface = [{
     "name": "LogDepositReceived",
     "type": "event"
 }];
-const contractAddress = "0x1851180b772395fA017F926dc68E24028B1620eA";
+const contractAddress = "0x5ec718aB8c21fEc6948a157dE3A92543E7FCe7b4";
 
 window.addEventListener('load', function () {
 
