@@ -4,6 +4,7 @@ pragma solidity ^0.4.11;
 contract Owned {
 
     address public owner;
+
     mapping (address => bool) public isAdmin;
 
     function Owned() {
@@ -27,7 +28,8 @@ contract Owned {
 
     function removeAdmin(address user) onlyAdmin {
         if (user == owner) {
-            throw; //cant remove the owner
+            throw;
+            //cant remove the owner
         }
         isAdmin[user] = false;
     }
