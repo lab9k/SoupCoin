@@ -151,7 +151,7 @@
         env: 'sandbox', // 'production' or 'sandbox',
 
         client: {
-            sandbox: 'AbuROEe2C0n7qnKH9Ler--81Y-9FZn-AxLqdzrLBlR_r3FdpWPGWlx5HVjpRC1qlcWWKXF8Nv7PMY8jf',
+            sandbox: 'AeGtN-0huzZBPuuBROxVWeNchtPLZUKoX5HCQINwP5S9IYMoleqYO8c5ZuxDqAwFGuVCEfqHFuh5v-rP',
             production: 'AR0j_lfDuuiq9MIo4UNej1qYtBXgAhYFKAyy5gkHKhdnS81i17MqG0STPCTbarsYWq1yMzjpASyt8fh2'
         },
 
@@ -160,8 +160,10 @@
         payment: function (data, actions) {
             let checkbox = $('.value-checkbox:checked')[0];
             let labels = $(checkbox).siblings();
-            let fee =  1.10; // 10% werkingskosten
-            let payAmount = Number.parseInt(labels[0].innerText) *fee;
+            let fee = 1.10; // 10% werkingskosten
+            let payAmount = Number.parseInt(labels[0].innerText) * fee;
+            payAmount = Math.round(payAmount * 100) / 100;
+            console.log(payAmount);
             console.log("%c De exacte prijs moet nog berekend worden", "color:red;font-size:24px;");
             return actions.payment.create({
                 payment: {
