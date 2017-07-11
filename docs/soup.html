@@ -160,7 +160,8 @@
         payment: function (data, actions) {
             let checkbox = $('.value-checkbox:checked')[0];
             let labels = $(checkbox).siblings();
-            let payAmount = Number.parseInt(labels[0].innerText);
+            let fee =  1.10; // 10% werkingskosten
+            let payAmount = Number.parseInt(labels[0].innerText) *fee;
             console.log("%c De exacte prijs moet nog berekend worden", "color:red;font-size:24px;");
             return actions.payment.create({
                 payment: {
