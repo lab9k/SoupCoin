@@ -1,4 +1,4 @@
-const configuration = require('./sendRawConfig.json');
+const configuration = require('./config.json');
 
 //change this when switching net
 const config = configuration.rinkeby;

@@ -5,7 +5,7 @@
 
 const Web3 = require('web3');
 const Tx = require('ethereumjs-tx');
-const config = require('./config.json');
+const config = require('./config.json').rinkeby; //change to mainnet if need be
 const util = require('ethereumjs-util');
 const privateKey = config.privatekey;
 const web3 = new Web3(new Web3.providers.HttpProvider(config.provider)); //link provided by Infura.io
