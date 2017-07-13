@@ -33,8 +33,227 @@
         <img src="assets/img/logo.png" alt="SoupCoin logo" class="ui centered medium image">
     </div>
     <div class="ui segment">
-        <div id="markdown">
+        <div class="content">
+            <div class="hr"></div>
+            <h1 id="soupcoin"><a href="#soupcoin" name="soupcoin">SoupCoin</a></h1>
+            <h2 id="see-it-in-action"><a href="#see-it-in-action" name="see-it-in-action">See it in action</a></h2>
+            <p>Go to <a href="https://lab9k.github.io/SoupCoin/" title="SoupCoin">this page</a> to see the app in
+                action. You need MetaMask to use the application. Get it <a href="https://metamask.io/"
+                                                                            title="MetaMask">here</a>.</p>
+            <h2 id="help-us-out"><a href="#help-us-out" name="help-us-out">Help us out</a></h2>
+            <p>Follow the guides below to set up your testing environments, and help improve our contract/frontend!</p>
+            <h3 id="initial-testing-environment"><a href="#initial-testing-environment"
+                                                    name="initial-testing-environment">Initial testing environment</a>
+            </h3>
+            <p>This will setup your environment to test your contracts on a private local testnet. Setup to test your
+                contracts on a live testnet are below.</p>
+            <h4 id="windows"><a href="#windows" name="windows">Windows</a></h4>
+            <ol>
+                <li class="p">
+                    <p class="p">install nodejs v8.1.2: <a href="https://nodejs.org/en/">link</a></p>
+                </li>
+                <li class="p">
+                    <p class="p">install windows-build-tools (only on windows)</p>
+                    <pre><code> $ npm install -g --production windows-build-tools
+</code></pre>
+                </li>
+                <li class="p">
+                    <p class="p">install the embark framework</p>
+                    <pre><code> # We need embark version 2.5 (time of writing: 28/06/17)
+ $ sudo npm install -g embark@2.5
+ # If you plan to use the simulator instead of a real ethereum node.
+ $ npm -g install ethereumjs-testrpc
+</code></pre>
+                </li>
+                <li class="p">
+                    <p class="p">clone the repository</p>
+                    <pre><code> $ mkdir &lt;project-name&gt;
+ $ cd &lt;project-name&gt;
+ $ git clone https://github.com/lab9k/SoupCoin.git
+ $ cd SoupCoin/embark_demo
+</code></pre>
+                </li>
+                <li class="p">
+                    <p class="p">run the development server</p>
+                    <pre><code> $ embark blockchain
+ # or
+ $ embark simulator
+</code></pre>
+                    <p>open another terminal instance and run:</p>
+                    <pre><code> $ embark run
+</code></pre>
+                </li>
+            </ol>
+            <h4 id="linux"><a href="#linux" name="linux">Linux</a></h4>
+            <ul>
+                <li class="p">
+                    <p class="p">similar to windows installation, with some extra steps when installing embark</p>
+                    <p>a detailed description can be found <a
+                            href="https://github.com/iurimatias/embark-framework/wiki/Install-on-Linux">here</a></p>
+                </li>
+            </ul>
+            <h4 id="osx"><a href="#osx" name="osx">OSX</a></h4>
+            <ul>
+                <li class="p">
+                    <p class="p">similar to windows installation, with some extra steps when installing embark</p>
+                    <p>a detailed description can be found <a
+                            href="https://github.com/iurimatias/embark-framework/wiki/Install-on-OSX">here</a></p>
+                </li>
+            </ul>
+            <h3 id="live-testnet-environment"><a href="#live-testnet-environment" name="live-testnet-environment">Live
+                testnet environment</a></h3>
+            <h4 id="step-1-download-geth"><a href="#step-1-download-geth" name="step-1-download-geth">Step 1: Download
+                Geth</a></h4>
+            <p>First, download the latest geth (1.6.1) to your laptop.
+                <a href="https://geth.ethereum.org/downloads/">https://geth.ethereum.org/downloads/</a></p>
+            <p>(I did it to my MacBook Air).
+                Extract it and copy the <code>geth</code> binary to somewhere in your path.</p>
+            <p>Unknown whether Parity works as well. It will probably take some finagling
+                to work with the Geth-style Genesis block.</p>
+            <h4 id="step-2-download-genesis-block"><a href="#step-2-download-genesis-block"
+                                                      name="step-2-download-genesis-block">Step 2: Download genesis
+                block</a></h4>
+            <pre><code>wget https://www.rinkeby.io/rinkeby.json
+</code></pre>
+            <h4 id="step-3-initialize"><a href="#step-3-initialize" name="step-3-initialize">Step 3: Initialize</a></h4>
+            <p>At this point, you should probably start a <code>tmux</code> or <code>screen</code> session, so if you
+                get
+                interrupted during syncing it will still keep going in the background.</p>
+            <p>To run a full node, download rinkeby.json and start Geth with:</p>
+            <pre><code>geth --datadir=$HOME/.rinkeby init rinkeby.json
+geth --networkid=4 --datadir=$HOME/.rinkeby --cache=512 --ethstats='yournode:Respect my authoritah!@stats.rinkeby.io' --bootnodes=enode://a24ac7c5484ef4ed0c5eb2d36620ba4e4aa13b8c84684e1b4aab0cebea2ae45cb4d375b77eab56516d34bfbd3c1a833fc51296ff084b770b94fb9028c4d25ccf@52.169.42.101:30303 --rpc --rpcapi=&quot;personal,eth,network&quot;
+</code></pre>
+            <p>Note that the credentials here <code>yournode:Respect my authoritah!</code> appear to be necessary.
+                Unknown whether you can create your own creds on <code>stats.rinkeby.io</code> so that you can collect
+                your own testnet mining stats :)</p>
+            <p>SECURITY WARNINGS: We've enabled RPC and also loaded the <code>personal</code> module to allow testing
+                and participating in smart contracts.
+                However, if you do these things on a mainnet node with your unlocked wallet exposed to the internet, you
+                could get hacked
+                and all your monies stolen. I'll write a separate gist about a secure way to participate in a mainnet
+                contract with real ETH.</p>
+            <p>You can download Geth from <a href="https://geth.ethereum.org/downloads/">https://geth.ethereum.org/downloads/</a>.
+            </p>
+            <p>On a MacBook Air with a 10 MBps (standard home internet download speeds),
+                I was able to sync all 187k blocks in &lt; 7 minutes.</p>
+            <h4 id="step-4-create-an-account"><a href="#step-4-create-an-account" name="step-4-create-an-account">Step
+                4: Create an account</a></h4>
+            <p>In a separate <code>tmux</code> pane or <code>screen</code> buffer or a separate terminal completely,
+                create an account and save the password somewhere safe.</p>
+            <p>First, symlink the IPC file so you can <code>geth attach</code> to the existing geth process.</p>
+            <p>On Linux:</p>
+            <pre><code>mkdir -p ~/.ethereum
+ln -s ~/.rinkeby/geth.ipc ~/.ethereum/
+</code></pre>
+            <p>On Mac:</p>
+            <pre><code>mkdir -p ~/Library/Ethereum
+ln -s ~/.rinkeby/geth.ipc ~/Library/Ethereum
+</code></pre>
+            <p>After that, attach the console</p>
+            <pre><code>geth attach
+</code></pre>
+            <p>and create an account (substituting a much better password than <code>notmyrealpassword</code>.</p>
+            <pre><code>Welcome to the Geth JavaScript console!
 
+instance: Geth/v1.6.1-stable-021c3c28/darwin-amd64/go1.8.1
+ modules: admin:1.0 clique:1.0 debug:1.0 eth:1.0 miner:1.0 net:1.0 personal:1.0 rpc:1.0 txpool:1.0 web3:1.0
+
+&gt; eth.accounts
+[]
+&gt; personal.newAccount(&quot;notmyrealpassword&quot;)
+&quot;0xb2e9fe08ca9a0323103883fe12c9609ed380f475&quot;
+&gt; eth.coinbase
+&quot;0xb2e9fe08ca9a0323103883fe12c9609ed380f475&quot;
+&gt; eth.getBalance(eth.coinbase)
+0
+</code></pre>
+            <p>You'll see a different address than <code>0xb2e9fe08ca9a0323103883fe12c9609ed380f475</code>. That one's
+                mine, provided for illustration.
+                Save your password in a secret place, preferrably encrypted. I use Evernote encrypted text, but you can
+                use any password manager
+                like 1Password, LastPass, Dashlane, etc.</p>
+            <p>Leave that terminal open for now.</p>
+            <h4 id="step-5-request-eth"><a href="#step-5-request-eth" name="step-5-request-eth">Step 5: Request ETH</a>
+            </h4>
+            <p>Because Kovan and Rinkeby both use Proof-of-Authority (clique) to grant ETH, you'll need to request some
+                to get started.
+                However, unlike Kovan which requires you to bootstrap by requesting KETH from another human being,
+                Rinkeby has a super-slick automated faucet, where you submit your address (copied from above) and submit
+                a public gist.</p>
+            <p>Go to <code>http://gist.github.com</code> and create a gist, pasting a single line into it which is your
+                Rinkeby address.
+                <a href="https://gist.github.com/cryptogoth/4e404fb58808a241f622afe80a659c05">Mine looks like this.</a>
+            </p>
+            <p>Copy the address of the gist, e.g. <a
+                    href="https://gist.github.com/cryptogoth/4e404fb58808a241f622afe80a659c05">https://gist.github.com/cryptogoth/4e404fb58808a241f622afe80a659c05</a>
+                Go to the <code>Crypto Faucet</code> section of <a href="www.rinkeby.io">www.rinkeby.io</a>
+                and paste it into the blank.</p>
+            <p>Choose an option from the dropdown which corresponds to how much Ether you need and how frequently
+                (requesting more Ether will take
+                longer between requests). I requested 3 ETH in 8 hours. Don't worry, you'll get your ETH in seconds, but
+                you can't
+                request again for another 8 hours. This is to prevent spammers from swamping the network by overpowering
+                it with mining power
+                and then out-spending everyone else.</p>
+            <p>This is the transaction where I received my 3 ETH:
+                <a href="https://rinkeby.etherscan.io/tx/0xf54c0101b71c645032b786b4eb3f0f0402b665575d34903f5fd1c911aaa22ebb">https://rinkeby.etherscan.io/tx/0xf54c0101b71c645032b786b4eb3f0f0402b665575d34903f5fd1c911aaa22ebb</a>
+            </p>
+            <p>Now, back in your geth console, wait for at most 15 seconds for the next block to be found, and verify
+                your balance again</p>
+            <pre><code>&gt; eth.getBalance(eth.coinbase)
+3000000000000000000
+</code></pre>
+            <p>Woohoo! You're rich, in testnet wei :)</p>
+            <p>If you found this guide useful, follow us on Twitter at @InvisibleLearn
+                or join us on Slack: <a href="http://invisible-slack.herokuapp.com/">http://invisible-slack.herokuapp.com/</a>
+            </p>
+            <h3 id="coupling-the-rinkeby-testnet-to-run-with-embark"><a
+                    href="#coupling-the-rinkeby-testnet-to-run-with-embark"
+                    name="coupling-the-rinkeby-testnet-to-run-with-embark">Coupling the rinkeby testnet to run with
+                Embark</a></h3>
+            <h4 id="step-1-locating-the-blockchainjson-configuration-file"><a
+                    href="#step-1-locating-the-blockchainjson-configuration-file"
+                    name="step-1-locating-the-blockchainjson-configuration-file">Step 1. locating the blockchain.json
+                configuration file:</a></h4>
+            <p>Clone our project and open it up in your favorite texteditor. We need to change the config file located
+                in SoupCoin/config/blockchain.json</p>
+            <h4 id="step-2-changing-privatenet-in-the-configuration-file"><a
+                    href="#step-2-changing-privatenet-in-the-configuration-file"
+                    name="step-2-changing-privatenet-in-the-configuration-file">Step 2. changing 'privatenet' in the
+                configuration file:</a></h4>
+            <pre><code class="json">&quot;privatenet&quot;: {
+  &quot;enabled&quot;: true,
+  &quot;networkType&quot;: &quot;custom&quot;,
+  &quot;rpcHost&quot;: &quot;localhost&quot;,
+  &quot;rpcPort&quot;: 8545,
+  &quot;rpcCorsDomain&quot;: &quot;http://localhost:8000&quot;,
+  &quot;datadir&quot;: &quot;$HOME/.rinkeby&quot;,
+  &quot;networkId&quot;: &quot;4&quot;,
+  &quot;bootnodes&quot;: &quot;enode://a24ac7c5484ef4ed0c5eb2d36620ba4e4aa13b8c84684e1b4aab0cebea2ae45cb4d375b77eab56516d34bfbd3c1a833fc51296ff084b770b94fb9028c4d25ccf@52.169.42.101:30303&quot;,
+  &quot;account&quot;: {
+    &quot;password&quot;: &quot;config/rinkebynet/password&quot;
+  }
+}
+</code></pre>
+            <p>I'll go over the important changes:</p>
+            <ul>
+                <li>datadir -&gt; Use the datadir specified earlier in the guide, when you were 'installing' the rinkeby
+                    blockchain.
+                </li>
+                <li>networkId -&gt; 4 (standard for rinkeby)</li>
+                <li>bootnodes -&gt; take the bootnode specified in the second command when following the guide</li>
+                <li>account -&gt; I made a rinkebynet directory in config with a password file. In that password file
+                    you'll put the password you used when you made your account in the geth console.
+                </li>
+            </ul>
+            <p>#### Step 3. running the blockchain via Embark:</p>
+            <pre><code class="bash"># navigate to the SoupCoin directory in our project.
+$ embark blockchain privatenet
+# now open up a seperate terminal
+$ embark run
+</code></pre>
+            <p>Et voila! If everything went OK you should see Geth v1.6.1 (replace with your version) in the embark
+                console. You can now start hacking away : - ).</p>
         </div>
     </div>
 </div>
@@ -44,249 +263,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js"></script>
 <script src="https://cdn.rawgit.com/showdownjs/showdown/1.7.1/dist/showdown.min.js"></script>
 <script src="js/markdown.js"></script>
-<div class="hidden" hidden>
-    # SoupCoin
 
-    ## See it in action
-
-    Go to [this page](https://lab9k.github.io/SoupCoin/ "SoupCoin") to see the app in action. You need MetaMask to use
-    the application. Get it [here](https://metamask.io/ "MetaMask").
-
-    ## Help us out
-
-    Follow the guides below to set up your testing environments, and help improve our contract/frontend!
-
-    ### Initial testing environment
-
-    This will setup your environment to test your contracts on a private local testnet. Setup to test your contracts on
-    a live testnet are below.
-
-    #### Windows
-
-    1. install nodejs v8.1.2: [link](https://nodejs.org/en/)
-
-    1. install windows-build-tools (only on windows)
-
-    $ npm install -g --production windows-build-tools
-
-    1. install the embark framework
-
-    # We need embark version 2.5 (time of writing: 28/06/17)
-    $ sudo npm install -g embark@2.5
-    # If you plan to use the simulator instead of a real ethereum node.
-    $ npm -g install ethereumjs-testrpc
-
-    1. clone the repository
-
-    $ mkdir < project-name>
-    $ cd < project-name>
-    $ git clone https://github.com/lab9k/SoupCoin.git
-    $ cd SoupCoin/embark_demo
-
-    1. run the development server
-
-    $ embark blockchain
-    # or
-    $ embark simulator
-    open another terminal instance and run:
-
-    $ embark run
-
-    #### Linux
-
-    * similar to windows installation, with some extra steps when installing embark
-
-    a detailed description can be found
-    [here](https://github.com/iurimatias/embark-framework/wiki/Install-on-Linux)
-
-    #### OSX
-
-    * similar to windows installation, with some extra steps when installing embark
-
-    a detailed description can be found
-    [here](https://github.com/iurimatias/embark-framework/wiki/Install-on-OSX)
-
-    ### Live testnet environment
-
-    #### Step 1: Download Geth
-    First, download the latest geth (1.6.1) to your laptop.
-    https://geth.ethereum.org/downloads/
-
-    (I did it to my MacBook Air).
-    Extract it and copy the `geth` binary to somewhere in your path.
-
-    Unknown whether Parity works as well. It will probably take some finagling
-    to work with the Geth-style Genesis block.
-
-    #### Step 2: Download genesis block
-
-    ```
-    wget https://www.rinkeby.io/rinkeby.json
-    ```
-
-    #### Step 3: Initialize
-
-    At this point, you should probably start a `tmux` or `screen` session, so if you get
-    interrupted during syncing it will still keep going in the background.
-
-    To run a full node, download rinkeby.json and start Geth with:
-
-    ```
-    geth --datadir=$HOME/.rinkeby init rinkeby.json
-    geth --networkid=4 --datadir=$HOME/.rinkeby --cache=512 --ethstats='yournode:Respect my
-    authoritah!@stats.rinkeby.io'
-    --bootnodes=enode://a24ac7c5484ef4ed0c5eb2d36620ba4e4aa13b8c84684e1b4aab0cebea2ae45cb4d375b77eab56516d34bfbd3c1a833fc51296ff084b770b94fb9028c4d25ccf@52.169.42.101:30303
-    --rpc --rpcapi="personal,eth,network"
-    ```
-
-    Note that the credentials here `yournode:Respect my authoritah!` appear to be necessary.
-    Unknown whether you can create your own creds on `stats.rinkeby.io` so that you can collect your own testnet
-    mining stats :)
-
-    SECURITY WARNINGS: We've enabled RPC and also loaded the `personal` module to allow testing and
-    participating in smart contracts.
-    However, if you do these things on a mainnet node with your unlocked wallet exposed to the internet, you
-    could get hacked
-    and all your monies stolen. I'll write a separate gist about a secure way to participate in a mainnet
-    contract with real ETH.
-
-    You can download Geth from https://geth.ethereum.org/downloads/.
-
-    On a MacBook Air with a 10 MBps (standard home internet download speeds),
-    I was able to sync all 187k blocks in < 7 minutes.
-
-    #### Step 4: Create an account
-
-    In a separate `tmux` pane or `screen` buffer or a separate terminal completely, create an account and save
-    the password somewhere safe.
-
-    First, symlink the IPC file so you can `geth attach` to the existing geth process.
-
-    On Linux:
-    ```
-    mkdir -p ~/.ethereum
-    ln -s ~/.rinkeby/geth.ipc ~/.ethereum/
-    ```
-
-    On Mac:
-    ```
-    mkdir -p ~/Library/Ethereum
-    ln -s ~/.rinkeby/geth.ipc ~/Library/Ethereum
-    ```
-
-    After that, attach the console
-    ```
-    geth attach
-    ```
-
-    and create an account (substituting a much better password than `notmyrealpassword`.
-
-    ```
-    Welcome to the Geth JavaScript console!
-
-    instance: Geth/v1.6.1-stable-021c3c28/darwin-amd64/go1.8.1
-    modules: admin:1.0 clique:1.0 debug:1.0 eth:1.0 miner:1.0 net:1.0 personal:1.0 rpc:1.0 txpool:1.0 web3:1.0
-
-    > eth.accounts
-    []
-    > personal.newAccount("notmyrealpassword")
-    "0xb2e9fe08ca9a0323103883fe12c9609ed380f475"
-    > eth.coinbase
-    "0xb2e9fe08ca9a0323103883fe12c9609ed380f475"
-    > eth.getBalance(eth.coinbase)
-    0
-    ```
-    You'll see a different address than `0xb2e9fe08ca9a0323103883fe12c9609ed380f475`. That one's mine, provided
-    for illustration.
-    Save your password in a secret place, preferrably encrypted. I use Evernote encrypted text, but you can use
-    any password manager
-    like 1Password, LastPass, Dashlane, etc.
-
-    Leave that terminal open for now.
-
-    #### Step 5: Request ETH
-
-    Because Kovan and Rinkeby both use Proof-of-Authority (clique) to grant ETH, you'll need to request some to
-    get started.
-    However, unlike Kovan which requires you to bootstrap by requesting KETH from another human being,
-    Rinkeby has a super-slick automated faucet, where you submit your address (copied from above) and submit a
-    public gist.
-
-    Go to `http://gist.github.com` and create a gist, pasting a single line into it which is your Rinkeby
-    address.
-    [Mine looks like this.](https://gist.github.com/cryptogoth/4e404fb58808a241f622afe80a659c05)
-
-    Copy the address of the gist, e.g. https://gist.github.com/cryptogoth/4e404fb58808a241f622afe80a659c05
-    Go to the `Crypto Faucet` section of www.rinkeby.io
-    and paste it into the blank.
-
-    Choose an option from the dropdown which corresponds to how much Ether you need and how frequently
-    (requesting more Ether will take
-    longer between requests). I requested 3 ETH in 8 hours. Don't worry, you'll get your ETH in seconds, but you
-    can't
-    request again for another 8 hours. This is to prevent spammers from swamping the network by overpowering it
-    with mining power
-    and then out-spending everyone else.
-
-    This is the transaction where I received my 3 ETH:
-    https://rinkeby.etherscan.io/tx/0xf54c0101b71c645032b786b4eb3f0f0402b665575d34903f5fd1c911aaa22ebb
-
-    Now, back in your geth console, wait for at most 15 seconds for the next block to be found, and verify your
-    balance again
-    ```
-    > eth.getBalance(eth.coinbase)
-    3000000000000000000
-    ```
-
-    Woohoo! You're rich, in testnet wei :)
-
-    If you found this guide useful, follow us on Twitter at @InvisibleLearn
-    or join us on Slack: http://invisible-slack.herokuapp.com/
-
-
-    ### Coupling the rinkeby testnet to run with Embark
-
-    #### Step 1. locating the blockchain.json configuration file:
-
-    Clone our project and open it up in your favorite texteditor. We need to change the config file located in
-    SoupCoin/config/blockchain.json
-
-    #### Step 2. changing 'privatenet' in the configuration file:
-    ```json
-    "privatenet": {
-    "enabled": true,
-    "networkType": "custom",
-    "rpcHost": "localhost",
-    "rpcPort": 8545,
-    "rpcCorsDomain": "http://localhost:8000",
-    "datadir": "$HOME/.rinkeby",
-    "networkId": "4",
-    "bootnodes":
-    "enode://a24ac7c5484ef4ed0c5eb2d36620ba4e4aa13b8c84684e1b4aab0cebea2ae45cb4d375b77eab56516d34bfbd3c1a833fc51296ff084b770b94fb9028c4d25ccf@52.169.42.101:30303",
-    "account": {
-    "password": "config/rinkebynet/password"
-    }
-    }
-    ```
-    I'll go over the important changes:
-    * datadir -> Use the datadir specified earlier in the guide, when you were 'installing' the rinkeby
-    blockchain.
-    * networkId -> 4 (standard for rinkeby)
-    * bootnodes -> take the bootnode specified in the second command when following the guide
-    * account -> I made a rinkebynet directory in config with a password file. In that password file you'll put
-    the password you used when you made your account in the geth console.
-
-    #### Step 3. running the blockchain via Embark:
-
-    ```bash
-    # navigate to the SoupCoin directory in our project.
-    $ embark blockchain privatenet
-    # now open up a seperate terminal
-    $ embark run
-    ```
-    Et voila! If everything went OK you should see Geth v1.6.1 (replace with your version) in the embark
-    console. You can now start hacking away : - ).
-</div>
 </body>
 
 </html>
