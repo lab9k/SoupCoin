@@ -215,12 +215,12 @@ var passphrase = "";
 
 web3.eth.defaultAccount = web3.eth.accounts[0];
 
-processPayment = function(name,familyname,amount,email, addr){
+processPayment = function (name, familyname, amount, email, addr) {
 
-    var soupAmount = amount * (1 / (1  + workingFee));
+    var soupAmount = amount * (1 / (1 + workingFee));
     var contract = eth.contract(dappInterface).at(contractAddress);
-   personal.unlockAccount(web3.eth.defaultAccount,passphrase); 
-   contract.mintToken(addr,soupAmount);
+    personal.unlockAccount(web3.eth.defaultAccount, passphrase);
+    contract.mintToken(addr, soupAmount);
 
 };
 

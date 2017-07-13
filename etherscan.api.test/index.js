@@ -1,4 +1,4 @@
-var Web3 = require('web3');
+const Web3 = require('web3');
 const jsdom = require("jsdom");
 const {
     JSDOM
@@ -26,7 +26,9 @@ $.getJSON('https://api.etherscan.io/api?module=contract&action=getabi&address=0x
         });
         console.log("result1 : " + result);
         var result = myContractInstance.totalSupply(function (error, value) {
-            if (error) {} else {}
+            if (error) {
+            } else {
+            }
         });
         console.log("result2 : " + result);
     } else {

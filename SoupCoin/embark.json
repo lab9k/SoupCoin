@@ -1,9 +1,20 @@
 {
-  "contracts": ["app/contracts/**"],
+  "contracts": [
+    "app/contracts/**"
+  ],
   "app": {
-    "css/app.css": ["app/css/**"],
-    "images/": ["app/images/**"],
-    "js/app.js": ["embark.js", "app/js/_vendor/jquery.min.js", "app/js/_vendor/bootstrap.min.js", "app/js/**"],
+    "css/app.css": [
+      "app/css/**"
+    ],
+    "images/": [
+      "app/images/**"
+    ],
+    "js/app.js": [
+      "embark.js",
+      "app/js/_vendor/jquery.min.js",
+      "app/js/_vendor/bootstrap.min.js",
+      "app/js/**"
+    ],
     "index.html": "app/index.html"
   },
   "buildDir": "dist/",

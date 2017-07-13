@@ -1,8 +1,9 @@
 pragma solidity ^0.4.8;
 
-contract Storage{
 
-mapping(bytes32 => uint) UIntStorage;
+contract Storage {
+
+    mapping (bytes32 => uint) UIntStorage;
 
     function getUIntValue(bytes32 record) constant returns (uint){
         return UIntStorage[record];

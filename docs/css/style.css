@@ -84,7 +84,7 @@ canvas {
     font-size: 2em;
     display: inline-block;
     top: calc(50% + 125px);
-    left: calc(50% - 325px);
+    left: calc(50% - 125px);
     font-family: 'Roboto Slab', serif;
 }
 

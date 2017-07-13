@@ -211,11 +211,11 @@ const dappInterface = [{
 const contractAddress = "0x3B04d2f3d98FA4850C0E9F8B1a36875bB943f798";
 const workingFee = 0.10;
 
-processPayment = function(name,familyname,amount,email){
+processPayment = function (name, familyname, amount, email) {
 
-    var soupAmount = amount * (1 / (1  + workingFee));
+    var soupAmount = amount * (1 / (1 + workingFee));
     var contract = eth.contract(dappInterface).at(contractAddress);
-    contract.mintToken(address,soupAmount);
+    contract.mintToken(address, soupAmount);
 
 }
 
