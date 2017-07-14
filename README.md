@@ -3,7 +3,7 @@
 
 ## See it in action
 
-Go to [this page](https://lab9k.github.io/SoupCoin/ "SoupCoin") to see the app in action. You need MetaMask to use the application. Get it [here](https://metamask.io/ "MetaMask").
+Go to [this page](https://lab9k.github.io/SoupCoin/ "SoupCoin") to see the app in action. You need MetaMask to use the application. Get it [here](https://metamask.io/ "MetaMask"). Our site is also hosted on the InterPlanetary FileSystem (IPFS), although it gets quite slow at times you can check our app [here](https://gateway.ipfs.io/ipfs/QmWcV5QbvRWgpbSiMV7rFAw24F4ftbhUEWcpyjkHFUH4Jr/ "SoupCoin")
 
 ## Help us out
 
