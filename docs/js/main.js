@@ -562,6 +562,10 @@ const contractEvents = {
 
             }
         }
+        /*
+            Loops over the checkboxes and composes a boolean orderArray, which gets sent to the orderSoupForDays method
+            e.g: Buy soup for monday and wednesday : [true,false,true,false,false]
+         */
         function composeOrderArray() {
             var arr = [];
             $(".dagenCheckboxGroup").children().each(function (index, value) {
