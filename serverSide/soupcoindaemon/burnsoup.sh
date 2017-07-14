@@ -1,3 +1,3 @@
 #!/bin/bash
 
-node soupcoinburnscript.js
+node /root/soupcoindaemon/soupcoinburnscript.js
