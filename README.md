@@ -167,3 +167,33 @@ Clone our project and open it up in your favorite texteditor. We need to change 
   $ embark run
   ```
   Et voila! If everything went OK you should see Geth v1.6.1 (replace with your version) in the embark console. You can now start hacking away : - ).
+
+## Some more information
+
+### The serverside scripts
+
+#### serversidescripts/soupcoindaemon
+
+##### Paymentlistener.php
+
+CRONjob that runs every 1 minute and checks a .sqlite db file for unprocessed soup orders. Then calls soupcoinmintscript.js
+
+##### soupcoinmintscript.js
+
+composes and signs a transaction which will mint some SoupCoin for someone. Takes Two cmdline arguments: address and amount.
+Needs a config file to work, which we won't be putting on github because well... passwords and stuff.
+
+##### burnsoup.sh
+
+CRONjob that runs every weekday at 23:45. Calls soupcoinburnscript.js which is similar to soupcoinmintscript.js
+
+##### SendMail.sh
+
+Gets called in soupcoinmintscript.js. Sends a mail to the soup-delivery-thingamajig using mailgun. API key left out because evil Russian hackers.
+
+#### serversidescripts/php
+
+##### SoupCoin.php
+
+IPN endpoint listener, which processes payments in the site thru paypal, writes to an sqlite DB file. left out for privacy reasons.
+
