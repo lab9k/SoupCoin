@@ -23,11 +23,9 @@ process.argv.forEach(function (val, index, array) {
     console.log(index + ': ' + val);
 });
 
-function pad(num, size) {
-    var s = num + "";
-    while (s.length < size) s = "0" + s;
-    return s;
-}
+soupAmount *= 100/110;
+
+
 let dataAddr = (util.bufferToHex(util.setLengthLeft(addr, 31)).replace("x", 0)).toString();
 let dataArgs = (util.bufferToHex(util.setLengthLeft(soupAmount, 31)).replace("x", 0)).toString();
 let txData = (config.mintTokenSig + dataAddr + dataArgs);
@@ -40,17 +38,17 @@ const getNonce = () => {
         web3.eth.getTransactionCount(web3.eth.defaultAccount, (error, result) => {
             if (error) reject(error);
             resolve(web3.toHex(result));
-        })
-    })
-}
+        });
+    });
+};
 const getGasPrice = () => {
     return new Promise((resolve, reject) => {
         web3.eth.getGasPrice((error, result) => {
             if (error) reject(error);
             resolve(web3.toHex(result.toNumber()));
-        })
-    })
-}
+        });
+    });
+};
 
 const sendRawTransaction = (rawTx) => {
     const tx = new Tx(rawTx);
@@ -61,7 +59,7 @@ const sendRawTransaction = (rawTx) => {
         console.log('Error:', err);
         console.log('Hash:', hash);
     });
-}
+};
 
 Promise.all([getNonce(), getGasPrice()])
     .then(values => {

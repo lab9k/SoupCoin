@@ -13,9 +13,9 @@ if [ "$1" -ne 1 ] ; then
     soep="soepjes"
 fi
 
-curl -s --user 'api:key-919defb00cb143edcbd65006ccafbd94' \
+curl -s --user 'api:key-<API-KEY-HERE>' \
     https://api.mailgun.net/v3/mail.lab9k.gent/messages \
     -F from='Postmaster <postmaster@mail.lab9k.gent>' \
-    -F to="dhr.philips.p@gmail.com" \
+    -F to="" \
     -F subject='Bestelling soep' \
     -F text=$'Beste,\nWij hadden graag '"$1 $soep"$' besteld voor morgen('"$date"$').\n\nMet vriendelijke groeten,\nLab9000'
