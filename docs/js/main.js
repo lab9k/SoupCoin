@@ -234,9 +234,17 @@ window.addEventListener('load', function () {
     // Now you can start your app & access web3 freely:
     contractEvents.init();
 });
+
+//is used to fill in the info in the appropriate fields
 const contractEvents = {
     init: function () {
         this.soupContract = web3.eth.contract(dappInterface);
+
+        /*
+         *   this object can be used to perform methods on the contract, usually this is in the format:
+         *   this.contractInstance.<methodName>(methodArgs...,callback(error,returnValue){});
+         *   args: contractAddress : address of the contract you want to perform methods on
+         * */
         this.contractInstance = this.soupContract.at(contractAddress);
         console.log(this.soupContract);
         console.log(this.contractInstance);
