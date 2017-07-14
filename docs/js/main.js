@@ -259,6 +259,9 @@ const contractEvents = {
         this.transferOwnershipInit();
         this.orderSoupForDaysInit();
     },
+    /*
+     * Displays basic info about the contract and user (signed in trough metamask) on the webpage
+     */
     basicInfoInit: function () {
         $('#contractadres').append(this.contractInstance.address);
         this.contractInstance.name(function (error, value) {
@@ -278,6 +281,9 @@ const contractEvents = {
         });
         $('#accountLabel').append(web3.eth.defaultAccount);
     },
+    /*
+     * initiates the event listener for changes in the isAdmin input field. Also fills in the user account (metamask)
+     * */
     isAdminInit: function () {
         let account = web3.eth.accounts;
         $('#isAdmin').on('change keydown paste input', function () {
@@ -285,6 +291,10 @@ const contractEvents = {
         }).val(`${account}`);
         this.isAdminChangeEvent();
     },
+    /*
+     * called every time the text in the isAdmin input field changes. Will display "True"/"False"/"Wrong address"
+     * accordingly, in red or green.
+     * */
     isAdminChangeEvent: function () {
         let tekst = $('#isAdmin').val();
 
@@ -302,6 +312,10 @@ const contractEvents = {
                 .addClass("red");
         }
     },
+    /*
+     * initiates the event listener for changes in the checkBalance input field.
+     * Also fills in the user account (metamask)
+     * */
     checkBalanceInit: function () {
         let account = web3.eth.accounts;
         $('#checkBalance').on('change keydown paste input', function () {
@@ -309,6 +323,10 @@ const contractEvents = {
         }).val(`${account}`);
         this.checkBalanceChangeEvent();
     },
+    /*
+     * called every time the text in the checkBalance input field changes.
+     * Will display balance of the account/"Wrong address" accordingly.
+     * */
     checkBalanceChangeEvent: function () {
         let account = $('#checkBalance').val();
         if (web3.isAddress(account)) {
@@ -321,6 +339,10 @@ const contractEvents = {
 
         }
     },
+    /*
+     * initiates the event listener for button clicks on the mintTokenBtn button.
+     * collects amount and address from the input fields mintTokenAmount and mintTokenAdress
+     * */
     mintTokenInit: function () {
         $('#mintTokenBtn').on('click', function (event) {
             let amount = Number.parseInt($('#mintTokenAmount').val());
@@ -328,6 +350,11 @@ const contractEvents = {
             contractEvents.mintTokenTransaction(address, amount);
         });
     },
+    /*
+     * Will call the mintToken(address,uint256) function on the contract.
+     * If the transaction is approved in meta-mask (auto-popup) the transactiondetails will be displayed
+     * in the text field below
+     * */
     mintTokenTransaction: function (address, amount) {
         console.log(`address: ${address} and type: ${typeof address}\namount: ${amount} and type: ${typeof amount}`);
         this.contractInstance.mintToken(address, amount, function (error, transaction) {
@@ -345,6 +372,10 @@ const contractEvents = {
             }
         })
     },
+    /*
+     * initiates the event listener for button clicks on the transferTokenBtn button.
+     * collects amount and address from the input fields transferTokenAmount and transferTokenAdress
+     * */
     transferTokenInit: function () {
         $('#transferTokenBtn').on('click', function (event) {
             let amount = Number.parseInt($('#transferTokenAmount').val());
@@ -352,6 +383,11 @@ const contractEvents = {
             contractEvents.transferTokenTransaction(address, amount);
         });
     },
+    /*
+     * Will call the transfer(address,uint256) function on the contract.
+     * If the transaction is approved in meta-mask (auto-popup) the transactiondetails will be displayed
+     * in the text field below
+     * */
     transferTokenTransaction(address, amount){
         console.log(`address: ${address} and type: ${typeof address}\namount: ${amount} and type: ${typeof amount}`);
         this.contractInstance.transfer(address, amount, function (error, transaction) {
@@ -369,12 +405,21 @@ const contractEvents = {
             }
         });
     },
+    /*
+     * initiates the event listener for button clicks on the addAdminBtn button.
+     * collects address from the input field addAdmin
+     * */
     addAdminInit: function () {
         $('#addAdminBtn').on('click', function (event) {
             let address = $('#addAdmin').val();
             contractEvents.addAdmin(address);
         });
     },
+    /*
+     * Will call the addAdmin(address) function on the contract.
+     * If the transaction is approved in meta-mask (auto-popup) the transactiondetails will be displayed
+     * in the text field below
+     * */
     addAdmin: function (address) {
         console.log(`address: ${address} and type: ${typeof address}`);
         this.contractInstance.addAdmin(address, function (error, value) {
@@ -392,12 +437,21 @@ const contractEvents = {
             }
         });
     },
+    /*
+     * initiates the event listener for button clicks on the removeAdminBtn button.
+     * collects address from the input field removeAdmin
+     * */
     removeAdminInit: function () {
         $('#removeAdminBtn').on('click', function () {
             let address = $('#removeAdmin').val();
             contractEvents.removeAdmin(address);
         });
     },
+    /*
+     * Will call the removeAdmin(address) function on the contract.
+     * If the transaction is approved in meta-mask (auto-popup) the transactiondetails will be displayed
+     * in the text field below
+     * */
     removeAdmin: function (address) {
         console.log(`address: ${address} and type: ${typeof address}`);
         this.contractInstance.removeAdmin(address, function (error, value) {
@@ -415,12 +469,21 @@ const contractEvents = {
             }
         });
     },
+    /*
+     * initiates the event listener for button clicks on the transferOwnershipBtn button.
+     * collects address from the input field removeAdmin
+     * */
     transferOwnershipInit: function () {
         $('#transferOwnershipBtn').on('click', function () {
             let address = $('#transferOwnership').val();
             contractEvents.transferOwnership(address);
         });
     },
+    /*
+     * Will call the transferOwnership(address) function on the contract.
+     * If the transaction is approved in meta-mask (auto-popup) the transactiondetails will be displayed
+     * in the text field below
+     * */
     transferOwnership: function (address) {
         console.log(`address: ${address} and type: ${typeof address}`);
         this.contractInstance.transferOwnership(address, function (error, value) {
