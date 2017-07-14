@@ -1,4 +1,7 @@
 #!/bin/bash
+
+
+# THIS SCRIPT IS NO LONGER IN USE
 # called when logfile.csv changes
 # scrapes logfile.csv and runs the mintscript
 IN=$(cat logfile.csv | tail -n1 | cut -d';' -f4,6 | xargs)
