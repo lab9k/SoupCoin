@@ -3,60 +3,13 @@
 
 ## See it in action
 
-Go to [this page](https://lab9k.github.io/SoupCoin/ "SoupCoin") to see the app in action. You need MetaMask to use the application. Get it [here](https://metamask.io/ "MetaMask").
+Go to [this page](https://lab9k.github.io/SoupCoin/ "SoupCoin") to see the app in action. You need MetaMask to use the application. Get it [here](https://metamask.io/ "MetaMask"). Our site is also hosted on the InterPlanetary FileSystem (IPFS), although it gets quite slow at times you can check our app [here](https://gateway.ipfs.io/ipfs/QmWcV5QbvRWgpbSiMV7rFAw24F4ftbhUEWcpyjkHFUH4Jr/ "SoupCoin")
 
 ## Help us out
 
 Follow the guides below to set up your testing environments, and help improve our contract/frontend!
 
-### Initial testing environment
-
-This will setup your environment to test your contracts on a private local testnet. Setup to test your contracts on a live testnet are below.
-
-#### Windows
-
-1. install nodejs v8.1.2: [link](https://nodejs.org/en/)
-
-1. install windows-build-tools (only on windows)
-
-        $ npm install -g --production windows-build-tools
-
-1. install the embark framework
-
-        # We need embark version 2.5 (time of writing: 28/06/17)
-        $ sudo npm install -g embark@2.5
-        # If you plan to use the simulator instead of a real ethereum node.
-        $ npm -g install ethereumjs-testrpc
-
-1. clone the repository
-
-        $ mkdir <project-name>
-        $ cd <project-name>
-        $ git clone https://github.com/lab9k/SoupCoin.git
-        $ cd SoupCoin/embark_demo
-
-1. run the development server
-
-        $ embark blockchain
-        # or
-        $ embark simulator
-    open another terminal instance and run:
-
-        $ embark run
-
-#### Linux
-
-* similar to windows installation, with some extra steps when installing embark
-
-    a detailed description can be found [here](https://github.com/iurimatias/embark-framework/wiki/Install-on-Linux)
-
-#### OSX
-
-* similar to windows installation, with some extra steps when installing embark
-
-    a detailed description can be found [here](https://github.com/iurimatias/embark-framework/wiki/Install-on-OSX)
-
-### Live testnet environment
+### Live testnet environment (for use in testing in the browser /w MetaMask)
 
 #### Step 1: Download Geth
 First, download the latest geth (1.6.1) to your laptop.
@@ -177,7 +130,7 @@ If you found this guide useful, follow us on Twitter at @InvisibleLearn
 or join us on Slack: http://invisible-slack.herokuapp.com/
 
 
-### Coupling the rinkeby testnet to run with Embark
+### Coupling the rinkeby testnet to run with Embark (No longer necessary, just open index.html in your browser)
 
 #### Step 1. locating the blockchain.json configuration file:
 
