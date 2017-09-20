@@ -189,7 +189,7 @@ CRONjob that runs every weekday at 23:45. Calls soupcoinburnscript.js which is s
 
 ##### SendMail.sh
 
-Gets called in soupcoinmintscript.js. Sends a mail to the soup-delivery-thingamajig using mailgun. API key left out because evil Russian hackers.
+Gets called in soupcoinburnscript.js. Sends a mail to the soup-delivery-thingamajig using mailgun. API key left out because evil Russian hackers.
 
 #### serversidescripts/php
 
