@@ -159,8 +159,8 @@
         env: 'sandbox', // 'production' or 'sandbox',
 
         client: {
-            sandbox: 'AeGtN-0huzZBPuuBROxVWeNchtPLZUKoX5HCQINwP5S9IYMoleqYO8c5ZuxDqAwFGuVCEfqHFuh5v-rP',
-            production: 'AR0j_lfDuuiq9MIo4UNej1qYtBXgAhYFKAyy5gkHKhdnS81i17MqG0STPCTbarsYWq1yMzjpASyt8fh2'
+            sandbox: 'AY93dQbmqUh5hvTxdkQx5xuuUiAo7U_vqL-mceYcF7xZoPbxLMYBVVRoRHifOq4vzDhYIOJc8YK4NRYw',
+            production: 'AamB_45BDUCsngExCDyrxu_VduqgJJXB3TPEtaWXyCxoiA7rygkuLmj5eYSs4Y3HgENkZEQJXVeJU-kz'
         },
 
         commit: true, // Show a 'Pay Now' button
@@ -173,7 +173,7 @@
             payAmount = Math.round(payAmount * 100) / 100;
             console.log(payAmount);
             console.log(web3.eth.defaultAccount)
-            console.log("%c De exacte prijs moet nog berekend worden", "color:red;font-size:24px;");
+            //console.log("%c De exacte prijs moet nog berekend worden", "color:red;font-size:24px;");
             return actions.payment.create({
                 payment: {
                     transactions: [
